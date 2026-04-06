@@ -269,3 +269,162 @@ select, textarea {
 
 .dark .modal-desc { color: #c4c7c5; }
 :not(.dark) .modal-desc { color: #5f6368; }
+
+/* ===== Favorites Modal İçeriği ===== */
+
+.favorites-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 150px;
+  gap: 6px;
+}
+
+.modal-desc-sub {
+  font-size: 12px;
+  text-align: center;
+  max-width: 280px;
+}
+
+.dark .modal-desc-sub { color: #9aa0a6; }
+:not(.dark) .modal-desc-sub { color: #80868b; }
+
+/* Liste wrapper */
+.modal-content.favorites-list {
+  display: block;
+  border: none;
+  min-height: 150px;
+  max-height: 480px;
+  overflow-y: auto;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.favorites-list-ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Favori kartı */
+.favorite-item {
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dark .favorite-item {
+  background-color: #1e1f20;
+  border: 1px solid #3c4043;
+}
+
+:not(.dark) .favorite-item {
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+}
+
+/* Kart başlık satırı */
+.favorite-item-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.favorite-star-icon {
+  font-size: 16px;
+  color: #fbbc04;
+  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+}
+
+.favorite-date {
+  font-size: 12px;
+  flex: 1;
+}
+
+.dark .favorite-date { color: #9aa0a6; }
+:not(.dark) .favorite-date { color: #80868b; }
+
+/* Silme butonu */
+.favorite-delete-btn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.15s;
+  flex-shrink: 0;
+}
+
+.favorite-delete-btn .google-symbols { font-size: 16px; }
+
+.dark .favorite-delete-btn { color: #9aa0a6; }
+.dark .favorite-delete-btn:hover { background-color: #3c4043; color: #e3e3e3; }
+
+:not(.dark) .favorite-delete-btn { color: #80868b; }
+:not(.dark) .favorite-delete-btn:hover { background-color: #f1f3f4; color: #444746; }
+
+/* Yanıt metni (4 satır ile sınırlı) */
+.favorite-text {
+  font-size: 13px;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin: 0;
+}
+
+.dark .favorite-text { color: #e3e3e3; }
+:not(.dark) .favorite-text { color: #202124; }
+
+/* Sohbete git linki */
+.favorite-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  text-decoration: none;
+  border-radius: 6px;
+  padding: 2px 6px;
+  transition: background-color 0.15s;
+  align-self: flex-start;
+}
+
+.favorite-link .google-symbols { font-size: 14px; }
+
+.dark .favorite-link { color: #a8c7fa; }
+.dark .favorite-link:hover { background-color: rgba(168, 199, 250, 0.12); }
+
+:not(.dark) .favorite-link { color: #1a73e8; }
+:not(.dark) .favorite-link:hover { background-color: rgba(26, 115, 232, 0.08); }
+
+/* Kaydırma çubuğu */
+.modal-content.favorites-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-content.favorites-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.dark .modal-content.favorites-list::-webkit-scrollbar-thumb {
+  background: #3c4043;
+  border-radius: 3px;
+}
+
+:not(.dark) .modal-content.favorites-list::-webkit-scrollbar-thumb {
+  background: #dadce0;
+  border-radius: 3px;
+}
