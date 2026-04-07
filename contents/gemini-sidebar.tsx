@@ -21,19 +21,7 @@ export const getInlineAnchor: PlasmoGetInlineAnchor = async () => ({
 })
 
 const GeminiSidebar = () => {
-  const [isDark, setIsDark] = useState(true)
 
-  useEffect(() => {
-    const checkTheme = () =>
-      setIsDark(document.body.classList.contains("dark-theme"))
-    checkTheme()
-    const observer = new MutationObserver(checkTheme)
-    observer.observe(document.body, {
-      attributes: true,
-      attributeFilter: ["class"]
-    })
-    return () => observer.disconnect()
-  }, [])
 
   // Modalı açmak için Global bir Event fırlatıyoruz
   const openModal = (type: string) => {
@@ -41,7 +29,7 @@ const GeminiSidebar = () => {
   }
 
   return (
-    <div className={`gemini-sidebar-container ${isDark ? "dark" : ""}`}>
+    <div className="gemini-sidebar-container">
       <div className="gemini-sidebar-content">
         <hr className="gemini-hr" />
 
