@@ -1,5 +1,5 @@
 // contents/gemini-modal.tsx
-import type { PlasmoCSConfig } from "plasmo"
+import type { PlasmoCSConfig, PlasmoGetOverlayAnchor } from "plasmo"
 import { useEffect, useState } from "react"
 
 import type { FavoriteAnswer } from "~types/favorite"
@@ -10,6 +10,8 @@ export const getStyle = () => {
   style.textContent = cssText
   return style
 }
+
+
 
 export const config: PlasmoCSConfig = {
   matches: ["https://gemini.google.com/*"]
