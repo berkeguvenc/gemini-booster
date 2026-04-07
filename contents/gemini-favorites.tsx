@@ -186,7 +186,7 @@ function createStarButton(
 // Enjeksiyon Mantığı
 // =============================================
 
-async function injectStarButton(thumbUpButtonEl: Element): Promise<void> {
+function injectStarButton(thumbUpButtonEl: Element, favorites: FavoriteAnswer[]): void {
   const responseId = getResponseId(thumbUpButtonEl)
   if (!responseId) return
 
@@ -197,7 +197,6 @@ async function injectStarButton(thumbUpButtonEl: Element): Promise<void> {
   if (container.querySelector(`[data-response-id="${responseId}"]`)) return
 
   const conversationId = getConversationId(thumbUpButtonEl) || ""
-  const favorites = await getFavorites()
   const isFavorited = favorites.some((f) => f.id === responseId)
 
   const btn = createStarButton(responseId, isFavorited)
@@ -226,18 +225,23 @@ async function injectStarButton(thumbUpButtonEl: Element): Promise<void> {
   thumbUpButtonEl.insertAdjacentElement("beforebegin", btn)
 }
 
-// =============================================
-// MutationObserver ile Dinamik DOM İzleme
-// =============================================
-
-function observeMessageActions(): void {
+function observeMessageActions(): () => void {
   const processAll = async () => {
-    const thumbUpButtons = document.querySelectorAll(
+    const thumbUpButtons = Array.from(document.querySelectorAll(
       "thumb-up-button:not([data-gbr-processed])"
-    )
+    ))
+    
+    if (thumbUpButtons.length === 0) return
+
+    // Hepsini asenkron çağırmadân önce anında işaretle ki, diğer mutation'lar bunları kapmasın.
     for (const el of thumbUpButtons) {
       el.setAttribute("data-gbr-processed", "true")
-      await injectStarButton(el)
+    }
+
+    const favorites = await getFavorites()
+
+    for (const el of thumbUpButtons) {
+      injectStarButton(el, favorites)
     }
   }
 
@@ -253,6 +257,8 @@ function observeMessageActions(): void {
     childList: true,
     subtree: true
   })
+
+  return () => observer.disconnect()
 }
 
 // =============================================
@@ -263,7 +269,8 @@ function observeMessageActions(): void {
 const GeminiFavorites = () => {
   useEffect(() => {
     injectGlobalStyles()
-    observeMessageActions()
+    const cleanup = observeMessageActions()
+    return cleanup
   }, [])
 
   return null
