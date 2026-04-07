@@ -1,11 +1,27 @@
-// contents/gemini-sidebar.tsx
-import type { PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo"
-import { useEffect, useState } from "react"
 import cssText from "data-text:~style.css"
+import type { PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo"
 
 export const getStyle = () => {
   const style = document.createElement("style")
-  style.textContent = cssText
+  style.textContent = `
+    @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
+    .google-symbols {
+      font-family: 'Material Symbols Outlined', sans-serif !important;
+      font-weight: normal;
+      font-style: normal;
+      font-size: 24px;
+      line-height: 1;
+      letter-spacing: normal;
+      text-transform: none;
+      display: inline-block;
+      white-space: nowrap;
+      word-wrap: normal;
+      direction: ltr;
+      -webkit-font-feature-settings: 'liga';
+      -webkit-font-smoothing: antialiased;
+    }
+    ${cssText}
+  `
   return style
 }
 
@@ -21,8 +37,6 @@ export const getInlineAnchor: PlasmoGetInlineAnchor = async () => ({
 })
 
 const GeminiSidebar = () => {
-
-
   // Modalı açmak için Global bir Event fırlatıyoruz
   const openModal = (type: string) => {
     window.dispatchEvent(new CustomEvent("OPEN_GEMINI_MODAL", { detail: type }))
@@ -34,37 +48,30 @@ const GeminiSidebar = () => {
         <hr className="gemini-hr" />
 
         <div className="sidebar-btn-group">
-          <button onClick={() => openModal("favorites")} className="side-nav-btn">
-            <span className="google-symbols side-nav-icon icon-amber">star</span>
+          <button
+            onClick={() => openModal("favorites")}
+            className="side-nav-btn">
+            <span className="google-symbols side-nav-icon icon-amber">
+              star
+            </span>
             <span className="gds-label-l">Favorite Answers</span>
           </button>
 
           <button onClick={() => openModal("notes")} className="side-nav-btn">
-            <span className="google-symbols side-nav-icon icon-blue">assignment</span>
+            <span className="google-symbols side-nav-icon icon-blue">
+              assignment
+            </span>
             <span className="gds-label-l">My Notes</span>
           </button>
 
           <button onClick={() => openModal("prompts")} className="side-nav-btn">
-            <span className="google-symbols side-nav-icon icon-gray">library_books</span>
+            <span className="google-symbols side-nav-icon icon-gray">
+              library_books
+            </span>
             <span className="gds-label-l">Prompt Library</span>
           </button>
         </div>
 
-        <div className="search-container">
-          <input
-            type="text"
-            placeholder="Search folders & chats..."
-          />
-        </div>
-
-        <div className="folders-header">
-          <span>Folders</span>
-          <button className="add-btn">
-            <span className="google-symbols side-nav-icon">add</span>
-          </button>
-        </div>
-
-        <hr className="gemini-hr" />
       </div>
     </div>
   )
