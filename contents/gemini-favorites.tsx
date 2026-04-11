@@ -31,6 +31,34 @@ function injectGlobalStyles(): void {
       color: #c4c7c5;
       transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
       vertical-align: middle;
+      position: relative;
+    }
+
+    .gbr-star-btn::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      top: 115%;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: var(--gem-sys-color--inverse-surface, #303030);
+      color: var(--gem-sys-color--inverse-on-surface, #f5f5f5);
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-family: "Google Sans", "Google Sans Flex", Roboto, sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.1px;
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.2s ease, visibility 0.2s ease;
+      z-index: 999999;
+    }
+
+    .gbr-star-btn:hover::after {
+      opacity: 1;
+      visibility: visible;
     }
 
     .gbr-star-btn .google-symbols {
@@ -175,7 +203,7 @@ function createStarButton(
     isFavorited ? "Favorilerden çıkar" : "Favorilere ekle"
   )
   btn.setAttribute(
-    "title",
+    "data-tooltip",
     isFavorited ? "Favorilerden çıkar" : "Favorilere ekle"
   )
   btn.innerHTML = `<span class="google-symbols">star</span>`
@@ -186,7 +214,10 @@ function createStarButton(
 // Enjeksiyon Mantığı
 // =============================================
 
-function injectStarButton(thumbUpButtonEl: Element, favorites: FavoriteAnswer[]): void {
+function injectStarButton(
+  thumbUpButtonEl: Element,
+  favorites: FavoriteAnswer[]
+): void {
   const responseId = getResponseId(thumbUpButtonEl)
   if (!responseId) return
 
@@ -212,7 +243,7 @@ function injectStarButton(thumbUpButtonEl: Element, favorites: FavoriteAnswer[])
       nowFavorited ? "Favorilerden çıkar" : "Favorilere ekle"
     )
     btn.setAttribute(
-      "title",
+      "data-tooltip",
       nowFavorited ? "Favorilerden çıkar" : "Favorilere ekle"
     )
 
@@ -227,10 +258,10 @@ function injectStarButton(thumbUpButtonEl: Element, favorites: FavoriteAnswer[])
 
 function observeMessageActions(): () => void {
   const processAll = async () => {
-    const thumbUpButtons = Array.from(document.querySelectorAll(
-      "thumb-up-button:not([data-gbr-processed])"
-    ))
-    
+    const thumbUpButtons = Array.from(
+      document.querySelectorAll("thumb-up-button:not([data-gbr-processed])")
+    )
+
     if (thumbUpButtons.length === 0) return
 
     // Hepsini asenkron çağırmadân önce anında işaretle ki, diğer mutation'lar bunları kapmasın.

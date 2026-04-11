@@ -37,10 +37,10 @@ function injectGlobalStyles(): void {
     .gbr-prompt-btn::after {
       content: attr(data-tooltip);
       position: absolute;
-      top: 110%;
+      top: 115%;
       left: 50%;
       transform: translateX(-50%);
-      background-color: var(--gem-sys-color--inverse-surface, #323232);
+      background-color: var(--gem-sys-color--inverse-surface, #303030);
       color: var(--gem-sys-color--inverse-on-surface, #f5f5f5);
       padding: 4px 8px;
       border-radius: 4px;
