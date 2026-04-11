@@ -3,25 +3,7 @@ import type { PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo"
 
 export const getStyle = () => {
   const style = document.createElement("style")
-  style.textContent = `
-    @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
-    .google-symbols {
-      font-family: 'Material Symbols Outlined', sans-serif !important;
-      font-weight: normal;
-      font-style: normal;
-      font-size: 24px;
-      line-height: 1;
-      letter-spacing: normal;
-      text-transform: none;
-      display: inline-block;
-      white-space: nowrap;
-      word-wrap: normal;
-      direction: ltr;
-      -webkit-font-feature-settings: 'liga';
-      -webkit-font-smoothing: antialiased;
-    }
-    ${cssText}
-  `
+  style.textContent = cssText
   return style
 }
 
@@ -31,7 +13,7 @@ export const config: PlasmoCSConfig = {
 
 export const getInlineAnchor: PlasmoGetInlineAnchor = async () => ({
   element: document.querySelector(
-    'conversations-list[data-test-id="all-conversations"]'
+    'conversations-list[data-test-id="all-conversations"] .title-container'
   ),
   insertPosition: "beforebegin"
 })
@@ -52,19 +34,21 @@ const GeminiSidebar = () => {
             onClick={() => openModal("favorites")}
             className="side-nav-btn">
             <span className="side-nav-icon icon-amber">⭐</span>
-            <span className="gds-label-l">Favorite Answers</span>
+            <span className="gds-label-l">Favori Cevaplar</span>
+          </button>
+
+          <button onClick={() => openModal("prompts")} className="side-nav-btn">
+            <span className="side-nav-icon icon-gray">📚</span>
+            <span className="gds-label-l">İstem Kütüphanesi</span>
           </button>
 
           <button onClick={() => openModal("notes")} className="side-nav-btn">
             <span className="side-nav-icon icon-blue">📝</span>
             <span className="gds-label-l">My Notes</span>
           </button>
-
-          <button onClick={() => openModal("prompts")} className="side-nav-btn">
-            <span className="side-nav-icon icon-gray">📚</span>
-            <span className="gds-label-l">Prompt Library</span>
-          </button>
         </div>
+
+        <hr className="gemini-hr" />
       </div>
     </div>
   )

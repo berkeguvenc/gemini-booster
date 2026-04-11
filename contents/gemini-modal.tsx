@@ -1,18 +1,16 @@
 // contents/gemini-modal.tsx
+import cssText from "data-text:~style.css"
 import type { PlasmoCSConfig, PlasmoGetOverlayAnchor } from "plasmo"
 import { useEffect, useState } from "react"
 
 import type { FavoriteAnswer } from "~types/favorite"
 import type { SavedPrompt } from "~types/prompt"
-import cssText from "data-text:~style.css"
 
 export const getStyle = () => {
   const style = document.createElement("style")
   style.textContent = cssText
   return style
 }
-
-
 
 export const config: PlasmoCSConfig = {
   matches: ["https://gemini.google.com/*"]
@@ -44,10 +42,13 @@ const GeminiModal = () => {
 
     // 3. Favoriler ve Prompts storage'dan yükle
     const loadData = () => {
-      chrome.storage.sync.get(["gemini_favorites", "gemini_prompts"], (result) => {
-        setFavorites(result.gemini_favorites || [])
-        setPrompts(result.gemini_prompts || [])
-      })
+      chrome.storage.sync.get(
+        ["gemini_favorites", "gemini_prompts"],
+        (result) => {
+          setFavorites(result.gemini_favorites || [])
+          setPrompts(result.gemini_prompts || [])
+        }
+      )
     }
     loadData()
 
@@ -93,31 +94,37 @@ const GeminiModal = () => {
   if (!activeModal) return null
 
   const modalTitles = {
-    favorites: "Favorite Answers",
+    favorites: "Favori Cevaplar",
     notes: "My Notes",
-    prompts: "Prompt Library"
+    prompts: "İstem Kütüphanesi"
   }
 
   return (
     <div className={`modal-overlay ${isDark ? "dark" : ""}`}>
-      <div className="modal-clickaway" onClick={() => setActiveModal(null)}></div>
+      <div
+        className="modal-clickaway"
+        onClick={() => setActiveModal(null)}></div>
 
       <div className="modal-box">
         <div className="modal-header">
           <h2 className="modal-title">
             {modalTitles[activeModal as keyof typeof modalTitles]}
           </h2>
-          <button onClick={() => setActiveModal(null)} className="modal-close-btn">
+          <button
+            onClick={() => setActiveModal(null)}
+            className="modal-close-btn">
             <span className="google-symbols">close</span>
           </button>
         </div>
 
-        {/* Favorite Answers Modal İçeriği */}
+        {/* Favori Cevaplar Modal İçeriği */}
         {activeModal === "favorites" ? (
           <div className="modal-content favorites-list">
             {favorites.length === 0 ? (
               <div className="favorites-empty">
-                <span className="google-symbols modal-icon-placeholder">star</span>
+                <span className="google-symbols modal-icon-placeholder">
+                  star
+                </span>
                 <p className="modal-desc">Henüz favori yanıt kaydedilmedi.</p>
                 <p className="modal-desc-sub">
                   Yanıtların altındaki ⭐ ikonuna tıklayarak favorilere
@@ -164,10 +171,13 @@ const GeminiModal = () => {
           <div className="modal-content favorites-list">
             {prompts.length === 0 ? (
               <div className="favorites-empty">
-                <span className="google-symbols modal-icon-placeholder">bookmark</span>
+                <span className="google-symbols modal-icon-placeholder">
+                  bookmark
+                </span>
                 <p className="modal-desc">Henüz kayıtlı istem (prompt) yok.</p>
                 <p className="modal-desc-sub">
-                  Kendi yazdığınız sınırların (istemlerin) altındaki 🔖 ikonuna tıklayarak istemlerinizi kaydedebilirsiniz.
+                  Kendi yazdığınız sınırların (istemlerin) altındaki 🔖 ikonuna
+                  tıklayarak istemlerinizi kaydedebilirsiniz.
                 </p>
               </div>
             ) : (
@@ -175,7 +185,11 @@ const GeminiModal = () => {
                 {prompts.map((p) => (
                   <li key={p.id} className="favorite-item">
                     <div className="favorite-item-header">
-                      <span className="google-symbols favorite-star-icon" style={{color: "var(--gem-sys-color--primary, #a8c7fa)"}}>
+                      <span
+                        className="google-symbols favorite-star-icon"
+                        style={{
+                          color: "var(--gem-sys-color--primary, #a8c7fa)"
+                        }}>
                         bookmark
                       </span>
                       <span className="favorite-date">
@@ -193,7 +207,13 @@ const GeminiModal = () => {
                       </button>
                     </div>
                     {/* Prompt'lar genelde daha sade bir tasarımla render edilebilir */}
-                    <p className="favorite-text" style={{ fontStyle: "italic", borderLeft: "2px solid var(--gem-sys-color--primary)", paddingLeft: "12px" }}>
+                    <p
+                      className="favorite-text"
+                      style={{
+                        fontStyle: "italic",
+                        borderLeft: "2px solid var(--gem-sys-color--primary)",
+                        paddingLeft: "12px"
+                      }}>
                       "{p.text}"
                     </p>
                     <a
