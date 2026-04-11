@@ -31,6 +31,34 @@ function injectGlobalStyles(): void {
       transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
       vertical-align: middle;
       margin-right: 4px; /* Kopyala butonuyla arasına minik boşluk */
+      position: relative;
+    }
+
+    .gbr-prompt-btn::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      top: 110%;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: var(--gem-sys-color--inverse-surface, #323232);
+      color: var(--gem-sys-color--inverse-on-surface, #f5f5f5);
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-family: "Google Sans", "Google Sans Flex", Roboto, sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.1px;
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.2s ease, visibility 0.2s ease;
+      z-index: 999999;
+    }
+
+    .gbr-prompt-btn:hover::after {
+      opacity: 1;
+      visibility: visible;
     }
 
     .gbr-prompt-btn .google-symbols {
@@ -173,14 +201,8 @@ function createPromptButton(
   const btn = document.createElement("button")
   btn.className = `gbr-prompt-btn${isSaved ? " gbr-prompt-active" : ""}`
   btn.setAttribute("data-prompt-id", promptId)
-  btn.setAttribute(
-    "aria-label",
-    isSaved ? "İstemi kütüphaneden çıkar" : "İstemi kütüphaneye kaydet"
-  )
-  btn.setAttribute(
-    "title",
-    isSaved ? "İstemi kütüphaneden çıkar" : "İstemi kütüphaneye kaydet"
-  )
+  btn.setAttribute("aria-label", isSaved ? "İstemi çıkar" : "İstemi kaydet")
+  btn.setAttribute("data-tooltip", isSaved ? "İstemi çıkar" : "İstemi kaydet")
   // İkon olarak Bookmark kullanıldı.
   btn.innerHTML = `<span class="google-symbols">bookmark</span>`
   return btn
@@ -190,10 +212,7 @@ function createPromptButton(
 // Enjeksiyon Mantığı
 // =============================================
 
-function injectPromptButton(
-  copyBtnEl: Element,
-  prompts: SavedPrompt[]
-): void {
+function injectPromptButton(copyBtnEl: Element, prompts: SavedPrompt[]): void {
   const promptId = getResponseId(copyBtnEl)
   if (!promptId) return
 
@@ -223,13 +242,10 @@ function injectPromptButton(
     const nowSaved = await togglePrompt(promptId, conversationId, text)
 
     btn.classList.toggle("gbr-prompt-active", nowSaved)
+    btn.setAttribute("aria-label", nowSaved ? "İstemi çıkar" : "İstemi kaydet")
     btn.setAttribute(
-      "aria-label",
-      nowSaved ? "İstemi kütüphaneden çıkar" : "İstemi kütüphaneye kaydet"
-    )
-    btn.setAttribute(
-      "title",
-      nowSaved ? "İstemi kütüphaneden çıkar" : "İstemi kütüphaneye kaydet"
+      "data-tooltip",
+      nowSaved ? "İstemi çıkar" : "İstemi kaydet"
     )
 
     // Görsel efekt
