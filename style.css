@@ -28,7 +28,8 @@ select, textarea {
 /* Sidebar structure */
 .gemini-sidebar-container {
   width: 100%;
-  font-family: inherit;
+  font-family: "Google Sans Flex", "Google Sans", Roboto, Arial, sans-serif;
+  letter-spacing: normal;
   padding: 0 8px;
 }
 
@@ -156,6 +157,8 @@ select, textarea {
   align-items: center;
   justify-content: center;
   background-color: rgba(0, 0, 0, 0.5);
+  font-family: "Google Sans Flex", "Google Sans", Roboto, Arial, sans-serif;
+  letter-spacing: normal;
 }
 
 .modal-clickaway {
