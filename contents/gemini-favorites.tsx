@@ -46,7 +46,7 @@ function injectGlobalStyles(): void {
       border-radius: 4px;
       font-family: "Google Sans", "Google Sans Flex", Roboto, sans-serif;
       font-size: 12px;
-      font-weight: 500;
+      font-weight: 400;
       letter-spacing: 0.1px;
       white-space: nowrap;
       pointer-events: none;

@@ -37,7 +37,7 @@ function injectGlobalStyles(): void {
     .gbr-prompt-btn::after {
       content: attr(data-tooltip);
       position: absolute;
-      top: 115%;
+      top: 120%;
       left: 50%;
       transform: translateX(-50%);
       background-color: var(--gem-sys-color--inverse-surface, #303030);
@@ -46,7 +46,7 @@ function injectGlobalStyles(): void {
       border-radius: 4px;
       font-family: "Google Sans", "Google Sans Flex", Roboto, sans-serif;
       font-size: 12px;
-      font-weight: 500;
+      font-weight: 400;
       letter-spacing: 0.1px;
       white-space: nowrap;
       pointer-events: none;
