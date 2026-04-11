@@ -51,22 +51,22 @@ const GeminiSidebar = () => {
           <button
             onClick={() => openModal("favorites")}
             className="side-nav-btn">
-            <span className="google-symbols side-nav-icon icon-amber">
-              star
+            <span className="side-nav-icon icon-amber">
+              ⭐
             </span>
             <span className="gds-label-l">Favorite Answers</span>
           </button>
 
           <button onClick={() => openModal("notes")} className="side-nav-btn">
-            <span className="google-symbols side-nav-icon icon-blue">
-              assignment
+            <span className="side-nav-icon icon-blue">
+              📝
             </span>
             <span className="gds-label-l">My Notes</span>
           </button>
 
           <button onClick={() => openModal("prompts")} className="side-nav-btn">
-            <span className="google-symbols side-nav-icon icon-gray">
-              library_books
+            <span className="side-nav-icon icon-gray">
+              📚
             </span>
             <span className="gds-label-l">Prompt Library</span>
           </button>
