@@ -12,10 +12,13 @@ export const config: PlasmoCSConfig = {
 }
 
 export const getInlineAnchor: PlasmoGetInlineAnchor = async () => ({
-  element: document.querySelector(
-    'conversations-list[data-test-id="all-conversations"] .title-container'
-  ),
-  insertPosition: "beforebegin"
+  element:
+    document.querySelector(
+      '.side-nav-entry-container:has([data-test-id="my-stuff-side-nav-entry-button"])'
+    ) ||
+    document.querySelector('[data-test-id="my-stuff-side-nav-entry-button"]')
+      ?.parentElement,
+  insertPosition: "afterend"
 })
 
 const GeminiSidebar = () => {
@@ -27,8 +30,6 @@ const GeminiSidebar = () => {
   return (
     <div className="gemini-sidebar-container">
       <div className="gemini-sidebar-content">
-        <hr className="gemini-hr" />
-
         <div className="sidebar-btn-group">
           <button
             onClick={() => openModal("favorites")}
@@ -47,8 +48,6 @@ const GeminiSidebar = () => {
             <span className="gds-label-l">My Notes</span>
           </button>
         </div>
-
-        <hr className="gemini-hr" />
       </div>
     </div>
   )
