@@ -1,9 +1,24 @@
 /* style.css */
 
-* {
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
+
+*:not(.google-symbols) {
   font-family: "Google Sans Flex", "Google Sans", Roboto, Arial, sans-serif !important;
 }
 
+.google-symbols {
+  font-family: 'Material Symbols Outlined', 'Google Symbols' !important;
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+}
 /* Typography clones for Shadow DOM encapsulation */
 .gds-label-l {
   font-family: "Google Sans Flex", "Google Sans", Roboto, Arial, sans-serif !important;
@@ -177,24 +192,38 @@ select, textarea {
 }
 
 .modal-box {
+  background-color: var(--gem-sys-color--surface-container, var(--local-surface-container));
+  color: var(--gem-sys-color--on-surface, var(--local-on-surface));
   position: relative;
   width: 100%;
   max-width: 448px;
-  padding: 24px;
   border-radius: 28px;
   box-shadow: 0 24px 38px 3px rgba(0,0,0,.14), 0 9px 46px 8px rgba(0,0,0,.12), 0 11px 15px -7px rgba(0,0,0,.2);
-}
-
-.modal-box {
-  background-color: var(--gem-sys-color--surface-container, var(--local-surface-container));
-  color: var(--gem-sys-color--on-surface, var(--local-on-surface));
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  padding: 24px 24px 16px 24px;
+}
+
+.modal-title-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-icon {
+  font-size: 32px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .modal-title {
@@ -211,122 +240,132 @@ select, textarea {
   justify-content: center;
   border-radius: 50%;
   transition: background-color 0.15s;
-}
-
-.modal-close-btn {
   color: var(--gem-sys-color--on-surface-variant, var(--local-on-surface-variant));
 }
+
 .modal-close-btn:hover {
   background-color: var(--gem-sys-color--surface-container-highest, var(--local-surface-container-highest));
   color: var(--gem-sys-color--on-surface, var(--local-on-surface));
 }
 
 .modal-content {
-  min-height: 150px;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border-radius: 16px;
-  border: 1px dashed;
-}
-
-.modal-content {
-  background-color: var(--gem-sys-color--surface-container-low, var(--local-surface-container-low));
-  border-color: var(--gem-sys-color--outline-variant, var(--local-outline-variant));
-}
-
-.modal-icon-placeholder {
-  font-size: 40px;
-  margin-bottom: 8px;
-}
-
-.modal-icon-placeholder { color: var(--gem-sys-color--on-surface-variant, var(--local-on-surface-variant)); }
-
-.modal-desc {
-  font-size: 14px;
-}
-
-.modal-desc { color: var(--gem-sys-color--on-surface-variant, var(--local-on-surface-variant)); }
-
-/* ===== Favorites Modal İçeriği ===== */
-
-.favorites-empty {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 150px;
-  gap: 6px;
-}
-
-.modal-desc-sub {
-  font-size: 12px;
-  text-align: center;
-  max-width: 280px;
-}
-
-.modal-desc-sub { color: var(--gem-sys-color--on-surface-variant, var(--local-on-surface-variant)); opacity: 0.8; }
-
-/* Liste wrapper */
-.modal-content.favorites-list {
-  display: block;
-  border: none;
-  min-height: 150px;
   max-height: 480px;
   overflow-y: auto;
-  padding: 0;
-  border-radius: 0;
-  background: transparent;
+  padding: 0 0 16px 0;
 }
 
-.favorites-list-ul {
+/* Kaydırma çubuğu */
+.modal-content::-webkit-scrollbar {
+  width: 6px;
+}
+.modal-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+.modal-content::-webkit-scrollbar-thumb {
+  background: var(--gem-sys-color--surface-container-highest, var(--local-surface-container-highest));
+  border-radius: 3px;
+}
+
+/* Liste Başlığı (Örn: En son) */
+.list-header {
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 24px;
+  margin: 0;
+  color: var(--gem-sys-color--on-surface-variant, var(--local-on-surface-variant));
+}
+
+.item-list {
   list-style: none;
   margin: 0;
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
 }
 
-/* Favori kartı */
-.favorite-item {
-  border-radius: 12px;
-  padding: 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.favorite-item {
-  background-color: var(--gem-sys-color--surface-container, var(--local-surface-container));
-  border: 1px solid var(--gem-sys-color--outline-variant, var(--local-outline-variant));
-}
-
-/* Kart başlık satırı */
-.favorite-item-header {
+/* Liste Öğesi (Kart satırı) */
+.list-item-container {
   display: flex;
   align-items: center;
-  gap: 6px;
+  padding: 12px 24px;
+  cursor: default;
+  transition: background-color 0.15s;
 }
 
-.favorite-star-icon {
-  font-size: 16px;
-  color: #fbbc04;
-  font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+.list-item-container:hover {
+  background-color: var(--gem-sys-color--surface-container-highest, var(--local-surface-container-highest));
 }
 
-.favorite-date {
-  font-size: 12px;
+.list-item-main {
+  display: flex;
   flex: 1;
+  align-items: flex-start;
+  gap: 16px;
+  overflow: hidden;
 }
 
-.favorite-date { color: var(--gem-sys-color--on-surface-variant, var(--local-on-surface-variant)); }
+.list-item-icon {
+  font-size: 24px;
+  color: var(--gem-sys-color--on-surface-variant, var(--local-on-surface-variant));
+  flex-shrink: 0;
+}
+.list-item-icon.star { color: #fbbc04; font-variation-settings: 'FILL' 1; }
+.list-item-icon.bookmark { color: var(--gem-sys-color--primary, var(--local-primary)); font-variation-settings: 'FILL' 1; }
 
-/* Silme butonu */
+.list-item-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+}
+
+.list-item-title {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 400;
+  color: var(--gem-sys-color--on-surface, var(--local-on-surface));
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.list-item-metadata {
+  font-size: 12px;
+  color: var(--gem-sys-color--on-surface-variant, var(--local-on-surface-variant));
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.separator {
+  margin: 0 4px;
+}
+
+.favorite-link {
+  text-decoration: none;
+  color: var(--gem-sys-color--primary, var(--local-primary));
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.favorite-link:hover {
+  text-decoration: underline;
+}
+
+/* Silme Butonu */
+.list-item-actions {
+  display: flex;
+  align-items: center;
+  margin-left: 12px;
+}
+
 .favorite-delete-btn {
-  width: 28px;
-  height: 28px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -336,55 +375,44 @@ select, textarea {
   cursor: pointer;
   transition: background-color 0.15s;
   flex-shrink: 0;
+  color: var(--gem-sys-color--on-surface-variant, var(--local-on-surface-variant));
 }
 
-.favorite-delete-btn .google-symbols { font-size: 16px; }
+.favorite-delete-btn .google-symbols { font-size: 20px; }
 
-.favorite-delete-btn { color: var(--gem-sys-color--on-surface-variant, var(--local-on-surface-variant)); }
-.favorite-delete-btn:hover { background-color: var(--gem-sys-color--surface-container-highest, var(--local-surface-container-highest)); color: var(--gem-sys-color--on-surface, var(--local-on-surface)); }
+.favorite-delete-btn:hover {
+  background-color: var(--gem-sys-color--surface-container-high, rgba(255,255,255,0.05));
+  color: var(--gem-sys-color--on-surface, var(--local-on-surface));
+}
 
-/* Yanıt metni (4 satır ile sınırlı) */
-.favorite-text {
-  font-size: 13px;
-  line-height: 1.5;
-  display: -webkit-box;
-  -webkit-line-clamp: 4;
-  line-clamp: 4;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+/* Boş Durum (Empty State) */
+.favorites-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  padding: 24px;
+  gap: 8px;
+  text-align: center;
+}
+
+.modal-icon-placeholder {
+  font-size: 40px;
+  margin-bottom: 8px;
+  color: var(--gem-sys-color--on-surface-variant, var(--local-on-surface-variant));
+}
+
+.modal-desc {
+  font-size: 14px;
+  color: var(--gem-sys-color--on-surface-variant, var(--local-on-surface-variant));
   margin: 0;
 }
 
-.favorite-text { color: var(--gem-sys-color--on-surface, var(--local-on-surface)); }
-
-/* Sohbete git linki */
-.favorite-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
+.modal-desc-sub {
   font-size: 12px;
-  text-decoration: none;
-  border-radius: 6px;
-  padding: 2px 6px;
-  transition: background-color 0.15s;
-  align-self: flex-start;
-}
-
-.favorite-link .google-symbols { font-size: 14px; }
-
-.favorite-link { color: var(--gem-sys-color--primary, var(--local-primary)); }
-.favorite-link:hover { background-color: var(--gem-sys-color--surface-container-highest, var(--local-surface-container-highest)); }
-
-/* Kaydırma çubuğu */
-.modal-content.favorites-list::-webkit-scrollbar {
-  width: 6px;
-}
-
-.modal-content.favorites-list::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.modal-content.favorites-list::-webkit-scrollbar-thumb {
-  background: var(--gem-sys-color--surface-container-highest, var(--local-surface-container-highest));
-  border-radius: 3px;
+  color: var(--gem-sys-color--on-surface-variant, var(--local-on-surface-variant));
+  opacity: 0.8;
+  max-width: 280px;
+  margin: 0;
 }
