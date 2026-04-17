@@ -53,11 +53,41 @@ const ConstructionIcon = ({ size = 40, fill = "currentColor" }) => (
   </svg>
 )
 
+const CopyIcon = ({ size = 20, fill = "currentColor" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill={fill}>
+    <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+  </svg>
+)
+
+const CheckIcon = ({ size = 20, fill = "currentColor" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill={fill}>
+    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+  </svg>
+)
+
+const SearchIcon = ({ size = 20, fill = "currentColor" }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill={fill}>
+    <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+  </svg>
+)
+
 const GeminiModal = () => {
   const [activeModal, setActiveModal] = useState<string | null>(null)
   const [isDark, setIsDark] = useState(true)
   const [favorites, setFavorites] = useState<FavoriteAnswer[]>([])
   const [prompts, setPrompts] = useState<SavedPrompt[]>([])
+
+  // UI State for Features
+  const [searchQuery, setSearchQuery] = useState("")
+  const [copiedIds, setCopiedIds] = useState<Record<string, boolean>>({})
+  const [expandedIds, setExpandedIds] = useState<Record<string, boolean>>({})
+
+  // Reset states when modal changes
+  useEffect(() => {
+    setSearchQuery("")
+    setCopiedIds({})
+    setExpandedIds({})
+  }, [activeModal])
 
   useEffect(() => {
     // 1. Tema dinleyici
@@ -128,6 +158,23 @@ const GeminiModal = () => {
     })
   }
 
+  // Panoya kopyalama aracı
+  const copyToClipboard = async (id: string, text: string) => {
+    try {
+      await navigator.clipboard.writeText(text)
+      setCopiedIds((prev) => ({ ...prev, [id]: true }))
+      setTimeout(() => {
+        setCopiedIds((prev) => ({ ...prev, [id]: false }))
+      }, 2000)
+    } catch (err) {
+      console.error("Kopyalama hatası:", err)
+    }
+  }
+
+  const toggleExpand = (id: string) => {
+    setExpandedIds((prev) => ({ ...prev, [id]: !prev[id] }))
+  }
+
   if (!activeModal) return null
 
   const modalTitles = {
@@ -135,6 +182,15 @@ const GeminiModal = () => {
     notes: "My Notes",
     prompts: "İstem Kütüphanesi"
   }
+
+  // Filtrelenmiş veri
+  const filteredFavorites = favorites.filter((f) =>
+    f.text.toLowerCase().includes(searchQuery.toLowerCase())
+  )
+  
+  const filteredPrompts = prompts.filter((p) =>
+    p.text.toLowerCase().includes(searchQuery.toLowerCase())
+  )
 
   return (
     <div className={`modal-overlay ${isDark ? "dark" : ""}`}>
@@ -173,6 +229,21 @@ const GeminiModal = () => {
           </button>
         </div>
 
+        {(activeModal === "favorites" || activeModal === "prompts") && (
+          <div className="modal-search-container">
+            <span className="modal-search-icon">
+              <SearchIcon size={20} />
+            </span>
+            <input
+              type="text"
+              className="modal-search-input"
+              placeholder={`${modalTitles[activeModal as keyof typeof modalTitles]} içinde ara...`}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+        )}
+
         <div className="modal-content">
           {(activeModal === "favorites" || activeModal === "prompts") && (
             <h3 className="list-header">En son</h3>
@@ -190,46 +261,68 @@ const GeminiModal = () => {
                   ekleyebilirsin.
                 </p>
               </div>
+            ) : filteredFavorites.length === 0 ? (
+              <div className="favorites-empty">
+                <p className="modal-desc">Aramanızla eşleşen favori bulunamadı.</p>
+              </div>
             ) : (
               <ul className="item-list">
-                {favorites.map((fav) => (
-                  <li key={fav.id} className="list-item-container">
-                    <div className="list-item-main">
-                      <span className="list-item-icon star">
-                        <StarIcon size={24} />
-                      </span>
-                      <div className="list-item-text">
-                        <div className="list-item-title">{fav.text}</div>
-                        <div className="list-item-metadata">
-                          <span>
-                            {new Date(fav.savedAt).toLocaleDateString("tr-TR", {
-                              day: "numeric",
-                              month: "long",
-                              year: "numeric"
-                            })}
-                          </span>
-                          <span className="separator">•</span>
-                          <a
-                            href={fav.url}
-                            className="favorite-link"
-                            target="_blank"
-                            rel="noreferrer">
-                            <OpenInNewIcon size={14} />
-                            Sohbete git
-                          </a>
+                {filteredFavorites.map((fav) => {
+                  const isExpanded = expandedIds[fav.id]
+                  return (
+                    <li key={fav.id} className="list-item-container">
+                      <div className="list-item-main">
+                        <span className="list-item-icon star">
+                          <StarIcon size={24} />
+                        </span>
+                        <div className="list-item-text">
+                          <div className={`list-item-title ${isExpanded ? "expanded" : ""}`}>
+                            {fav.text}
+                          </div>
+                          {fav.text.length > 200 && (
+                            <button
+                              className="favorite-expand-btn"
+                              onClick={() => toggleExpand(fav.id)}>
+                              {isExpanded ? "Daha az göster" : "Devamını oku..."}
+                            </button>
+                          )}
+                          <div className="list-item-metadata">
+                            <span>
+                              {new Date(fav.savedAt).toLocaleDateString("tr-TR", {
+                                day: "numeric",
+                                month: "long",
+                                year: "numeric"
+                              })}
+                            </span>
+                            <span className="separator">•</span>
+                            <a
+                              href={fav.url}
+                              className="favorite-link"
+                              target="_blank"
+                              rel="noreferrer">
+                              <OpenInNewIcon size={14} />
+                              Sohbete git
+                            </a>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="list-item-actions">
-                      <button
-                        className="favorite-delete-btn"
-                        onClick={() => deleteFavorite(fav.id)}
-                        aria-label="Sil">
-                        <CloseIcon size={20} />
-                      </button>
-                    </div>
-                  </li>
-                ))}
+                      <div className="list-item-actions">
+                        <button
+                          className={`favorite-copy-btn ${copiedIds[fav.id] ? "copied" : ""}`}
+                          onClick={() => copyToClipboard(fav.id, fav.text)}
+                          title="Metni kopyala">
+                          {copiedIds[fav.id] ? <CheckIcon size={20} /> : <CopyIcon size={20} />}
+                        </button>
+                        <button
+                          className="favorite-delete-btn"
+                          onClick={() => deleteFavorite(fav.id)}
+                          title="Sil">
+                          <CloseIcon size={20} />
+                        </button>
+                      </div>
+                    </li>
+                  )
+                })}
               </ul>
             )
           ) : activeModal === "prompts" ? (
@@ -244,46 +337,68 @@ const GeminiModal = () => {
                   istemlerinizi kaydedebilirsiniz.
                 </p>
               </div>
+            ) : filteredPrompts.length === 0 ? (
+              <div className="favorites-empty">
+                <p className="modal-desc">Aramanızla eşleşen istem bulunamadı.</p>
+              </div>
             ) : (
               <ul className="item-list">
-                {prompts.map((p) => (
-                  <li key={p.id} className="list-item-container">
-                    <div className="list-item-main">
-                      <span className="list-item-icon bookmark">
-                        <BookmarkIcon size={24} />
-                      </span>
-                      <div className="list-item-text">
-                        <div className="list-item-title">{p.text}</div>
-                        <div className="list-item-metadata">
-                          <span>
-                            {new Date(p.savedAt).toLocaleDateString("tr-TR", {
-                              day: "numeric",
-                              month: "long",
-                              year: "numeric"
-                            })}
-                          </span>
-                          <span className="separator">•</span>
-                          <a
-                            href={p.url}
-                            className="favorite-link"
-                            target="_blank"
-                            rel="noreferrer">
-                            <OpenInNewIcon size={14} />
-                            Sohbete git
-                          </a>
+                {filteredPrompts.map((p) => {
+                  const isExpanded = expandedIds[p.id]
+                  return (
+                    <li key={p.id} className="list-item-container">
+                      <div className="list-item-main">
+                        <span className="list-item-icon bookmark">
+                          <BookmarkIcon size={24} />
+                        </span>
+                        <div className="list-item-text">
+                          <div className={`list-item-title ${isExpanded ? "expanded" : ""}`}>
+                            {p.text}
+                          </div>
+                          {p.text.length > 200 && (
+                            <button
+                              className="favorite-expand-btn"
+                              onClick={() => toggleExpand(p.id)}>
+                              {isExpanded ? "Daha az göster" : "Devamını oku..."}
+                            </button>
+                          )}
+                          <div className="list-item-metadata">
+                            <span>
+                              {new Date(p.savedAt).toLocaleDateString("tr-TR", {
+                                day: "numeric",
+                                month: "long",
+                                year: "numeric"
+                              })}
+                            </span>
+                            <span className="separator">•</span>
+                            <a
+                              href={p.url}
+                              className="favorite-link"
+                              target="_blank"
+                              rel="noreferrer">
+                              <OpenInNewIcon size={14} />
+                              Sohbete git
+                            </a>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="list-item-actions">
-                      <button
-                        className="favorite-delete-btn"
-                        onClick={() => deletePrompt(p.id)}
-                        aria-label="Sil">
-                        <CloseIcon size={20} />
-                      </button>
-                    </div>
-                  </li>
-                ))}
+                      <div className="list-item-actions">
+                        <button
+                          className={`favorite-copy-btn ${copiedIds[p.id] ? "copied" : ""}`}
+                          onClick={() => copyToClipboard(p.id, p.text)}
+                          title="İstemi kopyala">
+                          {copiedIds[p.id] ? <CheckIcon size={20} /> : <CopyIcon size={20} />}
+                        </button>
+                        <button
+                          className="favorite-delete-btn"
+                          onClick={() => deletePrompt(p.id)}
+                          title="Sil">
+                          <CloseIcon size={20} />
+                        </button>
+                      </div>
+                    </li>
+                  )
+                })}
               </ul>
             )
           ) : (

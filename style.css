@@ -317,18 +317,42 @@ select, textarea {
 .list-item-text {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 6px;
   overflow: hidden;
+  flex: 1;
 }
 
 .list-item-title {
-  font-size: 16px;
-  line-height: 24px;
+  font-size: 14px;
+  line-height: 22px;
   font-weight: 400;
   color: var(--gem-sys-color--on-surface, var(--local-on-surface));
-  white-space: nowrap;
+  white-space: pre-wrap;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+  word-break: break-word;
+}
+
+.list-item-title.expanded {
+  -webkit-line-clamp: unset;
+  display: block;
+}
+
+.favorite-expand-btn {
+  background: transparent;
+  border: none;
+  color: var(--gem-sys-color--primary, var(--local-primary));
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0;
+  align-self: flex-start;
+}
+.favorite-expand-btn:hover {
+  text-decoration: underline;
 }
 
 .list-item-metadata {
@@ -356,13 +380,17 @@ select, textarea {
   text-decoration: underline;
 }
 
-/* Silme Butonu */
+/* Silme/Kopyalama Butonları */
 .list-item-actions {
   display: flex;
+  flex-direction: row;
   align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
   margin-left: 12px;
 }
 
+.favorite-copy-btn,
 .favorite-delete-btn {
   width: 40px;
   height: 40px;
@@ -373,16 +401,66 @@ select, textarea {
   background: transparent;
   border: none;
   cursor: pointer;
-  transition: background-color 0.15s;
+  transition: background-color 0.15s, color 0.15s;
   flex-shrink: 0;
+}
+
+.favorite-copy-btn {
+  color: var(--gem-sys-color--primary, var(--local-primary));
+}
+
+.favorite-copy-btn:hover {
+  background-color: var(--gem-sys-color--surface-container-high, rgba(255,255,255,0.05));
+}
+
+.favorite-delete-btn {
   color: var(--gem-sys-color--on-surface-variant, var(--local-on-surface-variant));
 }
 
-.favorite-delete-btn .google-symbols { font-size: 20px; }
-
 .favorite-delete-btn:hover {
-  background-color: var(--gem-sys-color--surface-container-high, rgba(255,255,255,0.05));
+  background-color: rgba(234, 67, 53, 0.1); 
+  color: #ea4335; /* Google Red */
+}
+
+.favorite-copy-btn.copied {
+  color: #34a853; /* Success green */
+}
+
+/* Modal Search */
+.modal-search-container {
+  display: flex;
+  align-items: center;
+  background-color: var(--gem-sys-color--surface, var(--local-surface-container-low));
+  border: 1px solid var(--gem-sys-color--outline-variant, var(--local-outline-variant));
+  border-radius: 20px;
+  padding: 8px 16px;
+  margin: 0 24px 16px 24px;
+  gap: 8px;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.modal-search-container:focus-within {
+  border-color: var(--gem-sys-color--primary, var(--local-primary));
+  box-shadow: 0 0 0 1px var(--gem-sys-color--primary, var(--local-primary));
+}
+
+.modal-search-icon {
+  color: var(--gem-sys-color--on-surface-variant, var(--local-on-surface-variant));
+  display: flex;
+  align-items: center;
+}
+
+.modal-search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 14px;
   color: var(--gem-sys-color--on-surface, var(--local-on-surface));
+}
+
+.modal-search-input::placeholder {
+  color: var(--gem-sys-color--on-surface-variant, var(--local-on-surface-variant));
 }
 
 /* Boş Durum (Empty State) */
