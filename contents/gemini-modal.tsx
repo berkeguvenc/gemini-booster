@@ -179,8 +179,8 @@ const GeminiModal = () => {
 
   const modalTitles = {
     favorites: "Favori Cevaplar",
-    notes: "My Notes",
-    prompts: "İstem Kütüphanesi"
+    prompts: "İstem Kütüphanesi",
+    notes: "Notlarım",
   }
 
   // Filtrelenmiş veri

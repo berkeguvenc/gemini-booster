@@ -45,7 +45,7 @@ const GeminiSidebar = () => {
 
           <button onClick={() => openModal("notes")} className="side-nav-btn">
             <span className="side-nav-icon icon-blue">📝</span>
-            <span className="gds-label-l">My Notes</span>
+            <span className="gds-label-l">Notlarım</span>
           </button>
         </div>
       </div>
