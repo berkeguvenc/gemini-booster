@@ -494,3 +494,66 @@ select, textarea {
   max-width: 280px;
   margin: 0;
 }
+
+/* Bulk Delete Button */
+.bulk-delete-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background-color: transparent;
+  color: var(--gem-sys-color--on-surface-variant, var(--local-on-surface-variant));
+  border: 1px solid var(--gem-sys-color--outline-variant, rgba(128, 128, 128, 0.2));
+  border-radius: 8px;
+  padding: 4px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-left: auto; /* Push it to the right of the header */
+}
+
+.bulk-delete-btn:hover:not(:disabled) {
+  background-color: rgba(234, 67, 53, 0.1); 
+  color: #ea4335;
+  border-color: rgba(234, 67, 53, 0.3);
+}
+
+.bulk-delete-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.bulk-delete-btn .icon {
+  font-size: 14px;
+}
+
+.bulk-delete-btn.deleting {
+  animation: pulse-delete 1.5s infinite;
+}
+
+.bulk-delete-btn.cancel {
+  color: var(--gem-sys-color--on-surface-variant, var(--local-on-surface-variant));
+  border-color: var(--gem-sys-color--outline-variant, rgba(128, 128, 128, 0.2));
+}
+
+.bulk-delete-btn.cancel:hover:not(:disabled) {
+  background-color: var(--gem-sys-color--surface-container-high, rgba(128, 128, 128, 0.1));
+  color: var(--gem-sys-color--on-surface, var(--local-on-surface));
+  border-color: var(--gem-sys-color--outline-variant, rgba(128, 128, 128, 0.4));
+}
+
+@keyframes pulse-delete {
+  0% { opacity: 1; color: #ea4335; }
+  50% { opacity: 0.5; color: #ea4335; }
+  100% { opacity: 1; color: #ea4335; }
+}
+
+/* Select Mode Cursor */
+body.gemini-bulk-select-mode a[data-test-id="conversation"] {
+  cursor: cell !important;
+}
+
+body.gemini-bulk-select-mode a[data-test-id="conversation"]:hover {
+  background-color: rgba(26, 115, 232, 0.1) !important;
+}
+
