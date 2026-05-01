@@ -34,17 +34,17 @@ const GeminiSidebar = () => {
           <button
             onClick={() => openModal("favorites")}
             className="side-nav-btn">
-            <span className="side-nav-icon icon-amber">⭐</span>
+            <span className="google-symbols side-nav-icon icon-gray">star</span>
             <span className="gds-label-l">Favori Cevaplar</span>
           </button>
 
           <button onClick={() => openModal("prompts")} className="side-nav-btn">
-            <span className="side-nav-icon icon-gray">📚</span>
+            <span className="google-symbols side-nav-icon icon-gray">bookmark</span>
             <span className="gds-label-l">İstem Kütüphanesi</span>
           </button>
 
           <button onClick={() => openModal("notes")} className="side-nav-btn">
-            <span className="side-nav-icon icon-blue">📝</span>
+            <span className="google-symbols side-nav-icon icon-gray">note_stack</span>
             <span className="gds-label-l">Notlarım</span>
           </button>
         </div>
