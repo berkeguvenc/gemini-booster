@@ -6,6 +6,10 @@ function IndexPopup() {
   const [bulkDeleteEnabled, setBulkDeleteEnabled] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
   const [copiedId, setCopiedId] = useState<string | null>(null)
+  
+  // Custom Modals State
+  const [alertMessage, setAlertMessage] = useState("")
+  const [showConfirm, setShowConfirm] = useState(false)
 
   useEffect(() => {
     // Verileri chrome.storage'dan çek
@@ -49,18 +53,18 @@ function IndexPopup() {
       try {
         const jsonData = JSON.parse(event.target?.result as string)
         if (!Array.isArray(jsonData)) {
-          alert("Hatalı dosya formatı! Lütfen geçerli bir JSON dizisi yükleyin.")
+          setAlertMessage("Hatalı dosya formatı! Lütfen geçerli bir JSON dizisi yükleyin.")
           return
         }
         const key = type === "prompts" ? "gemini_prompts" : "gemini_favorites"
 
         chrome.storage.sync.set({ [key]: jsonData }, () => {
-          alert("Veriler başarıyla içe aktarıldı!")
+          setAlertMessage("Veriler başarıyla içe aktarıldı!")
           if (type === "prompts") setPrompts(jsonData)
           if (type === "favorites") setFavorites(jsonData)
         })
       } catch (error) {
-        alert("Dosya okunamadı. Geçerli bir JSON dosyası olduğundan emin olun.")
+        setAlertMessage("Dosya okunamadı. Geçerli bir JSON dosyası olduğundan emin olun.")
       }
     }
     reader.readAsText(file)
@@ -73,17 +77,17 @@ function IndexPopup() {
     chrome.storage.sync.set({ gbr_settings_bulk_delete: val })
   }
 
-  const handleClearAll = () => {
-    const confirmDelete = window.confirm(
-      "Tüm istemleri ve favori cevapları silmek istediğinize emin misiniz? Bu işlem geri alınamaz!"
-    )
-    if (confirmDelete) {
-      chrome.storage.sync.remove(["gemini_prompts", "gemini_favorites"], () => {
-        setPrompts([])
-        setFavorites([])
-        alert("Tüm veriler temizlendi.")
-      })
-    }
+  const handleClearAllClick = () => {
+    setShowConfirm(true)
+  }
+
+  const executeClearAll = () => {
+    setShowConfirm(false)
+    chrome.storage.sync.remove(["gemini_prompts", "gemini_favorites"], () => {
+      setPrompts([])
+      setFavorites([])
+      setAlertMessage("Tüm veriler temizlendi.")
+    })
   }
 
   const handleCopy = (id: string, text: string) => {
@@ -309,7 +313,7 @@ function IndexPopup() {
             {/* Tehlikeli Bölge */}
             <div style={{ marginTop: "20px", borderTop: "1px solid #333", paddingTop: "16px", textAlign: "center" }}>
               <button
-                onClick={handleClearAll}
+                onClick={handleClearAllClick}
                 style={{
                   background: "transparent",
                   color: "#ff7675",
@@ -325,6 +329,41 @@ function IndexPopup() {
           </>
         )}
       </div>
+
+      {/* Confirmation Modal */}
+      {showConfirm && (
+        <div style={overlayStyle}>
+          <div style={modalStyle}>
+            <h3 style={modalTitleStyle}>Verileri Temizle</h3>
+            <p style={modalTextStyle}>
+              Tüm istemleri ve favori cevapları silmek istediğinize emin misiniz? Bu işlem geri alınamaz!
+            </p>
+            <div style={modalActionsStyle}>
+              <button onClick={() => setShowConfirm(false)} style={modalCancelBtnStyle}>
+                İptal
+              </button>
+              <button onClick={executeClearAll} style={modalDeleteBtnStyle}>
+                Evet, Sil
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Alert Modal */}
+      {alertMessage && (
+        <div style={overlayStyle}>
+          <div style={modalStyle}>
+            <h3 style={modalTitleStyle}>Bilgi</h3>
+            <p style={modalTextStyle}>{alertMessage}</p>
+            <div style={modalActionsStyle}>
+              <button onClick={() => setAlertMessage("")} style={modalPrimaryBtnStyle}>
+                Tamam
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   )
 }
@@ -419,5 +458,76 @@ const copyBtnStyle = (copied: boolean): React.CSSProperties => ({
   minWidth: "60px",
   transition: "background 0.2s"
 })
+
+// Modal Styles
+const overlayStyle: React.CSSProperties = {
+  position: "fixed",
+  top: 0,
+  left: 0,
+  width: "100%",
+  height: "100%",
+  backgroundColor: "rgba(0, 0, 0, 0.6)",
+  backdropFilter: "blur(2px)",
+  zIndex: 9999,
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center"
+}
+
+const modalStyle: React.CSSProperties = {
+  backgroundColor: "#1e1f20",
+  color: "#e3e3e3",
+  padding: "20px",
+  borderRadius: "12px",
+  width: "280px",
+  boxShadow: "0 8px 32px rgba(0, 0, 0, 0.4)",
+}
+
+const modalTitleStyle: React.CSSProperties = {
+  margin: "0 0 12px 0",
+  fontSize: "16px",
+  fontWeight: 600
+}
+
+const modalTextStyle: React.CSSProperties = {
+  margin: "0 0 20px 0",
+  fontSize: "13px",
+  lineHeight: "1.5",
+  color: "#c4c7c5"
+}
+
+const modalActionsStyle: React.CSSProperties = {
+  display: "flex",
+  justifyContent: "flex-end",
+  gap: "8px"
+}
+
+const modalBtnBaseStyle: React.CSSProperties = {
+  padding: "8px 16px",
+  borderRadius: "6px",
+  fontSize: "13px",
+  fontWeight: 500,
+  cursor: "pointer",
+  border: "none",
+  transition: "background-color 0.2s"
+}
+
+const modalCancelBtnStyle: React.CSSProperties = {
+  ...modalBtnBaseStyle,
+  backgroundColor: "transparent",
+  color: "#a8c7fa"
+}
+
+const modalDeleteBtnStyle: React.CSSProperties = {
+  ...modalBtnBaseStyle,
+  backgroundColor: "#f28b82",
+  color: "#000"
+}
+
+const modalPrimaryBtnStyle: React.CSSProperties = {
+  ...modalBtnBaseStyle,
+  backgroundColor: "#a8c7fa",
+  color: "#000"
+}
 
 export default IndexPopup

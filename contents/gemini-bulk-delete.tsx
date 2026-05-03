@@ -26,6 +26,8 @@ const GeminiBulkDelete = () => {
   const [enabled, setEnabled] = useState(true)
   const [mode, setMode] = useState<"idle" | "selecting" | "deleting">("idle")
   const [selectedHrefs, setSelectedHrefs] = useState<Set<string>>(new Set())
+  const [showConfirm, setShowConfirm] = useState(false)
+  const [alertMessage, setAlertMessage] = useState("")
 
   useEffect(() => {
     chrome.storage.sync.get("gbr_settings_bulk_delete", (res) => {
@@ -103,18 +105,17 @@ const GeminiBulkDelete = () => {
     setSelectedHrefs(new Set())
   }
 
-  const handleDeleteSelected = async () => {
+  const handleDeleteClick = () => {
     if (selectedHrefs.size === 0) {
-      alert("Lütfen silinecek sohbetleri seçin.")
+      setAlertMessage("Lütfen silinecek sohbetleri seçin.")
       return
     }
+    setShowConfirm(true)
+  }
 
-    const confirmed = window.confirm(
-      `Seçilen ${selectedHrefs.size} sohbeti silmek istediğinize emin misiniz?`
-    )
-    if (!confirmed) return
-
+  const executeDelete = async () => {
     setMode("deleting")
+    setShowConfirm(false)
 
     try {
       // Iterate through selected items
@@ -182,10 +183,10 @@ const GeminiBulkDelete = () => {
           document.body.click() // try to close dialog
         }
       }
-      alert("Seçilen sohbetler başarıyla silindi.")
+      setAlertMessage("Seçilen sohbetler başarıyla silindi.")
     } catch (err) {
       console.error("Silme işlemi sırasında hata:", err)
-      alert("Bir hata oluştu, işlem durduruldu.")
+      setAlertMessage("Bir hata oluştu, işlem durduruldu.")
     } finally {
       setMode("idle")
       setSelectedHrefs(new Set())
@@ -250,27 +251,146 @@ const GeminiBulkDelete = () => {
   }
 
   return (
-    <div style={{ display: "flex", gap: "8px", marginLeft: "auto" }}>
-      <button
-        onClick={handleCancelSelect}
-        disabled={mode === "deleting"}
-        className="bulk-delete-btn cancel"
-        style={{ marginLeft: 0 }}>
-        <span className="text">İptal</span>
-      </button>
-      <button
-        onClick={handleDeleteSelected}
-        disabled={mode === "deleting" || selectedHrefs.size === 0}
-        className={`bulk-delete-btn ${mode === "deleting" ? "deleting" : ""}`}
-        style={{ marginLeft: 0 }}
-        title="Seçilenleri Sil">
-        <span className="icon">🗑️</span>
-        <span className="text">
-          {mode === "deleting" ? "Siliniyor..." : `Sil (${selectedHrefs.size})`}
-        </span>
-      </button>
-    </div>
+    <>
+      <div style={{ display: "flex", gap: "8px", marginLeft: "auto" }}>
+        <button
+          onClick={handleCancelSelect}
+          disabled={mode === "deleting"}
+          className="bulk-delete-btn cancel"
+          style={{ marginLeft: 0 }}>
+          <span className="text">İptal</span>
+        </button>
+        <button
+          onClick={handleDeleteClick}
+          disabled={mode === "deleting" || selectedHrefs.size === 0}
+          className={`bulk-delete-btn ${mode === "deleting" ? "deleting" : ""}`}
+          style={{ marginLeft: 0 }}
+          title="Seçilenleri Sil">
+          <span className="icon">🗑️</span>
+          <span className="text">
+            {mode === "deleting" ? "Siliniyor..." : `Sil (${selectedHrefs.size})`}
+          </span>
+        </button>
+      </div>
+
+      {/* Confirmation Modal */}
+      {showConfirm && (
+        <div style={overlayStyle}>
+          <div style={modalStyle}>
+            <h3 style={modalTitleStyle}>Sohbetleri Sil</h3>
+            <p style={modalTextStyle}>
+              Seçilen {selectedHrefs.size} sohbeti kalıcı olarak silmek istediğinize emin misiniz? Bu işlem geri alınamaz.
+            </p>
+            <div style={modalActionsStyle}>
+              <button
+                onClick={() => setShowConfirm(false)}
+                style={modalCancelBtnStyle}
+              >
+                İptal
+              </button>
+              <button
+                onClick={executeDelete}
+                style={modalDeleteBtnStyle}
+              >
+                Evet, Sil
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Alert Modal */}
+      {alertMessage && (
+        <div style={overlayStyle}>
+          <div style={modalStyle}>
+            <h3 style={modalTitleStyle}>Bilgi</h3>
+            <p style={modalTextStyle}>{alertMessage}</p>
+            <div style={modalActionsStyle}>
+              <button
+                onClick={() => setAlertMessage("")}
+                style={modalPrimaryBtnStyle}
+              >
+                Tamam
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   )
+}
+
+// Modal Styles
+const overlayStyle: React.CSSProperties = {
+  position: "fixed",
+  top: 0,
+  left: 0,
+  width: "100vw",
+  height: "100vh",
+  backgroundColor: "rgba(0, 0, 0, 0.5)",
+  backdropFilter: "blur(2px)",
+  zIndex: 999999,
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center"
+}
+
+const modalStyle: React.CSSProperties = {
+  backgroundColor: "var(--gem-sys-color--surface, #1e1f20)",
+  color: "var(--gem-sys-color--on-surface, #e3e3e3)",
+  padding: "24px",
+  borderRadius: "16px",
+  maxWidth: "400px",
+  width: "90%",
+  boxShadow: "0 8px 32px rgba(0, 0, 0, 0.4)",
+  fontFamily: "'Google Sans', 'Google Sans Flex', Roboto, sans-serif"
+}
+
+const modalTitleStyle: React.CSSProperties = {
+  margin: "0 0 16px 0",
+  fontSize: "20px",
+  fontWeight: 500
+}
+
+const modalTextStyle: React.CSSProperties = {
+  margin: "0 0 24px 0",
+  fontSize: "14px",
+  lineHeight: "1.5",
+  color: "var(--gem-sys-color--on-surface-variant, #c4c7c5)"
+}
+
+const modalActionsStyle: React.CSSProperties = {
+  display: "flex",
+  justifyContent: "flex-end",
+  gap: "12px"
+}
+
+const modalBtnBaseStyle: React.CSSProperties = {
+  padding: "10px 20px",
+  borderRadius: "8px",
+  fontSize: "14px",
+  fontWeight: 500,
+  cursor: "pointer",
+  border: "none",
+  transition: "background-color 0.2s"
+}
+
+const modalCancelBtnStyle: React.CSSProperties = {
+  ...modalBtnBaseStyle,
+  backgroundColor: "transparent",
+  color: "var(--gem-sys-color--primary, #a8c7fa)"
+}
+
+const modalDeleteBtnStyle: React.CSSProperties = {
+  ...modalBtnBaseStyle,
+  backgroundColor: "#f28b82", // Google Red light
+  color: "#000"
+}
+
+const modalPrimaryBtnStyle: React.CSSProperties = {
+  ...modalBtnBaseStyle,
+  backgroundColor: "var(--gem-sys-color--primary, #a8c7fa)",
+  color: "var(--gem-sys-color--on-primary, #000)"
 }
 
 export default GeminiBulkDelete
