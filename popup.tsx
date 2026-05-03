@@ -3,6 +3,7 @@ import { useState, useEffect } from "react"
 function IndexPopup() {
   const [prompts, setPrompts] = useState<any[]>([])
   const [favorites, setFavorites] = useState<any[]>([])
+  const [notes, setNotes] = useState<any[]>([])
   const [bulkDeleteEnabled, setBulkDeleteEnabled] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
   const [copiedId, setCopiedId] = useState<string | null>(null)
@@ -14,10 +15,11 @@ function IndexPopup() {
   useEffect(() => {
     // Verileri chrome.storage'dan çek
     chrome.storage.sync.get(
-      ["gemini_prompts", "gemini_favorites", "gbr_settings_bulk_delete"],
+      ["gemini_prompts", "gemini_favorites", "gemini_notes", "gbr_settings_bulk_delete"],
       (result) => {
         setPrompts(result.gemini_prompts || [])
         setFavorites(result.gemini_favorites || [])
+        setNotes(result.gemini_notes || [])
         if (result.gbr_settings_bulk_delete !== undefined) {
           setBulkDeleteEnabled(result.gbr_settings_bulk_delete)
         }
@@ -25,26 +27,26 @@ function IndexPopup() {
     )
   }, [])
 
-  const handleExport = (type: "prompts" | "favorites") => {
-    const key = type === "prompts" ? "gemini_prompts" : "gemini_favorites"
-    chrome.storage.sync.get(key, (result) => {
-      const data = result[key] || []
-      const blob = new Blob([JSON.stringify(data, null, 2)], {
+  const handleExport = () => {
+    chrome.storage.sync.get(["gemini_prompts", "gemini_favorites", "gemini_notes"], (result) => {
+      const exportData = {
+        prompts: result.gemini_prompts || [],
+        favorites: result.gemini_favorites || [],
+        notes: result.gemini_notes || []
+      }
+      const blob = new Blob([JSON.stringify(exportData, null, 2)], {
         type: "application/json"
       })
       const url = URL.createObjectURL(blob)
       const a = document.createElement("a")
       a.href = url
-      a.download = `gemini_${type}_backup_${new Date().toISOString().split("T")[0]}.json`
+      a.download = `gemini_booster_backup_${new Date().toISOString().split("T")[0]}.json`
       a.click()
       URL.revokeObjectURL(url)
     })
   }
 
-  const handleImport = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    type: "prompts" | "favorites"
-  ) => {
+  const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
 
@@ -52,16 +54,26 @@ function IndexPopup() {
     reader.onload = (event) => {
       try {
         const jsonData = JSON.parse(event.target?.result as string)
-        if (!Array.isArray(jsonData)) {
-          setAlertMessage("Hatalı dosya formatı! Lütfen geçerli bir JSON dizisi yükleyin.")
+        
+        // Basit format doğrulama
+        if (typeof jsonData !== 'object' || Array.isArray(jsonData)) {
+          setAlertMessage("Hatalı dosya formatı! Lütfen geçerli bir yedek dosyası yükleyin.")
           return
         }
-        const key = type === "prompts" ? "gemini_prompts" : "gemini_favorites"
 
-        chrome.storage.sync.set({ [key]: jsonData }, () => {
+        const newPrompts = Array.isArray(jsonData.prompts) ? jsonData.prompts : []
+        const newFavorites = Array.isArray(jsonData.favorites) ? jsonData.favorites : []
+        const newNotes = Array.isArray(jsonData.notes) ? jsonData.notes : []
+
+        chrome.storage.sync.set({
+          gemini_prompts: newPrompts,
+          gemini_favorites: newFavorites,
+          gemini_notes: newNotes
+        }, () => {
           setAlertMessage("Veriler başarıyla içe aktarıldı!")
-          if (type === "prompts") setPrompts(jsonData)
-          if (type === "favorites") setFavorites(jsonData)
+          setPrompts(newPrompts)
+          setFavorites(newFavorites)
+          setNotes(newNotes)
         })
       } catch (error) {
         setAlertMessage("Dosya okunamadı. Geçerli bir JSON dosyası olduğundan emin olun.")
@@ -83,9 +95,10 @@ function IndexPopup() {
 
   const executeClearAll = () => {
     setShowConfirm(false)
-    chrome.storage.sync.remove(["gemini_prompts", "gemini_favorites"], () => {
+    chrome.storage.sync.remove(["gemini_prompts", "gemini_favorites", "gemini_notes"], () => {
       setPrompts([])
       setFavorites([])
+      setNotes([])
       setAlertMessage("Tüm veriler temizlendi.")
     })
   }
@@ -99,6 +112,7 @@ function IndexPopup() {
 
   const filteredPrompts = prompts.filter((p) => p.text?.toLowerCase().includes(searchQuery.toLowerCase()))
   const filteredFavorites = favorites.filter((f) => f.text?.toLowerCase().includes(searchQuery.toLowerCase()))
+  const filteredNotes = notes.filter((n) => n.text?.toLowerCase().includes(searchQuery.toLowerCase()))
   const isSearching = searchQuery.trim().length > 0
 
   return (
@@ -161,7 +175,7 @@ function IndexPopup() {
         <div style={{ marginBottom: "20px" }}>
           <input
             type="text"
-            placeholder="İstemlerde ve Favorilerde Ara..."
+            placeholder="Ara"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             style={{
@@ -211,7 +225,22 @@ function IndexPopup() {
               </div>
             )}
 
-            {filteredPrompts.length === 0 && filteredFavorites.length === 0 && (
+            {/* Not Sonuçları */}
+            {filteredNotes.length > 0 && (
+              <div style={{ marginBottom: "16px" }}>
+                <h4 style={{ margin: "0 0 8px 0", color: "#aaa", fontSize: "12px", textTransform: "uppercase" }}>Notlar ({filteredNotes.length})</h4>
+                {filteredNotes.map((n) => (
+                  <div key={n.id} style={searchResultStyle}>
+                    <div style={searchResultTextStyle}>{n.text}</div>
+                    <button onClick={() => handleCopy(n.id, n.text)} style={copyBtnStyle(copiedId === n.id)}>
+                      {copiedId === n.id ? "✓" : "Kopyala"}
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {filteredPrompts.length === 0 && filteredFavorites.length === 0 && filteredNotes.length === 0 && (
               <div style={{ textAlign: "center", color: "#888", fontSize: "13px", padding: "20px 0" }}>
                 Sonuç bulunamadı.
               </div>
@@ -224,8 +253,8 @@ function IndexPopup() {
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: "12px",
+                gridTemplateColumns: "1fr 1fr 1fr",
+                gap: "8px",
                 marginBottom: "20px"
               }}>
               <div style={statBoxStyle}>
@@ -238,6 +267,11 @@ function IndexPopup() {
                 <div style={statValueStyle}>{favorites.length}</div>
                 <div style={statLabelStyle}>Favoriler</div>
               </div>
+              <div style={statBoxStyle}>
+                <div style={statIconStyle}>📓</div>
+                <div style={statValueStyle}>{notes.length}</div>
+                <div style={statLabelStyle}>Notlar</div>
+              </div>
             </div>
 
             {/* Veri Yönetimi */}
@@ -246,10 +280,13 @@ function IndexPopup() {
               
               <div style={dataSectionStyle}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
-                  <span style={{ fontSize: "14px", fontWeight: "500" }}>İstem Kütüphanesi</span>
+                  <span style={{ fontSize: "14px", fontWeight: "500" }}>Tüm Veriler</span>
+                </div>
+                <div style={{ fontSize: "12px", color: "#888", marginBottom: "12px", lineHeight: "1.4" }}>
+                  İstemler, Favoriler ve Notlarınız tek bir dosyada yedeklenir.
                 </div>
                 <div style={{ display: "flex", gap: "8px" }}>
-                  <button style={btnStyle} onClick={() => handleExport("prompts")}>
+                  <button style={btnStyle} onClick={handleExport}>
                     Dışa Aktar
                   </button>
                   <label style={{ ...btnStyle, background: "#2a2a32", color: "#fff", border: "1px solid #444" }}>
@@ -258,27 +295,7 @@ function IndexPopup() {
                       type="file"
                       accept=".json"
                       style={{ display: "none" }}
-                      onChange={(e) => handleImport(e, "prompts")}
-                    />
-                  </label>
-                </div>
-              </div>
-
-              <div style={dataSectionStyle}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
-                  <span style={{ fontSize: "14px", fontWeight: "500" }}>Favori Cevaplar</span>
-                </div>
-                <div style={{ display: "flex", gap: "8px" }}>
-                  <button style={btnStyle} onClick={() => handleExport("favorites")}>
-                    Dışa Aktar
-                  </button>
-                  <label style={{ ...btnStyle, background: "#2a2a32", color: "#fff", border: "1px solid #444" }}>
-                    İçe Aktar
-                    <input
-                      type="file"
-                      accept=".json"
-                      style={{ display: "none" }}
-                      onChange={(e) => handleImport(e, "favorites")}
+                      onChange={handleImport}
                     />
                   </label>
                 </div>
