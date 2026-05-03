@@ -23,8 +23,25 @@ export const getInlineAnchor: PlasmoGetInlineAnchor = async () => {
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms))
 
 const GeminiBulkDelete = () => {
+  const [enabled, setEnabled] = useState(true)
   const [mode, setMode] = useState<"idle" | "selecting" | "deleting">("idle")
   const [selectedHrefs, setSelectedHrefs] = useState<Set<string>>(new Set())
+
+  useEffect(() => {
+    chrome.storage.sync.get("gbr_settings_bulk_delete", (res) => {
+      if (res.gbr_settings_bulk_delete !== undefined) {
+        setEnabled(res.gbr_settings_bulk_delete)
+      }
+    })
+
+    const listener = (changes: { [key: string]: chrome.storage.StorageChange }, namespace: string) => {
+      if (namespace === "sync" && changes.gbr_settings_bulk_delete) {
+        setEnabled(changes.gbr_settings_bulk_delete.newValue)
+      }
+    }
+    chrome.storage.onChanged.addListener(listener)
+    return () => chrome.storage.onChanged.removeListener(listener)
+  }, [])
 
   // Apply flexbox styles to the parent container to align the button perfectly
   useEffect(() => {
@@ -211,30 +228,14 @@ const GeminiBulkDelete = () => {
         `body.gemini-bulk-select-mode a[data-test-id="conversation"][href="${href}"] { 
            background-color: rgba(26, 115, 232, 0.15) !important; 
            border: 2px solid #1a73e8 !important; 
-        }`,
-        `body.gemini-bulk-select-mode a[data-test-id="conversation"][href="${href}"]::after {
-           content: '✔';
-           position: absolute;
-           right: 48px;
-           top: 50%;
-           transform: translateY(-50%);
-           background: #1a73e8;
-           color: white;
-           border-radius: 50%;
-           width: 20px;
-           height: 20px;
-           display: flex;
-           align-items: center;
-           justify-content: center;
-           font-size: 12px;
-           font-weight: bold;
-           z-index: 10;
         }`
       )
     })
 
     styleEl.textContent = cssRules.join("\n")
   }, [mode, selectedHrefs])
+
+  if (!enabled) return null
 
   if (mode === "idle") {
     return (
