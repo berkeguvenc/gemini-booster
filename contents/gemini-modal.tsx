@@ -288,7 +288,7 @@ const GeminiModal = () => {
                 </span>
                 <p className="modal-desc">Henüz favori yanıt kaydedilmedi.</p>
                 <p className="modal-desc-sub">
-                  Yanıtların altındaki ⭐ ikonuna tıklayarak favorilere
+                  Yanıtların altındaki <StarIcon size={16} /> ikonuna tıklayarak favorilere
                   ekleyebilirsin.
                 </p>
               </div>
@@ -364,7 +364,7 @@ const GeminiModal = () => {
                 </span>
                 <p className="modal-desc">Henüz kayıtlı istem (prompt) yok.</p>
                 <p className="modal-desc-sub">
-                  Kendi yazdığınız satırların altındaki 🔖 ikonuna tıklayarak
+                  Kendi yazdığınız satırların altındaki <BookmarkIcon size={16} /> ikonuna tıklayarak
                   istemlerinizi kaydedebilirsiniz.
                 </p>
               </div>
