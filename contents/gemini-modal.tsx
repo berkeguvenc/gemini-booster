@@ -4,6 +4,7 @@ import type { PlasmoCSConfig, PlasmoGetOverlayAnchor } from "plasmo"
 import { useEffect, useState } from "react"
 
 import type { FavoriteAnswer } from "~types/favorite"
+import type { Note } from "~types/note"
 import type { SavedPrompt } from "~types/prompt"
 
 export const getStyle = () => {
@@ -76,6 +77,8 @@ const GeminiModal = () => {
   const [isDark, setIsDark] = useState(true)
   const [favorites, setFavorites] = useState<FavoriteAnswer[]>([])
   const [prompts, setPrompts] = useState<SavedPrompt[]>([])
+  const [notes, setNotes] = useState<Note[]>([])
+  const [newNoteText, setNewNoteText] = useState("")
 
   // UI State for Features
   const [searchQuery, setSearchQuery] = useState("")
@@ -107,13 +110,14 @@ const GeminiModal = () => {
     }
     window.addEventListener("OPEN_GEMINI_MODAL", handleOpenModal)
 
-    // 3. Favoriler ve Prompts storage'dan yükle
+    // 3. Favoriler, Prompts ve Notları storage'dan yükle
     const loadData = () => {
       chrome.storage.sync.get(
-        ["gemini_favorites", "gemini_prompts"],
+        ["gemini_favorites", "gemini_prompts", "gemini_notes"],
         (result) => {
           setFavorites(result.gemini_favorites || [])
           setPrompts(result.gemini_prompts || [])
+          setNotes(result.gemini_notes || [])
         }
       )
     }
@@ -158,6 +162,29 @@ const GeminiModal = () => {
     })
   }
 
+  // Not Ekleme ve Silme
+  const saveNote = () => {
+    if (!newNoteText.trim()) return
+    const newNote: Note = {
+      id: "note_" + Date.now().toString() + Math.random().toString(36).substr(2, 5),
+      text: newNoteText,
+      createdAt: Date.now(),
+      updatedAt: Date.now()
+    }
+    const updated = [newNote, ...notes]
+    chrome.storage.sync.set({ gemini_notes: updated }, () => {
+      setNotes(updated)
+      setNewNoteText("")
+    })
+  }
+
+  const deleteNote = (id: string) => {
+    const updated = notes.filter((n) => n.id !== id)
+    chrome.storage.sync.set({ gemini_notes: updated }, () => {
+      setNotes(updated)
+    })
+  }
+
   // Panoya kopyalama aracı
   const copyToClipboard = async (id: string, text: string) => {
     try {
@@ -190,6 +217,10 @@ const GeminiModal = () => {
   
   const filteredPrompts = prompts.filter((p) =>
     p.text.toLowerCase().includes(searchQuery.toLowerCase())
+  )
+
+  const filteredNotes = notes.filter((n) =>
+    n.text.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
   return (
@@ -229,7 +260,7 @@ const GeminiModal = () => {
           </button>
         </div>
 
-        {(activeModal === "favorites" || activeModal === "prompts") && (
+        {(activeModal === "favorites" || activeModal === "prompts" || activeModal === "notes") && (
           <div className="modal-search-container">
             <span className="modal-search-icon">
               <SearchIcon size={20} />
@@ -401,17 +432,116 @@ const GeminiModal = () => {
                 })}
               </ul>
             )
-          ) : (
-            <div className="favorites-empty">
-              <span style={{ color: "var(--gem-sys-color--on-surface-variant)" }} className="modal-icon-placeholder">
-                <ConstructionIcon size={40} />
-              </span>
-              <p className="modal-desc">
-                {modalTitles[activeModal as keyof typeof modalTitles]} içerikleri
-                yakında eklenecek...
-              </p>
+          ) : activeModal === "notes" ? (
+            <div className="notes-container">
+              <div className="note-input-area" style={{ margin: "0 24px 0 24px" }}>
+                <textarea
+                  className="note-textarea"
+                  placeholder="Yeni bir not yazın..."
+                  value={newNoteText}
+                  onChange={(e) => setNewNoteText(e.target.value)}
+                  style={{
+                    width: "100%",
+                    minHeight: "80px",
+                    backgroundColor: "var(--gem-sys-color--surface-container-high, #282a2c)",
+                    color: "var(--gem-sys-color--on-surface, #e3e3e3)",
+                    border: "1px solid var(--gem-sys-color--outline-variant, #444746)",
+                    borderRadius: "12px",
+                    padding: "12px",
+                    fontSize: "14px",
+                    fontFamily: "inherit",
+                    resize: "vertical",
+                    outline: "none",
+                    marginBottom: "8px",
+                    boxSizing: "border-box"
+                  }}
+                />
+                <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                  <button
+                    onClick={saveNote}
+                    disabled={!newNoteText.trim()}
+                    style={{
+                      backgroundColor: "var(--gem-sys-color--primary, #a8c7fa)",
+                      color: "var(--gem-sys-color--on-primary, #000)",
+                      border: "none",
+                      padding: "8px 16px",
+                      borderRadius: "20px",
+                      fontSize: "14px",
+                      fontWeight: 500,
+                      cursor: newNoteText.trim() ? "pointer" : "not-allowed",
+                      opacity: newNoteText.trim() ? 1 : 0.5
+                    }}>
+                    Notu Kaydet
+                  </button>
+                </div>
+              </div>
+
+              {notes.length === 0 ? (
+                <div className="favorites-empty">
+                  <span style={{ color: "var(--gem-sys-color--on-surface-variant)" }} className="modal-icon-placeholder">
+                    <DocumentIcon size={40} />
+                  </span>
+                  <p className="modal-desc">Henüz hiç not eklemediniz.</p>
+                </div>
+              ) : filteredNotes.length === 0 ? (
+                <div className="favorites-empty">
+                  <p className="modal-desc">Aramanızla eşleşen not bulunamadı.</p>
+                </div>
+              ) : (
+                <ul className="item-list">
+                  {filteredNotes.map((n) => {
+                    const isExpanded = expandedIds[n.id]
+                    return (
+                      <li key={n.id} className="list-item-container">
+                        <div className="list-item-main">
+                          <span className="list-item-icon document">
+                            <DocumentIcon size={24} />
+                          </span>
+                          <div className="list-item-text">
+                            <div className={`list-item-title ${isExpanded ? "expanded" : ""}`} style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
+                              {n.text}
+                            </div>
+                            {n.text.length > 200 && (
+                              <button
+                                className="favorite-expand-btn"
+                                onClick={() => toggleExpand(n.id)}>
+                                {isExpanded ? "Daha az göster" : "Devamını oku..."}
+                              </button>
+                            )}
+                            <div className="list-item-metadata">
+                              <span>
+                                {new Date(n.createdAt).toLocaleDateString("tr-TR", {
+                                  day: "numeric",
+                                  month: "long",
+                                  year: "numeric",
+                                  hour: "2-digit",
+                                  minute: "2-digit"
+                                })}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="list-item-actions">
+                          <button
+                            className={`favorite-copy-btn ${copiedIds[n.id] ? "copied" : ""}`}
+                            onClick={() => copyToClipboard(n.id, n.text)}
+                            title="Notu kopyala">
+                            {copiedIds[n.id] ? <CheckIcon size={20} /> : <CopyIcon size={20} />}
+                          </button>
+                          <button
+                            className="favorite-delete-btn"
+                            onClick={() => deleteNote(n.id)}
+                            title="Sil">
+                            <CloseIcon size={20} />
+                          </button>
+                        </div>
+                      </li>
+                    )
+                  })}
+                </ul>
+              )}
             </div>
-          )}
+          ) : null}
         </div>
       </div>
     </div>
