@@ -3,6 +3,7 @@ import type { PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo"
 import { useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import "../i18n"
+import SidebarButton from "../components/SidebarButton"
 
 export const getStyle = () => {
   const style = document.createElement("style")
@@ -49,22 +50,21 @@ const GeminiSidebar = () => {
     <div className="gemini-sidebar-container">
       <div className="gemini-sidebar-content">
         <div className="sidebar-btn-group">
-          <button
+          <SidebarButton
+            icon="star"
+            label={t("favoriteAnswers")}
             onClick={() => openModal("favorites")}
-            className="side-nav-btn">
-            <span className="google-symbols side-nav-icon icon-gray">star</span>
-            <span className="gds-label-l">{t("favoriteAnswers")}</span>
-          </button>
-
-          <button onClick={() => openModal("prompts")} className="side-nav-btn">
-            <span className="google-symbols side-nav-icon icon-gray">bookmark</span>
-            <span className="gds-label-l">{t("promptLibrary")}</span>
-          </button>
-
-          <button onClick={() => openModal("notes")} className="side-nav-btn">
-            <span className="google-symbols side-nav-icon icon-gray">note_stack</span>
-            <span className="gds-label-l">{t("myNotes")}</span>
-          </button>
+          />
+          <SidebarButton
+            icon="bookmark"
+            label={t("promptLibrary")}
+            onClick={() => openModal("prompts")}
+          />
+          <SidebarButton
+            icon="note_stack"
+            label={t("myNotes")}
+            onClick={() => openModal("notes")}
+          />
         </div>
       </div>
     </div>

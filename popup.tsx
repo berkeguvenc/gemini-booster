@@ -1,6 +1,11 @@
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import "./i18n"
+import ConfirmModal from "./components/ConfirmModal"
+import AlertModal from "./components/AlertModal"
+import StatBox from "./components/StatBox"
+import SearchResultItem from "./components/SearchResultItem"
+import { BookmarkIcon, StarIcon, DocumentIcon } from "./components/Icons"
 
 function IndexPopup() {
   const { t, i18n } = useTranslation()
@@ -239,12 +244,14 @@ function IndexPopup() {
               <div style={{ marginBottom: "16px" }}>
                 <h4 style={{ margin: "0 0 8px 0", color: "#aaa", fontSize: "12px", textTransform: "uppercase" }}>{t("prompts")} ({filteredPrompts.length})</h4>
                 {filteredPrompts.map((p) => (
-                  <div key={p.id} style={searchResultStyle}>
-                    <div style={searchResultTextStyle}>{p.text}</div>
-                    <button onClick={() => handleCopy(p.id, p.text)} style={copyBtnStyle(copiedId === p.id)}>
-                      {copiedId === p.id ? t("copied") : t("copy")}
-                    </button>
-                  </div>
+                  <SearchResultItem
+                    key={p.id}
+                    text={p.text}
+                    onCopy={() => handleCopy(p.id, p.text)}
+                    isCopied={copiedId === p.id}
+                    copyText={t("copy")}
+                    copiedText={t("copied")}
+                  />
                 ))}
               </div>
             )}
@@ -254,12 +261,14 @@ function IndexPopup() {
               <div style={{ marginBottom: "16px" }}>
                 <h4 style={{ margin: "0 0 8px 0", color: "#aaa", fontSize: "12px", textTransform: "uppercase" }}>{t("favorites")} ({filteredFavorites.length})</h4>
                 {filteredFavorites.map((f) => (
-                  <div key={f.id} style={searchResultStyle}>
-                    <div style={searchResultTextStyle}>{f.text}</div>
-                    <button onClick={() => handleCopy(f.id, f.text)} style={copyBtnStyle(copiedId === f.id)}>
-                      {copiedId === f.id ? t("copied") : t("copy")}
-                    </button>
-                  </div>
+                  <SearchResultItem
+                    key={f.id}
+                    text={f.text}
+                    onCopy={() => handleCopy(f.id, f.text)}
+                    isCopied={copiedId === f.id}
+                    copyText={t("copy")}
+                    copiedText={t("copied")}
+                  />
                 ))}
               </div>
             )}
@@ -269,12 +278,14 @@ function IndexPopup() {
               <div style={{ marginBottom: "16px" }}>
                 <h4 style={{ margin: "0 0 8px 0", color: "#aaa", fontSize: "12px", textTransform: "uppercase" }}>{t("notes")} ({filteredNotes.length})</h4>
                 {filteredNotes.map((n) => (
-                  <div key={n.id} style={searchResultStyle}>
-                    <div style={searchResultTextStyle}>{n.text}</div>
-                    <button onClick={() => handleCopy(n.id, n.text)} style={copyBtnStyle(copiedId === n.id)}>
-                      {copiedId === n.id ? t("copied") : t("copy")}
-                    </button>
-                  </div>
+                  <SearchResultItem
+                    key={n.id}
+                    text={n.text}
+                    onCopy={() => handleCopy(n.id, n.text)}
+                    isCopied={copiedId === n.id}
+                    copyText={t("copy")}
+                    copiedText={t("copied")}
+                  />
                 ))}
               </div>
             )}
@@ -296,21 +307,9 @@ function IndexPopup() {
                 gap: "8px",
                 marginBottom: "20px"
               }}>
-              <div style={statBoxStyle}>
-                <div style={statIconStyle}>📝</div>
-                <div style={statValueStyle}>{prompts.length}</div>
-                <div style={statLabelStyle}>{t("prompts")}</div>
-              </div>
-              <div style={statBoxStyle}>
-                <div style={statIconStyle}>⭐</div>
-                <div style={statValueStyle}>{favorites.length}</div>
-                <div style={statLabelStyle}>{t("favorites")}</div>
-              </div>
-              <div style={statBoxStyle}>
-                <div style={statIconStyle}>📓</div>
-                <div style={statValueStyle}>{notes.length}</div>
-                <div style={statLabelStyle}>{t("notes")}</div>
-              </div>
+              <StatBox icon={<BookmarkIcon size={24} />} value={prompts.length} label={t("prompts")} />
+              <StatBox icon={<StarIcon size={24} />} value={favorites.length} label={t("favorites")} />
+              <StatBox icon={<DocumentIcon size={24} />} value={notes.length} label={t("notes")} />
             </div>
 
             {/* Veri Yönetimi */}
@@ -388,69 +387,30 @@ function IndexPopup() {
 
       {/* Confirmation Modal */}
       {showConfirm && (
-        <div style={overlayStyle}>
-          <div style={modalStyle}>
-            <h3 style={modalTitleStyle}>{t("clearDataTitle")}</h3>
-            <p style={modalTextStyle}>
-              {t("clearDataDesc")}
-            </p>
-            <div style={modalActionsStyle}>
-              <button onClick={() => setShowConfirm(false)} style={modalCancelBtnStyle}>
-                {t("cancel")}
-              </button>
-              <button onClick={executeClearAll} style={modalDeleteBtnStyle}>
-                {t("yesDelete")}
-              </button>
-            </div>
-          </div>
-        </div>
+        <ConfirmModal
+          title={t("clearDataTitle")}
+          description={t("clearDataDesc")}
+          onConfirm={executeClearAll}
+          onCancel={() => setShowConfirm(false)}
+          confirmText={t("yesDelete")}
+          cancelText={t("cancel")}
+        />
       )}
 
       {/* Alert Modal */}
       {alertMessage && (
-        <div style={overlayStyle}>
-          <div style={modalStyle}>
-            <h3 style={modalTitleStyle}>{t("info")}</h3>
-            <p style={modalTextStyle}>{alertMessage}</p>
-            <div style={modalActionsStyle}>
-              <button onClick={() => setAlertMessage("")} style={modalPrimaryBtnStyle}>
-                {t("ok")}
-              </button>
-            </div>
-          </div>
-        </div>
+        <AlertModal
+          title={t("info")}
+          message={alertMessage}
+          onClose={() => setAlertMessage("")}
+          closeText={t("ok")}
+        />
       )}
     </>
   )
 }
 
 // Ortak Stiller
-const statBoxStyle: React.CSSProperties = {
-  backgroundColor: "#25252d",
-  borderRadius: "8px",
-  padding: "12px",
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  border: "1px solid #333"
-}
-
-const statIconStyle: React.CSSProperties = {
-  fontSize: "20px",
-  marginBottom: "4px"
-}
-
-const statValueStyle: React.CSSProperties = {
-  fontSize: "20px",
-  fontWeight: "bold",
-  color: "#6c5ce7"
-}
-
-const statLabelStyle: React.CSSProperties = {
-  fontSize: "12px",
-  color: "#aaa"
-}
-
 const sectionTitleStyle: React.CSSProperties = {
   margin: "0 0 12px 0",
   fontSize: "13px",
@@ -480,110 +440,6 @@ const btnStyle: React.CSSProperties = {
   cursor: "pointer",
   transition: "opacity 0.2s",
   display: "inline-block"
-}
-
-const searchResultStyle: React.CSSProperties = {
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "space-between",
-  background: "#25252d",
-  padding: "10px",
-  borderRadius: "6px",
-  marginBottom: "8px",
-  border: "1px solid #333",
-  gap: "8px"
-}
-
-const searchResultTextStyle: React.CSSProperties = {
-  fontSize: "13px",
-  color: "#ccc",
-  whiteSpace: "nowrap",
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-  flex: 1
-}
-
-const copyBtnStyle = (copied: boolean): React.CSSProperties => ({
-  background: copied ? "#00b894" : "#444",
-  color: "#fff",
-  border: "none",
-  borderRadius: "4px",
-  padding: "4px 8px",
-  fontSize: "11px",
-  cursor: "pointer",
-  minWidth: "60px",
-  transition: "background 0.2s"
-})
-
-// Modal Styles
-const overlayStyle: React.CSSProperties = {
-  position: "fixed",
-  top: 0,
-  left: 0,
-  width: "100%",
-  height: "100%",
-  backgroundColor: "rgba(0, 0, 0, 0.6)",
-  backdropFilter: "blur(2px)",
-  zIndex: 9999,
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center"
-}
-
-const modalStyle: React.CSSProperties = {
-  backgroundColor: "#1e1f20",
-  color: "#e3e3e3",
-  padding: "20px",
-  borderRadius: "12px",
-  width: "280px",
-  boxShadow: "0 8px 32px rgba(0, 0, 0, 0.4)",
-}
-
-const modalTitleStyle: React.CSSProperties = {
-  margin: "0 0 12px 0",
-  fontSize: "16px",
-  fontWeight: 600
-}
-
-const modalTextStyle: React.CSSProperties = {
-  margin: "0 0 20px 0",
-  fontSize: "13px",
-  lineHeight: "1.5",
-  color: "#c4c7c5"
-}
-
-const modalActionsStyle: React.CSSProperties = {
-  display: "flex",
-  justifyContent: "flex-end",
-  gap: "8px"
-}
-
-const modalBtnBaseStyle: React.CSSProperties = {
-  padding: "8px 16px",
-  borderRadius: "6px",
-  fontSize: "13px",
-  fontWeight: 500,
-  cursor: "pointer",
-  border: "none",
-  transition: "background-color 0.2s"
-}
-
-const modalCancelBtnStyle: React.CSSProperties = {
-  ...modalBtnBaseStyle,
-  backgroundColor: "transparent",
-  color: "#a8c7fa"
-}
-
-const modalDeleteBtnStyle: React.CSSProperties = {
-  ...modalBtnBaseStyle,
-  backgroundColor: "#f28b82",
-  color: "#000"
-}
-
-const modalPrimaryBtnStyle: React.CSSProperties = {
-  ...modalBtnBaseStyle,
-  backgroundColor: "#a8c7fa",
-  color: "#000"
 }
 
 export default IndexPopup

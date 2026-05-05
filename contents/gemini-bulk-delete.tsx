@@ -3,6 +3,8 @@ import type { PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo"
 import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import "../i18n"
+import ConfirmModal from "../components/ConfirmModal"
+import AlertModal from "../components/AlertModal"
 
 export const getStyle = () => {
   const style = document.createElement("style")
@@ -283,122 +285,27 @@ const GeminiBulkDelete = () => {
 
       {/* Confirmation Modal */}
       {showConfirm && (
-        <div style={overlayStyle}>
-          <div style={modalStyle}>
-            <h3 style={modalTitleStyle}>{t("deleteChatsTitle")}</h3>
-            <p style={modalTextStyle}>
-              {t("deleteChatsDesc", { count: selectedHrefs.size })}
-            </p>
-            <div style={modalActionsStyle}>
-              <button
-                onClick={() => setShowConfirm(false)}
-                style={modalCancelBtnStyle}
-              >
-                {t("cancel")}
-              </button>
-              <button
-                onClick={executeDelete}
-                style={modalDeleteBtnStyle}
-              >
-                {t("yesDelete")}
-              </button>
-            </div>
-          </div>
-        </div>
+        <ConfirmModal
+          title={t("deleteChatsTitle")}
+          description={t("deleteChatsDesc", { count: selectedHrefs.size })}
+          onConfirm={executeDelete}
+          onCancel={() => setShowConfirm(false)}
+          confirmText={t("yesDelete")}
+          cancelText={t("cancel")}
+        />
       )}
 
       {/* Alert Modal */}
       {alertMessage && (
-        <div style={overlayStyle}>
-          <div style={modalStyle}>
-            <h3 style={modalTitleStyle}>{t("info")}</h3>
-            <p style={modalTextStyle}>{alertMessage}</p>
-            <div style={modalActionsStyle}>
-              <button
-                onClick={() => setAlertMessage("")}
-                style={modalPrimaryBtnStyle}
-              >
-                {t("ok")}
-              </button>
-            </div>
-          </div>
-        </div>
+        <AlertModal
+          title={t("info")}
+          message={alertMessage}
+          onClose={() => setAlertMessage("")}
+          closeText={t("ok")}
+        />
       )}
     </>
   )
-}
-
-// Modal Styles
-const overlayStyle: React.CSSProperties = {
-  position: "fixed",
-  top: 0,
-  left: 0,
-  width: "100vw",
-  height: "100vh",
-  backgroundColor: "rgba(0, 0, 0, 0.5)",
-  backdropFilter: "blur(2px)",
-  zIndex: 999999,
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center"
-}
-
-const modalStyle: React.CSSProperties = {
-  backgroundColor: "var(--gem-sys-color--surface, #1e1f20)",
-  color: "var(--gem-sys-color--on-surface, #e3e3e3)",
-  padding: "24px",
-  borderRadius: "16px",
-  maxWidth: "400px",
-  width: "90%",
-  boxShadow: "0 8px 32px rgba(0, 0, 0, 0.4)",
-  fontFamily: "'Google Sans', 'Google Sans Flex', Roboto, sans-serif"
-}
-
-const modalTitleStyle: React.CSSProperties = {
-  margin: "0 0 16px 0",
-  fontSize: "20px",
-  fontWeight: 500
-}
-
-const modalTextStyle: React.CSSProperties = {
-  margin: "0 0 24px 0",
-  fontSize: "14px",
-  lineHeight: "1.5",
-  color: "var(--gem-sys-color--on-surface-variant, #c4c7c5)"
-}
-
-const modalActionsStyle: React.CSSProperties = {
-  display: "flex",
-  justifyContent: "flex-end",
-  gap: "12px"
-}
-
-const modalBtnBaseStyle: React.CSSProperties = {
-  padding: "10px 20px",
-  borderRadius: "8px",
-  fontSize: "14px",
-  fontWeight: 500,
-  cursor: "pointer",
-  border: "none",
-  transition: "background-color 0.2s"
-}
-
-const modalCancelBtnStyle: React.CSSProperties = {
-  ...modalBtnBaseStyle,
-  backgroundColor: "transparent",
-  color: "var(--gem-sys-color--primary, #a8c7fa)"
-}
-
-const modalDeleteBtnStyle: React.CSSProperties = {
-  ...modalBtnBaseStyle,
-  backgroundColor: "#f28b82", // Google Red light
-  color: "#000"
-}
-
-const modalPrimaryBtnStyle: React.CSSProperties = {
-  ...modalBtnBaseStyle,
-  backgroundColor: "var(--gem-sys-color--primary, #a8c7fa)",
-  color: "var(--gem-sys-color--on-primary, #000)"
 }
 
 export default GeminiBulkDelete

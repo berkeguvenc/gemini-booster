@@ -9,6 +9,16 @@ import type { FavoriteAnswer } from "~types/favorite"
 import type { Note } from "~types/note"
 import type { SavedPrompt } from "~types/prompt"
 
+import {
+  StarIcon,
+  BookmarkIcon,
+  CloseIcon,
+  DocumentIcon,
+  SearchIcon
+} from "../components/Icons"
+import EmptyState from "../components/EmptyState"
+import ModalListItem from "../components/ModalListItem"
+
 export const getStyle = () => {
   const style = document.createElement("style")
   style.textContent = cssText
@@ -18,61 +28,6 @@ export const getStyle = () => {
 export const config: PlasmoCSConfig = {
   matches: ["https://gemini.google.com/*"]
 }
-
-// Inline SVGs to avoid strict CSP and Shadow DOM boundaries
-const StarIcon = ({ size = 24, fill = "currentColor" }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill={fill}>
-    <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/>
-  </svg>
-)
-
-const BookmarkIcon = ({ size = 24, fill = "currentColor" }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill={fill}>
-    <path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z"/>
-  </svg>
-)
-
-const CloseIcon = ({ size = 24, fill = "currentColor" }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill={fill}>
-    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"/>
-  </svg>
-)
-
-const DocumentIcon = ({ size = 24, fill = "currentColor" }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill={fill}>
-    <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
-  </svg>
-)
-
-const OpenInNewIcon = ({ size = 18, fill = "currentColor" }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill={fill}>
-    <path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/>
-  </svg>
-)
-
-const ConstructionIcon = ({ size = 40, fill = "currentColor" }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill={fill}>
-    <path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.5 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/>
-  </svg>
-)
-
-const CopyIcon = ({ size = 20, fill = "currentColor" }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill={fill}>
-    <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
-  </svg>
-)
-
-const CheckIcon = ({ size = 20, fill = "currentColor" }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill={fill}>
-    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-  </svg>
-)
-
-const SearchIcon = ({ size = 20, fill = "currentColor" }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill={fill}>
-    <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-  </svg>
-)
 
 const GeminiModal = () => {
   const { t, i18n } = useTranslation()
@@ -86,13 +41,11 @@ const GeminiModal = () => {
   // UI State for Features
   const [searchQuery, setSearchQuery] = useState("")
   const [copiedIds, setCopiedIds] = useState<Record<string, boolean>>({})
-  const [expandedIds, setExpandedIds] = useState<Record<string, boolean>>({})
 
   // Reset states when modal changes
   useEffect(() => {
     setSearchQuery("")
     setCopiedIds({})
-    setExpandedIds({})
   }, [activeModal])
 
   useEffect(() => {
@@ -213,10 +166,6 @@ const GeminiModal = () => {
     }
   }
 
-  const toggleExpand = (id: string) => {
-    setExpandedIds((prev) => ({ ...prev, [id]: !prev[id] }))
-  }
-
   if (!activeModal) return null
 
   const modalTitles = {
@@ -297,152 +246,60 @@ const GeminiModal = () => {
 
           {activeModal === "favorites" ? (
             favorites.length === 0 ? (
-              <div className="favorites-empty">
-                <span style={{ color: "var(--gem-sys-color--on-surface-variant)" }} className="modal-icon-placeholder">
-                  <StarIcon size={40} />
-                </span>
-                <p className="modal-desc">{t("noFavorites")}</p>
-                <p className="modal-desc-sub">
-                  {t("noFavoritesDesc")}
-                </p>
-              </div>
+              <EmptyState 
+                icon={<StarIcon size={40} />} 
+                title={t("noFavorites")} 
+                description={t("noFavoritesDesc")} 
+              />
             ) : filteredFavorites.length === 0 ? (
               <div className="favorites-empty">
                 <p className="modal-desc">{t("noFavoritesMatch")}</p>
               </div>
             ) : (
               <ul className="item-list">
-                {filteredFavorites.map((fav) => {
-                  const isExpanded = expandedIds[fav.id]
-                  return (
-                    <li key={fav.id} className="list-item-container">
-                      <div className="list-item-main">
-                        <span className="list-item-icon star">
-                          <StarIcon size={24} />
-                        </span>
-                        <div className="list-item-text">
-                          <div className={`list-item-title ${isExpanded ? "expanded" : ""}`}>
-                            {fav.text}
-                          </div>
-                          {fav.text.length > 200 && (
-                            <button
-                              className="favorite-expand-btn"
-                              onClick={() => toggleExpand(fav.id)}>
-                              {isExpanded ? t("showLess") : t("readMore")}
-                            </button>
-                          )}
-                          <div className="list-item-metadata">
-                            <span>
-                              {new Date(fav.savedAt).toLocaleDateString("tr-TR", {
-                                day: "numeric",
-                                month: "long",
-                                year: "numeric"
-                              })}
-                            </span>
-                            <span className="separator">•</span>
-                            <a
-                              href={fav.url}
-                              className="favorite-link"
-                              target="_blank"
-                              rel="noreferrer">
-                              <OpenInNewIcon size={14} />
-                              {t("goToChat")}
-                            </a>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="list-item-actions">
-                        <button
-                          className={`favorite-copy-btn ${copiedIds[fav.id] ? "copied" : ""}`}
-                          onClick={() => copyToClipboard(fav.id, fav.text)}
-                          title={t("copyText")}>
-                          {copiedIds[fav.id] ? <CheckIcon size={20} /> : <CopyIcon size={20} />}
-                        </button>
-                        <button
-                          className="favorite-delete-btn"
-                          onClick={() => deleteFavorite(fav.id)}
-                          title={t("delete")}>
-                          <CloseIcon size={20} />
-                        </button>
-                      </div>
-                    </li>
-                  )
-                })}
+                {filteredFavorites.map((fav) => (
+                  <ModalListItem
+                    key={fav.id}
+                    id={fav.id}
+                    text={fav.text}
+                    timestamp={fav.savedAt}
+                    url={fav.url}
+                    icon={<StarIcon size={24} />}
+                    iconColorClass="star"
+                    onCopy={copyToClipboard}
+                    onDelete={deleteFavorite}
+                    isCopied={!!copiedIds[fav.id]}
+                  />
+                ))}
               </ul>
             )
           ) : activeModal === "prompts" ? (
             prompts.length === 0 ? (
-              <div className="favorites-empty">
-                <span style={{ color: "var(--gem-sys-color--on-surface-variant)" }} className="modal-icon-placeholder">
-                  <BookmarkIcon size={40} />
-                </span>
-                <p className="modal-desc">{t("noPrompts")}</p>
-                <p className="modal-desc-sub">
-                  {t("noPromptsDesc")}
-                </p>
-              </div>
+              <EmptyState 
+                icon={<BookmarkIcon size={40} />} 
+                title={t("noPrompts")} 
+                description={t("noPromptsDesc")} 
+              />
             ) : filteredPrompts.length === 0 ? (
               <div className="favorites-empty">
                 <p className="modal-desc">{t("noPromptsMatch")}</p>
               </div>
             ) : (
               <ul className="item-list">
-                {filteredPrompts.map((p) => {
-                  const isExpanded = expandedIds[p.id]
-                  return (
-                    <li key={p.id} className="list-item-container">
-                      <div className="list-item-main">
-                        <span className="list-item-icon bookmark">
-                          <BookmarkIcon size={24} />
-                        </span>
-                        <div className="list-item-text">
-                          <div className={`list-item-title ${isExpanded ? "expanded" : ""}`}>
-                            {p.text}
-                          </div>
-                          {p.text.length > 200 && (
-                            <button
-                              className="favorite-expand-btn"
-                              onClick={() => toggleExpand(p.id)}>
-                              {isExpanded ? t("showLess") : t("readMore")}
-                            </button>
-                          )}
-                          <div className="list-item-metadata">
-                            <span>
-                              {new Date(p.savedAt).toLocaleDateString("tr-TR", {
-                                day: "numeric",
-                                month: "long",
-                                year: "numeric"
-                              })}
-                            </span>
-                            <span className="separator">•</span>
-                            <a
-                              href={p.url}
-                              className="favorite-link"
-                              target="_blank"
-                              rel="noreferrer">
-                              <OpenInNewIcon size={14} />
-                              {t("goToChat")}
-                            </a>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="list-item-actions">
-                        <button
-                          className={`favorite-copy-btn ${copiedIds[p.id] ? "copied" : ""}`}
-                          onClick={() => copyToClipboard(p.id, p.text)}
-                          title={t("copyPrompt")}>
-                          {copiedIds[p.id] ? <CheckIcon size={20} /> : <CopyIcon size={20} />}
-                        </button>
-                        <button
-                          className="favorite-delete-btn"
-                          onClick={() => deletePrompt(p.id)}
-                          title={t("delete")}>
-                          <CloseIcon size={20} />
-                        </button>
-                      </div>
-                    </li>
-                  )
-                })}
+                {filteredPrompts.map((p) => (
+                  <ModalListItem
+                    key={p.id}
+                    id={p.id}
+                    text={p.text}
+                    timestamp={p.savedAt}
+                    url={p.url}
+                    icon={<BookmarkIcon size={24} />}
+                    iconColorClass="bookmark"
+                    onCopy={copyToClipboard}
+                    onDelete={deletePrompt}
+                    isCopied={!!copiedIds[p.id]}
+                  />
+                ))}
               </ul>
             )
           ) : activeModal === "notes" ? (
@@ -490,67 +347,36 @@ const GeminiModal = () => {
               </div>
 
               {notes.length === 0 ? (
-                <div className="favorites-empty">
-                  <span style={{ color: "var(--gem-sys-color--on-surface-variant)" }} className="modal-icon-placeholder">
-                    <DocumentIcon size={40} />
-                  </span>
-                  <p className="modal-desc">{t("noNotes")}</p>
-                </div>
+                <EmptyState 
+                  icon={<DocumentIcon size={40} />} 
+                  title={t("noNotes")} 
+                />
               ) : filteredNotes.length === 0 ? (
                 <div className="favorites-empty">
                   <p className="modal-desc">{t("noNotesMatch")}</p>
                 </div>
               ) : (
                 <ul className="item-list">
-                  {filteredNotes.map((n) => {
-                    const isExpanded = expandedIds[n.id]
-                    return (
-                      <li key={n.id} className="list-item-container">
-                        <div className="list-item-main">
-                          <span className="list-item-icon document">
-                            <DocumentIcon size={24} />
-                          </span>
-                          <div className="list-item-text">
-                            <div className={`list-item-title ${isExpanded ? "expanded" : ""}`} style={{ whiteSpace: "pre-wrap", wordBreak: "break-word" }}>
-                              {n.text}
-                            </div>
-                            {n.text.length > 200 && (
-                              <button
-                                className="favorite-expand-btn"
-                                onClick={() => toggleExpand(n.id)}>
-                                {isExpanded ? t("showLess") : t("readMore")}
-                              </button>
-                            )}
-                            <div className="list-item-metadata">
-                              <span>
-                                {new Date(n.createdAt).toLocaleDateString("tr-TR", {
-                                  day: "numeric",
-                                  month: "long",
-                                  year: "numeric",
-                                  hour: "2-digit",
-                                  minute: "2-digit"
-                                })}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="list-item-actions">
-                          <button
-                            className={`favorite-copy-btn ${copiedIds[n.id] ? "copied" : ""}`}
-                            onClick={() => copyToClipboard(n.id, n.text)}
-                            title={t("copyNote")}>
-                            {copiedIds[n.id] ? <CheckIcon size={20} /> : <CopyIcon size={20} />}
-                          </button>
-                          <button
-                            className="favorite-delete-btn"
-                            onClick={() => deleteNote(n.id)}
-                            title={t("delete")}>
-                            <CloseIcon size={20} />
-                          </button>
-                        </div>
-                      </li>
-                    )
-                  })}
+                  {filteredNotes.map((n) => (
+                    <ModalListItem
+                      key={n.id}
+                      id={n.id}
+                      text={n.text}
+                      timestamp={n.createdAt}
+                      icon={<DocumentIcon size={24} />}
+                      iconColorClass="document"
+                      onCopy={copyToClipboard}
+                      onDelete={deleteNote}
+                      isCopied={!!copiedIds[n.id]}
+                      dateFormat={{
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit"
+                      }}
+                    />
+                  ))}
                 </ul>
               )}
             </div>
