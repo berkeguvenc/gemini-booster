@@ -1,9 +1,9 @@
 {
-  "name": "gemini-booster",
-  "displayName": "Gemini booster",
+  "name": "enhancer-for-gemini",
+  "displayName": "Enhancer for Gemini",
   "version": "0.0.1",
-  "description": "Gemini Enhancer Extension",
-  "author": "Plasmo Corp. <foss@plasmo.com>",
+  "description": "Enhancer for Gemini",
+  "author": "Yağız Berke Güvenç",
   "scripts": {
     "dev": "plasmo dev",
     "build": "plasmo build",
@@ -27,7 +27,7 @@
   },
   "manifest": {
     "host_permissions": [
-      "https://*/*"
+      "https://gemini.google.com/*"
     ],
     "permissions": [
       "storage"

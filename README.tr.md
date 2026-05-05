@@ -1,6 +1,6 @@
-# Gemini Booster
+# Enhancer for Gemini
 
-Gemini Booster, [Google Gemini](https://gemini.google.com) deneyiminizi geliştiren güçlü bir Chrome Eklentisidir. Gemini yan menüsüne sorunsuz bir şekilde entegre olarak favori cevaplarınızı, özel istemlerinizi (prompts) ve kişisel notlarınızı kaydedip yönetebileceğiniz özel bir alan sunar.
+Enhancer for Gemini, [Google Gemini](https://gemini.google.com) deneyiminizi geliştiren güçlü bir Chrome Eklentisidir. Gemini yan menüsüne sorunsuz bir şekilde entegre olarak favori cevaplarınızı, özel istemlerinizi (prompts) ve kişisel notlarınızı kaydedip yönetebileceğiniz özel bir alan sunar.
 
 Diğer dillerde oku: [English](README.md)
 

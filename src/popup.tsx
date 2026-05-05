@@ -57,7 +57,7 @@ function IndexPopup() {
       const url = URL.createObjectURL(blob)
       const a = document.createElement("a")
       a.href = url
-      a.download = `gemini_booster_backup_${new Date().toISOString().split("T")[0]}.json`
+      a.download = `enhancer_for_gemini_backup_${new Date().toISOString().split("T")[0]}.json`
       a.click()
       URL.revokeObjectURL(url)
     })

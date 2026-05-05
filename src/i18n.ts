@@ -4,7 +4,7 @@ import { initReactI18next } from "react-i18next";
 const resources = {
   en: {
     translation: {
-      "appTitle": "Gemini Booster",
+      "appTitle": "Enhancer for Gemini",
       "searchPlaceholder": "Search",
       "prompts": "Prompts",
       "favorites": "Favorites",
@@ -68,7 +68,7 @@ const resources = {
   },
   tr: {
     translation: {
-      "appTitle": "Gemini Booster",
+      "appTitle": "Enhancer for Gemini",
       "searchPlaceholder": "Ara",
       "prompts": "İstemler",
       "favorites": "Favoriler",

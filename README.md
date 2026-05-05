@@ -1,6 +1,6 @@
-# Gemini Booster
+# Enhancer for Gemini
 
-Gemini Booster is a powerful Chrome Extension that enhances your experience on [Google Gemini](https://gemini.google.com). It seamlessly integrates into the Gemini sidebar, providing a dedicated space to save, manage, and access your favorite answers, custom prompts, and personal notes.
+Enhancer for Gemini is a powerful Chrome Extension that enhances your experience on [Google Gemini](https://gemini.google.com). It seamlessly integrates into the Gemini sidebar, providing a dedicated space to save, manage, and access your favorite answers, custom prompts, and personal notes.
 
 Read this in other languages: [Türkçe](README.tr.md)
 
