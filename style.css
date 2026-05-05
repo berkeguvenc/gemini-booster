@@ -60,6 +60,12 @@ select, textarea {
   padding: 0 0 0 8px;
 }
 
+@media (max-width: 960px) {
+  .gemini-sidebar-container {
+    padding: 0 0 0 0;
+  }
+}
+
 .gemini-hr {
   border: 0;
   border-top: 1px solid var(--gem-sys-color--outline-variant, rgba(255, 255, 255, 0.1));
@@ -71,12 +77,18 @@ select, textarea {
   width: 100%;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   padding: 0 8px 0 16px;
   height: 40px;
   border-radius: 9999px;
   transition: background-color 0.15s ease, color 0.15s ease;
   font-size: 14px;
+}
+
+@media (max-width: 960px) {
+  .side-nav-btn {
+    gap: 16px;
+  }
 }
 
 .side-nav-btn {
@@ -88,6 +100,12 @@ select, textarea {
 
 .side-nav-icon {
   font-size: 24px;
+}
+
+@media (max-width: 960px) {
+  .side-nav-icon {
+    padding-left: 2px;
+  }
 }
 
 .icon-amber { color: var(--bard-color-callout-warning-text, #fbbc04); }
