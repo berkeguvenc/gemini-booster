@@ -1,6 +1,7 @@
 // contents/gemini-favorites.tsx
 import type { PlasmoCSConfig } from "plasmo"
 import { useEffect } from "react"
+import i18n from "../i18n"
 
 import type { FavoriteAnswer } from "~types/favorite"
 
@@ -200,11 +201,11 @@ function createStarButton(
   btn.setAttribute("data-response-id", responseId)
   btn.setAttribute(
     "aria-label",
-    isFavorited ? "Favorilerden çıkar" : "Favorilere ekle"
+    isFavorited ? i18n.t("removeFromFavorites") : i18n.t("addToFavorites")
   )
   btn.setAttribute(
     "data-tooltip",
-    isFavorited ? "Favorilerden çıkar" : "Favorilere ekle"
+    isFavorited ? i18n.t("removeFromFavorites") : i18n.t("addToFavorites")
   )
   btn.innerHTML = `<span class="google-symbols">star</span>`
   return btn
@@ -240,11 +241,11 @@ function injectStarButton(
     btn.classList.toggle("gbr-star-active", nowFavorited)
     btn.setAttribute(
       "aria-label",
-      nowFavorited ? "Favorilerden çıkar" : "Favorilere ekle"
+      nowFavorited ? i18n.t("removeFromFavorites") : i18n.t("addToFavorites")
     )
     btn.setAttribute(
       "data-tooltip",
-      nowFavorited ? "Favorilerden çıkar" : "Favorilere ekle"
+      nowFavorited ? i18n.t("removeFromFavorites") : i18n.t("addToFavorites")
     )
 
     // Görsel geri bildirim animasyonu
@@ -299,9 +300,22 @@ function observeMessageActions(): () => void {
 
 const GeminiFavorites = () => {
   useEffect(() => {
+    chrome.storage.sync.get("gbr_settings_language", (res) => {
+      if (res.gbr_settings_language) i18n.changeLanguage(res.gbr_settings_language)
+    })
+    const langListener = (changes: any, ns: string) => {
+      if (ns === "sync" && changes.gbr_settings_language) {
+        i18n.changeLanguage(changes.gbr_settings_language.newValue)
+      }
+    }
+    chrome.storage.onChanged.addListener(langListener)
+
     injectGlobalStyles()
     const cleanup = observeMessageActions()
-    return cleanup
+    return () => {
+      cleanup()
+      chrome.storage.onChanged.removeListener(langListener)
+    }
   }, [])
 
   return null

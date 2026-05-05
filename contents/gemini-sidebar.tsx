@@ -1,5 +1,8 @@
 import cssText from "data-text:~style.css"
 import type { PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo"
+import { useEffect } from "react"
+import { useTranslation } from "react-i18next"
+import "../i18n"
 
 export const getStyle = () => {
   const style = document.createElement("style")
@@ -22,6 +25,21 @@ export const getInlineAnchor: PlasmoGetInlineAnchor = async () => ({
 })
 
 const GeminiSidebar = () => {
+  const { t, i18n } = useTranslation()
+
+  useEffect(() => {
+    chrome.storage.sync.get("gbr_settings_language", (res) => {
+      if (res.gbr_settings_language) i18n.changeLanguage(res.gbr_settings_language)
+    })
+    const listener = (changes: any, ns: string) => {
+      if (ns === "sync" && changes.gbr_settings_language) {
+        i18n.changeLanguage(changes.gbr_settings_language.newValue)
+      }
+    }
+    chrome.storage.onChanged.addListener(listener)
+    return () => chrome.storage.onChanged.removeListener(listener)
+  }, [i18n])
+
   // Modalı açmak için Global bir Event fırlatıyoruz
   const openModal = (type: string) => {
     window.dispatchEvent(new CustomEvent("OPEN_GEMINI_MODAL", { detail: type }))
@@ -35,17 +53,17 @@ const GeminiSidebar = () => {
             onClick={() => openModal("favorites")}
             className="side-nav-btn">
             <span className="google-symbols side-nav-icon icon-gray">star</span>
-            <span className="gds-label-l">Favori Cevaplar</span>
+            <span className="gds-label-l">{t("favoriteAnswers")}</span>
           </button>
 
           <button onClick={() => openModal("prompts")} className="side-nav-btn">
             <span className="google-symbols side-nav-icon icon-gray">bookmark</span>
-            <span className="gds-label-l">İstem Kütüphanesi</span>
+            <span className="gds-label-l">{t("promptLibrary")}</span>
           </button>
 
           <button onClick={() => openModal("notes")} className="side-nav-btn">
             <span className="google-symbols side-nav-icon icon-gray">note_stack</span>
-            <span className="gds-label-l">Notlarım</span>
+            <span className="gds-label-l">{t("myNotes")}</span>
           </button>
         </div>
       </div>

@@ -1,6 +1,8 @@
 import cssText from "data-text:~style.css"
 import type { PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo"
 import { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
+import "../i18n"
 
 export const getStyle = () => {
   const style = document.createElement("style")
@@ -29,21 +31,27 @@ const GeminiBulkDelete = () => {
   const [showConfirm, setShowConfirm] = useState(false)
   const [alertMessage, setAlertMessage] = useState("")
 
+  const { t, i18n } = useTranslation()
+
   useEffect(() => {
-    chrome.storage.sync.get("gbr_settings_bulk_delete", (res) => {
+    chrome.storage.sync.get(["gbr_settings_bulk_delete", "gbr_settings_language"], (res) => {
       if (res.gbr_settings_bulk_delete !== undefined) {
         setEnabled(res.gbr_settings_bulk_delete)
+      }
+      if (res.gbr_settings_language) {
+        i18n.changeLanguage(res.gbr_settings_language)
       }
     })
 
     const listener = (changes: { [key: string]: chrome.storage.StorageChange }, namespace: string) => {
-      if (namespace === "sync" && changes.gbr_settings_bulk_delete) {
-        setEnabled(changes.gbr_settings_bulk_delete.newValue)
+      if (namespace === "sync") {
+        if (changes.gbr_settings_bulk_delete) setEnabled(changes.gbr_settings_bulk_delete.newValue)
+        if (changes.gbr_settings_language) i18n.changeLanguage(changes.gbr_settings_language.newValue)
       }
     }
     chrome.storage.onChanged.addListener(listener)
     return () => chrome.storage.onChanged.removeListener(listener)
-  }, [])
+  }, [i18n])
 
   // Apply flexbox styles to the parent container to align the button perfectly
   useEffect(() => {
@@ -107,7 +115,7 @@ const GeminiBulkDelete = () => {
 
   const handleDeleteClick = () => {
     if (selectedHrefs.size === 0) {
-      setAlertMessage("Lütfen silinecek sohbetleri seçin.")
+      setAlertMessage(t("selectChatsToDelete"))
       return
     }
     setShowConfirm(true)
@@ -183,10 +191,10 @@ const GeminiBulkDelete = () => {
           document.body.click() // try to close dialog
         }
       }
-      setAlertMessage("Seçilen sohbetler başarıyla silindi.")
+      setAlertMessage(t("chatsDeletedSuccess"))
     } catch (err) {
       console.error("Silme işlemi sırasında hata:", err)
-      setAlertMessage("Bir hata oluştu, işlem durduruldu.")
+      setAlertMessage(t("deleteError"))
     } finally {
       setMode("idle")
       setSelectedHrefs(new Set())
@@ -243,9 +251,9 @@ const GeminiBulkDelete = () => {
       <button
         onClick={handleStartSelect}
         className="bulk-delete-btn"
-        title="Toplu Seç">
+        title={t("bulkSelect")}>
         <span className="google-symbols" style={{ fontSize: "18px" }}>checklist</span>
-        <span className="text">Toplu Seç</span>
+        <span className="text">{t("bulkSelect")}</span>
       </button>
     )
   }
@@ -258,17 +266,17 @@ const GeminiBulkDelete = () => {
           disabled={mode === "deleting"}
           className="bulk-delete-btn cancel"
           style={{ marginLeft: 0 }}>
-          <span className="text">İptal</span>
+          <span className="text">{t("cancel")}</span>
         </button>
         <button
           onClick={handleDeleteClick}
           disabled={mode === "deleting" || selectedHrefs.size === 0}
           className={`bulk-delete-btn delete-action ${mode === "deleting" ? "deleting" : ""}`}
           style={{ marginLeft: 0 }}
-          title="Seçilenleri Sil">
+          title={t("deleteChatsTitle")}>
           <span className="google-symbols" style={{ fontSize: "18px" }}>delete</span>
           <span className="text">
-            {mode === "deleting" ? "Siliniyor..." : `Sil (${selectedHrefs.size})`}
+            {mode === "deleting" ? t("deleting") : t("deleteCount", { count: selectedHrefs.size })}
           </span>
         </button>
       </div>
@@ -277,22 +285,22 @@ const GeminiBulkDelete = () => {
       {showConfirm && (
         <div style={overlayStyle}>
           <div style={modalStyle}>
-            <h3 style={modalTitleStyle}>Sohbetleri Sil</h3>
+            <h3 style={modalTitleStyle}>{t("deleteChatsTitle")}</h3>
             <p style={modalTextStyle}>
-              Seçilen {selectedHrefs.size} sohbeti kalıcı olarak silmek istediğinize emin misiniz? Bu işlem geri alınamaz.
+              {t("deleteChatsDesc", { count: selectedHrefs.size })}
             </p>
             <div style={modalActionsStyle}>
               <button
                 onClick={() => setShowConfirm(false)}
                 style={modalCancelBtnStyle}
               >
-                İptal
+                {t("cancel")}
               </button>
               <button
                 onClick={executeDelete}
                 style={modalDeleteBtnStyle}
               >
-                Evet, Sil
+                {t("yesDelete")}
               </button>
             </div>
           </div>
@@ -303,14 +311,14 @@ const GeminiBulkDelete = () => {
       {alertMessage && (
         <div style={overlayStyle}>
           <div style={modalStyle}>
-            <h3 style={modalTitleStyle}>Bilgi</h3>
+            <h3 style={modalTitleStyle}>{t("info")}</h3>
             <p style={modalTextStyle}>{alertMessage}</p>
             <div style={modalActionsStyle}>
               <button
                 onClick={() => setAlertMessage("")}
                 style={modalPrimaryBtnStyle}
               >
-                Tamam
+                {t("ok")}
               </button>
             </div>
           </div>

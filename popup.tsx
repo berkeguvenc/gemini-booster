@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react"
+import { useTranslation } from "react-i18next"
+import "./i18n"
 
 function IndexPopup() {
+  const { t, i18n } = useTranslation()
+  const [currentLang, setCurrentLang] = useState<string>("tr")
   const [prompts, setPrompts] = useState<any[]>([])
   const [favorites, setFavorites] = useState<any[]>([])
   const [notes, setNotes] = useState<any[]>([])
@@ -15,7 +19,7 @@ function IndexPopup() {
   useEffect(() => {
     // Verileri chrome.storage'dan çek
     chrome.storage.sync.get(
-      ["gemini_prompts", "gemini_favorites", "gemini_notes", "gbr_settings_bulk_delete"],
+      ["gemini_prompts", "gemini_favorites", "gemini_notes", "gbr_settings_bulk_delete", "gbr_settings_language"],
       (result) => {
         setPrompts(result.gemini_prompts || [])
         setFavorites(result.gemini_favorites || [])
@@ -23,9 +27,18 @@ function IndexPopup() {
         if (result.gbr_settings_bulk_delete !== undefined) {
           setBulkDeleteEnabled(result.gbr_settings_bulk_delete)
         }
+        
+        // Language handling
+        let savedLang = result.gbr_settings_language
+        if (!savedLang) {
+          const sysLang = typeof chrome !== "undefined" && chrome.i18n ? chrome.i18n.getUILanguage() : navigator.language
+          savedLang = sysLang.startsWith("tr") ? "tr" : "en"
+        }
+        setCurrentLang(savedLang)
+        i18n.changeLanguage(savedLang)
       }
     )
-  }, [])
+  }, [i18n])
 
   const handleExport = () => {
     chrome.storage.sync.get(["gemini_prompts", "gemini_favorites", "gemini_notes"], (result) => {
@@ -57,7 +70,7 @@ function IndexPopup() {
         
         // Basit format doğrulama
         if (typeof jsonData !== 'object' || Array.isArray(jsonData)) {
-          setAlertMessage("Hatalı dosya formatı! Lütfen geçerli bir yedek dosyası yükleyin.")
+          setAlertMessage(t("importFormatError"))
           return
         }
 
@@ -70,13 +83,13 @@ function IndexPopup() {
           gemini_favorites: newFavorites,
           gemini_notes: newNotes
         }, () => {
-          setAlertMessage("Veriler başarıyla içe aktarıldı!")
+          setAlertMessage(t("importSuccess"))
           setPrompts(newPrompts)
           setFavorites(newFavorites)
           setNotes(newNotes)
         })
       } catch (error) {
-        setAlertMessage("Dosya okunamadı. Geçerli bir JSON dosyası olduğundan emin olun.")
+        setAlertMessage(t("importReadError"))
       }
     }
     reader.readAsText(file)
@@ -99,7 +112,7 @@ function IndexPopup() {
       setPrompts([])
       setFavorites([])
       setNotes([])
-      setAlertMessage("Tüm veriler temizlendi.")
+      setAlertMessage(t("clearedSuccess"))
     })
   }
 
@@ -108,6 +121,13 @@ function IndexPopup() {
       setCopiedId(id)
       setTimeout(() => setCopiedId(null), 2000)
     })
+  }
+
+  const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const lang = e.target.value
+    setCurrentLang(lang)
+    i18n.changeLanguage(lang)
+    chrome.storage.sync.set({ gbr_settings_language: lang })
   }
 
   const filteredPrompts = prompts.filter((p) => p.text?.toLowerCase().includes(searchQuery.toLowerCase()))
@@ -164,18 +184,37 @@ function IndexPopup() {
             paddingBottom: "12px"
           }}>
           <h2 style={{ margin: 0, fontSize: "18px", fontWeight: "600", display: "flex", alignItems: "center", gap: "8px" }}>
-            <span style={{ fontSize: "22px" }}>🚀</span> Gemini Booster
+            <span style={{ fontSize: "22px" }}>🚀</span> {t("appTitle")}
           </h2>
-          <span style={{ fontSize: "12px", color: "#888", backgroundColor: "#2a2a32", padding: "2px 6px", borderRadius: "4px" }}>
-            v1.0
-          </span>
+          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+            <select
+              value={currentLang}
+              onChange={handleLanguageChange}
+              style={{
+                backgroundColor: "#2a2a32",
+                color: "#fff",
+                border: "1px solid #444",
+                borderRadius: "4px",
+                padding: "2px 4px",
+                fontSize: "12px",
+                outline: "none",
+                cursor: "pointer"
+              }}
+            >
+              <option value="en">EN</option>
+              <option value="tr">TR</option>
+            </select>
+            <span style={{ fontSize: "12px", color: "#888", backgroundColor: "#2a2a32", padding: "2px 6px", borderRadius: "4px" }}>
+              v1.0
+            </span>
+          </div>
         </div>
 
         {/* Arama Çubuğu */}
         <div style={{ marginBottom: "20px" }}>
           <input
             type="text"
-            placeholder="Ara"
+            placeholder={t("searchPlaceholder")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             style={{
@@ -198,12 +237,12 @@ function IndexPopup() {
             {/* İstem Sonuçları */}
             {filteredPrompts.length > 0 && (
               <div style={{ marginBottom: "16px" }}>
-                <h4 style={{ margin: "0 0 8px 0", color: "#aaa", fontSize: "12px", textTransform: "uppercase" }}>İstemler ({filteredPrompts.length})</h4>
+                <h4 style={{ margin: "0 0 8px 0", color: "#aaa", fontSize: "12px", textTransform: "uppercase" }}>{t("prompts")} ({filteredPrompts.length})</h4>
                 {filteredPrompts.map((p) => (
                   <div key={p.id} style={searchResultStyle}>
                     <div style={searchResultTextStyle}>{p.text}</div>
                     <button onClick={() => handleCopy(p.id, p.text)} style={copyBtnStyle(copiedId === p.id)}>
-                      {copiedId === p.id ? "✓" : "Kopyala"}
+                      {copiedId === p.id ? t("copied") : t("copy")}
                     </button>
                   </div>
                 ))}
@@ -213,12 +252,12 @@ function IndexPopup() {
             {/* Favori Sonuçları */}
             {filteredFavorites.length > 0 && (
               <div style={{ marginBottom: "16px" }}>
-                <h4 style={{ margin: "0 0 8px 0", color: "#aaa", fontSize: "12px", textTransform: "uppercase" }}>Favoriler ({filteredFavorites.length})</h4>
+                <h4 style={{ margin: "0 0 8px 0", color: "#aaa", fontSize: "12px", textTransform: "uppercase" }}>{t("favorites")} ({filteredFavorites.length})</h4>
                 {filteredFavorites.map((f) => (
                   <div key={f.id} style={searchResultStyle}>
                     <div style={searchResultTextStyle}>{f.text}</div>
                     <button onClick={() => handleCopy(f.id, f.text)} style={copyBtnStyle(copiedId === f.id)}>
-                      {copiedId === f.id ? "✓" : "Kopyala"}
+                      {copiedId === f.id ? t("copied") : t("copy")}
                     </button>
                   </div>
                 ))}
@@ -228,12 +267,12 @@ function IndexPopup() {
             {/* Not Sonuçları */}
             {filteredNotes.length > 0 && (
               <div style={{ marginBottom: "16px" }}>
-                <h4 style={{ margin: "0 0 8px 0", color: "#aaa", fontSize: "12px", textTransform: "uppercase" }}>Notlar ({filteredNotes.length})</h4>
+                <h4 style={{ margin: "0 0 8px 0", color: "#aaa", fontSize: "12px", textTransform: "uppercase" }}>{t("notes")} ({filteredNotes.length})</h4>
                 {filteredNotes.map((n) => (
                   <div key={n.id} style={searchResultStyle}>
                     <div style={searchResultTextStyle}>{n.text}</div>
                     <button onClick={() => handleCopy(n.id, n.text)} style={copyBtnStyle(copiedId === n.id)}>
-                      {copiedId === n.id ? "✓" : "Kopyala"}
+                      {copiedId === n.id ? t("copied") : t("copy")}
                     </button>
                   </div>
                 ))}
@@ -242,7 +281,7 @@ function IndexPopup() {
 
             {filteredPrompts.length === 0 && filteredFavorites.length === 0 && filteredNotes.length === 0 && (
               <div style={{ textAlign: "center", color: "#888", fontSize: "13px", padding: "20px 0" }}>
-                Sonuç bulunamadı.
+                {t("noResults")}
               </div>
             )}
           </div>
@@ -260,37 +299,37 @@ function IndexPopup() {
               <div style={statBoxStyle}>
                 <div style={statIconStyle}>📝</div>
                 <div style={statValueStyle}>{prompts.length}</div>
-                <div style={statLabelStyle}>İstemler</div>
+                <div style={statLabelStyle}>{t("prompts")}</div>
               </div>
               <div style={statBoxStyle}>
                 <div style={statIconStyle}>⭐</div>
                 <div style={statValueStyle}>{favorites.length}</div>
-                <div style={statLabelStyle}>Favoriler</div>
+                <div style={statLabelStyle}>{t("favorites")}</div>
               </div>
               <div style={statBoxStyle}>
                 <div style={statIconStyle}>📓</div>
                 <div style={statValueStyle}>{notes.length}</div>
-                <div style={statLabelStyle}>Notlar</div>
+                <div style={statLabelStyle}>{t("notes")}</div>
               </div>
             </div>
 
             {/* Veri Yönetimi */}
             <div style={{ marginBottom: "20px" }}>
-              <h3 style={sectionTitleStyle}>Veri Yönetimi</h3>
+              <h3 style={sectionTitleStyle}>{t("dataManagement")}</h3>
               
               <div style={dataSectionStyle}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
-                  <span style={{ fontSize: "14px", fontWeight: "500" }}>Tüm Veriler</span>
+                  <span style={{ fontSize: "14px", fontWeight: "500" }}>{t("allData")}</span>
                 </div>
                 <div style={{ fontSize: "12px", color: "#888", marginBottom: "12px", lineHeight: "1.4" }}>
-                  İstemler, Favoriler ve Notlarınız tek bir dosyada yedeklenir.
+                  {t("allDataDesc")}
                 </div>
                 <div style={{ display: "flex", gap: "8px" }}>
                   <button style={btnStyle} onClick={handleExport}>
-                    Dışa Aktar
+                    {t("export")}
                   </button>
                   <label style={{ ...btnStyle, background: "#2a2a32", color: "#fff", border: "1px solid #444" }}>
-                    İçe Aktar
+                    {t("import")}
                     <input
                       type="file"
                       accept=".json"
@@ -304,7 +343,7 @@ function IndexPopup() {
 
             {/* Ayarlar */}
             <div style={{ marginBottom: "20px" }}>
-              <h3 style={sectionTitleStyle}>Ayarlar</h3>
+              <h3 style={sectionTitleStyle}>{t("settings")}</h3>
               <label
                 style={{
                   display: "flex",
@@ -317,7 +356,7 @@ function IndexPopup() {
                   borderRadius: "8px",
                   border: "1px solid #333"
                 }}>
-                <span>Toplu Silme Butonu Göster</span>
+                <span>{t("bulkDeleteShow")}</span>
                 <input
                   type="checkbox"
                   checked={bulkDeleteEnabled}
@@ -340,7 +379,7 @@ function IndexPopup() {
                   textDecoration: "underline",
                   padding: "4px 8px"
                 }}>
-                Tüm Verileri Temizle
+                {t("clearAllData")}
               </button>
             </div>
           </>
@@ -351,16 +390,16 @@ function IndexPopup() {
       {showConfirm && (
         <div style={overlayStyle}>
           <div style={modalStyle}>
-            <h3 style={modalTitleStyle}>Verileri Temizle</h3>
+            <h3 style={modalTitleStyle}>{t("clearDataTitle")}</h3>
             <p style={modalTextStyle}>
-              Tüm istemleri ve favori cevapları silmek istediğinize emin misiniz? Bu işlem geri alınamaz!
+              {t("clearDataDesc")}
             </p>
             <div style={modalActionsStyle}>
               <button onClick={() => setShowConfirm(false)} style={modalCancelBtnStyle}>
-                İptal
+                {t("cancel")}
               </button>
               <button onClick={executeClearAll} style={modalDeleteBtnStyle}>
-                Evet, Sil
+                {t("yesDelete")}
               </button>
             </div>
           </div>
@@ -371,11 +410,11 @@ function IndexPopup() {
       {alertMessage && (
         <div style={overlayStyle}>
           <div style={modalStyle}>
-            <h3 style={modalTitleStyle}>Bilgi</h3>
+            <h3 style={modalTitleStyle}>{t("info")}</h3>
             <p style={modalTextStyle}>{alertMessage}</p>
             <div style={modalActionsStyle}>
               <button onClick={() => setAlertMessage("")} style={modalPrimaryBtnStyle}>
-                Tamam
+                {t("ok")}
               </button>
             </div>
           </div>

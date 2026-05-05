@@ -1,5 +1,6 @@
 import type { PlasmoCSConfig } from "plasmo"
 import { useEffect } from "react"
+import i18n from "../i18n"
 
 import type { SavedPrompt } from "~types/prompt"
 
@@ -201,8 +202,8 @@ function createPromptButton(
   const btn = document.createElement("button")
   btn.className = `gbr-prompt-btn${isSaved ? " gbr-prompt-active" : ""}`
   btn.setAttribute("data-prompt-id", promptId)
-  btn.setAttribute("aria-label", isSaved ? "İstemi çıkar" : "İstemi kaydet")
-  btn.setAttribute("data-tooltip", isSaved ? "İstemi çıkar" : "İstemi kaydet")
+  btn.setAttribute("aria-label", isSaved ? i18n.t("removePrompt") : i18n.t("savePrompt"))
+  btn.setAttribute("data-tooltip", isSaved ? i18n.t("removePrompt") : i18n.t("savePrompt"))
   // İkon olarak Bookmark kullanıldı.
   btn.innerHTML = `<span class="google-symbols">bookmark</span>`
   return btn
@@ -242,10 +243,10 @@ function injectPromptButton(copyBtnEl: Element, prompts: SavedPrompt[]): void {
     const nowSaved = await togglePrompt(promptId, conversationId, text)
 
     btn.classList.toggle("gbr-prompt-active", nowSaved)
-    btn.setAttribute("aria-label", nowSaved ? "İstemi çıkar" : "İstemi kaydet")
+    btn.setAttribute("aria-label", nowSaved ? i18n.t("removePrompt") : i18n.t("savePrompt"))
     btn.setAttribute(
       "data-tooltip",
-      nowSaved ? "İstemi çıkar" : "İstemi kaydet"
+      nowSaved ? i18n.t("removePrompt") : i18n.t("savePrompt")
     )
 
     // Görsel efekt
@@ -301,9 +302,22 @@ function observePromptActions(): () => void {
 
 const GeminiPrompts = () => {
   useEffect(() => {
+    chrome.storage.sync.get("gbr_settings_language", (res) => {
+      if (res.gbr_settings_language) i18n.changeLanguage(res.gbr_settings_language)
+    })
+    const langListener = (changes: any, ns: string) => {
+      if (ns === "sync" && changes.gbr_settings_language) {
+        i18n.changeLanguage(changes.gbr_settings_language.newValue)
+      }
+    }
+    chrome.storage.onChanged.addListener(langListener)
+
     injectGlobalStyles()
     const cleanup = observePromptActions()
-    return cleanup
+    return () => {
+      cleanup()
+      chrome.storage.onChanged.removeListener(langListener)
+    }
   }, [])
 
   return null

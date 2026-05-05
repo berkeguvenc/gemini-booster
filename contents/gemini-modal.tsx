@@ -2,6 +2,8 @@
 import cssText from "data-text:~style.css"
 import type { PlasmoCSConfig, PlasmoGetOverlayAnchor } from "plasmo"
 import { useEffect, useState } from "react"
+import { useTranslation } from "react-i18next"
+import "../i18n"
 
 import type { FavoriteAnswer } from "~types/favorite"
 import type { Note } from "~types/note"
@@ -73,6 +75,7 @@ const SearchIcon = ({ size = 20, fill = "currentColor" }) => (
 )
 
 const GeminiModal = () => {
+  const { t, i18n } = useTranslation()
   const [activeModal, setActiveModal] = useState<string | null>(null)
   const [isDark, setIsDark] = useState(true)
   const [favorites, setFavorites] = useState<FavoriteAnswer[]>([])
@@ -128,13 +131,25 @@ const GeminiModal = () => {
     window.addEventListener("FAVORITES_UPDATED", handleDataUpdated)
     window.addEventListener("PROMPTS_UPDATED", handleDataUpdated)
 
+    // Language handling
+    chrome.storage.sync.get("gbr_settings_language", (res) => {
+      if (res.gbr_settings_language) i18n.changeLanguage(res.gbr_settings_language)
+    })
+    const langListener = (changes: any, ns: string) => {
+      if (ns === "sync" && changes.gbr_settings_language) {
+        i18n.changeLanguage(changes.gbr_settings_language.newValue)
+      }
+    }
+    chrome.storage.onChanged.addListener(langListener)
+
     return () => {
       observer.disconnect()
       window.removeEventListener("OPEN_GEMINI_MODAL", handleOpenModal)
       window.removeEventListener("FAVORITES_UPDATED", handleDataUpdated)
       window.removeEventListener("PROMPTS_UPDATED", handleDataUpdated)
+      chrome.storage.onChanged.removeListener(langListener)
     }
-  }, [])
+  }, [i18n])
 
   // Favoriyi modalden sil
   const deleteFavorite = (id: string) => {
@@ -205,9 +220,9 @@ const GeminiModal = () => {
   if (!activeModal) return null
 
   const modalTitles = {
-    favorites: "Favori Cevaplar",
-    prompts: "İstem Kütüphanesi",
-    notes: "Notlarım",
+    favorites: t("favoriteAnswers"),
+    prompts: t("promptLibrary"),
+    notes: t("myNotes"),
   }
 
   // Filtrelenmiş veri
@@ -268,7 +283,7 @@ const GeminiModal = () => {
             <input
               type="text"
               className="modal-search-input"
-              placeholder={`${modalTitles[activeModal as keyof typeof modalTitles]} içinde ara...`}
+              placeholder={t("searchIn", { title: modalTitles[activeModal as keyof typeof modalTitles] })}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -277,7 +292,7 @@ const GeminiModal = () => {
 
         <div className="modal-content">
           {(activeModal === "favorites" || activeModal === "prompts") && (
-            <h3 className="list-header">En son</h3>
+            <h3 className="list-header">{t("latest")}</h3>
           )}
 
           {activeModal === "favorites" ? (
@@ -286,15 +301,14 @@ const GeminiModal = () => {
                 <span style={{ color: "var(--gem-sys-color--on-surface-variant)" }} className="modal-icon-placeholder">
                   <StarIcon size={40} />
                 </span>
-                <p className="modal-desc">Henüz favori yanıt kaydedilmedi.</p>
+                <p className="modal-desc">{t("noFavorites")}</p>
                 <p className="modal-desc-sub">
-                  Yanıtların altındaki <StarIcon size={16} /> ikonuna tıklayarak favorilere
-                  ekleyebilirsin.
+                  {t("noFavoritesDesc")}
                 </p>
               </div>
             ) : filteredFavorites.length === 0 ? (
               <div className="favorites-empty">
-                <p className="modal-desc">Aramanızla eşleşen favori bulunamadı.</p>
+                <p className="modal-desc">{t("noFavoritesMatch")}</p>
               </div>
             ) : (
               <ul className="item-list">
@@ -314,7 +328,7 @@ const GeminiModal = () => {
                             <button
                               className="favorite-expand-btn"
                               onClick={() => toggleExpand(fav.id)}>
-                              {isExpanded ? "Daha az göster" : "Devamını oku..."}
+                              {isExpanded ? t("showLess") : t("readMore")}
                             </button>
                           )}
                           <div className="list-item-metadata">
@@ -332,7 +346,7 @@ const GeminiModal = () => {
                               target="_blank"
                               rel="noreferrer">
                               <OpenInNewIcon size={14} />
-                              Sohbete git
+                              {t("goToChat")}
                             </a>
                           </div>
                         </div>
@@ -341,13 +355,13 @@ const GeminiModal = () => {
                         <button
                           className={`favorite-copy-btn ${copiedIds[fav.id] ? "copied" : ""}`}
                           onClick={() => copyToClipboard(fav.id, fav.text)}
-                          title="Metni kopyala">
+                          title={t("copyText")}>
                           {copiedIds[fav.id] ? <CheckIcon size={20} /> : <CopyIcon size={20} />}
                         </button>
                         <button
                           className="favorite-delete-btn"
                           onClick={() => deleteFavorite(fav.id)}
-                          title="Sil">
+                          title={t("delete")}>
                           <CloseIcon size={20} />
                         </button>
                       </div>
@@ -362,15 +376,14 @@ const GeminiModal = () => {
                 <span style={{ color: "var(--gem-sys-color--on-surface-variant)" }} className="modal-icon-placeholder">
                   <BookmarkIcon size={40} />
                 </span>
-                <p className="modal-desc">Henüz kayıtlı istem (prompt) yok.</p>
+                <p className="modal-desc">{t("noPrompts")}</p>
                 <p className="modal-desc-sub">
-                  Kendi yazdığınız satırların altındaki <BookmarkIcon size={16} /> ikonuna tıklayarak
-                  istemlerinizi kaydedebilirsiniz.
+                  {t("noPromptsDesc")}
                 </p>
               </div>
             ) : filteredPrompts.length === 0 ? (
               <div className="favorites-empty">
-                <p className="modal-desc">Aramanızla eşleşen istem bulunamadı.</p>
+                <p className="modal-desc">{t("noPromptsMatch")}</p>
               </div>
             ) : (
               <ul className="item-list">
@@ -390,7 +403,7 @@ const GeminiModal = () => {
                             <button
                               className="favorite-expand-btn"
                               onClick={() => toggleExpand(p.id)}>
-                              {isExpanded ? "Daha az göster" : "Devamını oku..."}
+                              {isExpanded ? t("showLess") : t("readMore")}
                             </button>
                           )}
                           <div className="list-item-metadata">
@@ -408,7 +421,7 @@ const GeminiModal = () => {
                               target="_blank"
                               rel="noreferrer">
                               <OpenInNewIcon size={14} />
-                              Sohbete git
+                              {t("goToChat")}
                             </a>
                           </div>
                         </div>
@@ -417,13 +430,13 @@ const GeminiModal = () => {
                         <button
                           className={`favorite-copy-btn ${copiedIds[p.id] ? "copied" : ""}`}
                           onClick={() => copyToClipboard(p.id, p.text)}
-                          title="İstemi kopyala">
+                          title={t("copyPrompt")}>
                           {copiedIds[p.id] ? <CheckIcon size={20} /> : <CopyIcon size={20} />}
                         </button>
                         <button
                           className="favorite-delete-btn"
                           onClick={() => deletePrompt(p.id)}
-                          title="Sil">
+                          title={t("delete")}>
                           <CloseIcon size={20} />
                         </button>
                       </div>
@@ -437,7 +450,7 @@ const GeminiModal = () => {
               <div className="note-input-area" style={{ margin: "0 24px 0 24px" }}>
                 <textarea
                   className="note-textarea"
-                  placeholder="Yeni bir not yazın..."
+                  placeholder={t("writeNewNote")}
                   value={newNoteText}
                   onChange={(e) => setNewNoteText(e.target.value)}
                   style={{
@@ -471,7 +484,7 @@ const GeminiModal = () => {
                       cursor: newNoteText.trim() ? "pointer" : "not-allowed",
                       opacity: newNoteText.trim() ? 1 : 0.5
                     }}>
-                    Notu Kaydet
+                    {t("saveNote")}
                   </button>
                 </div>
               </div>
@@ -481,11 +494,11 @@ const GeminiModal = () => {
                   <span style={{ color: "var(--gem-sys-color--on-surface-variant)" }} className="modal-icon-placeholder">
                     <DocumentIcon size={40} />
                   </span>
-                  <p className="modal-desc">Henüz hiç not eklemediniz.</p>
+                  <p className="modal-desc">{t("noNotes")}</p>
                 </div>
               ) : filteredNotes.length === 0 ? (
                 <div className="favorites-empty">
-                  <p className="modal-desc">Aramanızla eşleşen not bulunamadı.</p>
+                  <p className="modal-desc">{t("noNotesMatch")}</p>
                 </div>
               ) : (
                 <ul className="item-list">
@@ -505,7 +518,7 @@ const GeminiModal = () => {
                               <button
                                 className="favorite-expand-btn"
                                 onClick={() => toggleExpand(n.id)}>
-                                {isExpanded ? "Daha az göster" : "Devamını oku..."}
+                                {isExpanded ? t("showLess") : t("readMore")}
                               </button>
                             )}
                             <div className="list-item-metadata">
@@ -525,13 +538,13 @@ const GeminiModal = () => {
                           <button
                             className={`favorite-copy-btn ${copiedIds[n.id] ? "copied" : ""}`}
                             onClick={() => copyToClipboard(n.id, n.text)}
-                            title="Notu kopyala">
+                            title={t("copyNote")}>
                             {copiedIds[n.id] ? <CheckIcon size={20} /> : <CopyIcon size={20} />}
                           </button>
                           <button
                             className="favorite-delete-btn"
                             onClick={() => deleteNote(n.id)}
-                            title="Sil">
+                            title={t("delete")}>
                             <CloseIcon size={20} />
                           </button>
                         </div>
