@@ -155,11 +155,13 @@ const GeminiBulkDelete = () => {
           document.querySelectorAll('.mat-mdc-menu-panel [role="menuitem"]')
         ) as HTMLElement[]
 
-        const deleteMenuItem = menuItems.find(
-          (el) =>
-            el.textContent?.toLowerCase().includes("sil") ||
-            el.textContent?.toLowerCase().includes("delete")
-        )
+        const deleteMenuItem = menuItems.find((el) => {
+          const testId = el.getAttribute("data-test-id")
+          if (testId && testId.toLowerCase().includes("delete")) return true
+
+          const icon = el.querySelector("mat-icon, .mat-icon, .google-symbols")
+          return !!(icon && icon.textContent?.toLowerCase().trim() === "delete")
+        })
 
         if (!deleteMenuItem) {
           console.error("Menüde Sil/Delete seçeneği bulunamadı.")
@@ -179,10 +181,7 @@ const GeminiBulkDelete = () => {
         ) as HTMLElement[]
 
         const confirmBtn = dialogButtons.find(
-          (el) =>
-            el.textContent?.toLowerCase().includes("sil") ||
-            el.textContent?.toLowerCase().includes("delete") ||
-            el.textContent?.toLowerCase().includes("confirm")
+          (el) => el.getAttribute("data-test-id") === "confirm-button"
         )
 
         if (confirmBtn) {
