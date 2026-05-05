@@ -68,7 +68,7 @@ const GeminiModal = () => {
 
     // 3. Favoriler, Prompts ve Notları storage'dan yükle
     const loadData = () => {
-      chrome.storage.sync.get(
+      chrome.storage.local.get(
         ["gemini_favorites", "gemini_prompts", "gemini_notes"],
         (result) => {
           setFavorites(result.gemini_favorites || [])
@@ -106,11 +106,11 @@ const GeminiModal = () => {
 
   // Favoriyi modalden sil
   const deleteFavorite = (id: string) => {
-    chrome.storage.sync.get("gemini_favorites", (result) => {
+    chrome.storage.local.get("gemini_favorites", (result) => {
       const updated = (result.gemini_favorites || []).filter(
         (f: FavoriteAnswer) => f.id !== id
       )
-      chrome.storage.sync.set({ gemini_favorites: updated }, () => {
+      chrome.storage.local.set({ gemini_favorites: updated }, () => {
         setFavorites(updated)
         window.dispatchEvent(new CustomEvent("FAVORITES_UPDATED"))
       })
@@ -119,11 +119,11 @@ const GeminiModal = () => {
 
   // İstemi modalden sil
   const deletePrompt = (id: string) => {
-    chrome.storage.sync.get("gemini_prompts", (result) => {
+    chrome.storage.local.get("gemini_prompts", (result) => {
       const updated = (result.gemini_prompts || []).filter(
         (p: SavedPrompt) => p.id !== id
       )
-      chrome.storage.sync.set({ gemini_prompts: updated }, () => {
+      chrome.storage.local.set({ gemini_prompts: updated }, () => {
         setPrompts(updated)
         window.dispatchEvent(new CustomEvent("PROMPTS_UPDATED"))
       })
@@ -140,7 +140,7 @@ const GeminiModal = () => {
       updatedAt: Date.now()
     }
     const updated = [newNote, ...notes]
-    chrome.storage.sync.set({ gemini_notes: updated }, () => {
+    chrome.storage.local.set({ gemini_notes: updated }, () => {
       setNotes(updated)
       setNewNoteText("")
     })
@@ -148,7 +148,7 @@ const GeminiModal = () => {
 
   const deleteNote = (id: string) => {
     const updated = notes.filter((n) => n.id !== id)
-    chrome.storage.sync.set({ gemini_notes: updated }, () => {
+    chrome.storage.local.set({ gemini_notes: updated }, () => {
       setNotes(updated)
     })
   }

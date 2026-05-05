@@ -112,7 +112,7 @@ function injectGlobalStyles(): void {
 
 async function getPrompts(): Promise<SavedPrompt[]> {
   return new Promise((resolve) => {
-    chrome.storage.sync.get("gemini_prompts", (result) => {
+    chrome.storage.local.get("gemini_prompts", (result) => {
       resolve(result.gemini_prompts || [])
     })
   })
@@ -120,7 +120,7 @@ async function getPrompts(): Promise<SavedPrompt[]> {
 
 async function savePrompts(prompts: SavedPrompt[]): Promise<void> {
   return new Promise((resolve) => {
-    chrome.storage.sync.set({ gemini_prompts: prompts }, resolve)
+    chrome.storage.local.set({ gemini_prompts: prompts }, resolve)
   })
 }
 

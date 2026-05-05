@@ -23,30 +23,29 @@ function IndexPopup() {
 
   useEffect(() => {
     // Verileri chrome.storage'dan çek
-    chrome.storage.sync.get(
-      ["gemini_prompts", "gemini_favorites", "gemini_notes", "gbr_settings_bulk_delete", "gbr_settings_language"],
-      (result) => {
-        setPrompts(result.gemini_prompts || [])
-        setFavorites(result.gemini_favorites || [])
-        setNotes(result.gemini_notes || [])
-        if (result.gbr_settings_bulk_delete !== undefined) {
-          setBulkDeleteEnabled(result.gbr_settings_bulk_delete)
+    chrome.storage.local.get(["gemini_prompts", "gemini_favorites", "gemini_notes"], (localResult) => {
+      chrome.storage.sync.get(["gbr_settings_bulk_delete", "gbr_settings_language"], (syncResult) => {
+        setPrompts(localResult.gemini_prompts || [])
+        setFavorites(localResult.gemini_favorites || [])
+        setNotes(localResult.gemini_notes || [])
+        if (syncResult.gbr_settings_bulk_delete !== undefined) {
+          setBulkDeleteEnabled(syncResult.gbr_settings_bulk_delete)
         }
         
         // Language handling
-        let savedLang = result.gbr_settings_language
+        let savedLang = syncResult.gbr_settings_language
         if (!savedLang) {
           const sysLang = typeof chrome !== "undefined" && chrome.i18n ? chrome.i18n.getUILanguage() : navigator.language
           savedLang = sysLang.startsWith("tr") ? "tr" : "en"
         }
         setCurrentLang(savedLang)
         i18n.changeLanguage(savedLang)
-      }
-    )
+      })
+    })
   }, [i18n])
 
   const handleExport = () => {
-    chrome.storage.sync.get(["gemini_prompts", "gemini_favorites", "gemini_notes"], (result) => {
+    chrome.storage.local.get(["gemini_prompts", "gemini_favorites", "gemini_notes"], (result) => {
       const exportData = {
         prompts: result.gemini_prompts || [],
         favorites: result.gemini_favorites || [],
@@ -83,7 +82,7 @@ function IndexPopup() {
         const newFavorites = Array.isArray(jsonData.favorites) ? jsonData.favorites : []
         const newNotes = Array.isArray(jsonData.notes) ? jsonData.notes : []
 
-        chrome.storage.sync.set({
+        chrome.storage.local.set({
           gemini_prompts: newPrompts,
           gemini_favorites: newFavorites,
           gemini_notes: newNotes
@@ -113,7 +112,7 @@ function IndexPopup() {
 
   const executeClearAll = () => {
     setShowConfirm(false)
-    chrome.storage.sync.remove(["gemini_prompts", "gemini_favorites", "gemini_notes"], () => {
+    chrome.storage.local.remove(["gemini_prompts", "gemini_favorites", "gemini_notes"], () => {
       setPrompts([])
       setFavorites([])
       setNotes([])

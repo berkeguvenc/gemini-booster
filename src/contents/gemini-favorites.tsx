@@ -113,7 +113,7 @@ function injectGlobalStyles(): void {
 
 async function getFavorites(): Promise<FavoriteAnswer[]> {
   return new Promise((resolve) => {
-    chrome.storage.sync.get("gemini_favorites", (result) => {
+    chrome.storage.local.get("gemini_favorites", (result) => {
       resolve(result.gemini_favorites || [])
     })
   })
@@ -121,7 +121,7 @@ async function getFavorites(): Promise<FavoriteAnswer[]> {
 
 async function saveFavorites(favorites: FavoriteAnswer[]): Promise<void> {
   return new Promise((resolve) => {
-    chrome.storage.sync.set({ gemini_favorites: favorites }, resolve)
+    chrome.storage.local.set({ gemini_favorites: favorites }, resolve)
   })
 }
 
@@ -150,7 +150,7 @@ function getResponseText(responseId: string): string {
   const contentEl = document.getElementById(`message-content-id-${responseId}`)
   if (!contentEl) return ""
   const rawText = (contentEl as HTMLElement).innerText?.trim() || ""
-  // 500 karakter limiti (chrome.storage.sync 8 KB limiti için)
+  // 500 karakter limiti (Arayüz performansı ve UX için)
   return rawText.slice(0, 500) + (rawText.length > 500 ? "..." : "")
 }
 
