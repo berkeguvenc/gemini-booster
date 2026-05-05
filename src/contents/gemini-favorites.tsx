@@ -3,7 +3,7 @@ import type { PlasmoCSConfig } from "plasmo"
 import { useEffect } from "react"
 import i18n from "../i18n"
 
-import type { FavoriteAnswer } from "~types/favorite"
+import type { FavoriteAnswer } from "~src/types/favorite"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://gemini.google.com/*"]

@@ -2,7 +2,7 @@ import type { PlasmoCSConfig } from "plasmo"
 import { useEffect } from "react"
 import i18n from "../i18n"
 
-import type { SavedPrompt } from "~types/prompt"
+import type { SavedPrompt } from "~src/types/prompt"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://gemini.google.com/*"]

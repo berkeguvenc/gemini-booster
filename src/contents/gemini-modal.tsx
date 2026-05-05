@@ -5,9 +5,9 @@ import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 import "../i18n"
 
-import type { FavoriteAnswer } from "~types/favorite"
-import type { Note } from "~types/note"
-import type { SavedPrompt } from "~types/prompt"
+import type { FavoriteAnswer } from "../types/favorite"
+import type { Note } from "../types/note"
+import type { SavedPrompt } from "../types/prompt"
 
 import {
   StarIcon,
