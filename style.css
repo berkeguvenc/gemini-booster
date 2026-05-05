@@ -500,22 +500,22 @@ select, textarea {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 6px;
   background-color: transparent;
   color: var(--gem-sys-color--on-surface-variant, var(--local-on-surface-variant));
-  border: 1px solid var(--gem-sys-color--outline-variant, rgba(128, 128, 128, 0.2));
-  border-radius: 8px;
-  padding: 4px 8px;
-  font-size: 12px;
+  border: none;
+  border-radius: 9999px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background-color 0.15s ease, color 0.15s ease;
   margin-left: auto; /* Push it to the right of the header */
 }
 
 .bulk-delete-btn:hover:not(:disabled) {
-  background-color: rgba(234, 67, 53, 0.1); 
-  color: #ea4335;
-  border-color: rgba(234, 67, 53, 0.3);
+  background-color: var(--gem-sys-color--surface-container-highest, var(--local-surface-container-highest));
+  color: var(--gem-sys-color--on-surface, var(--local-on-surface));
 }
 
 .bulk-delete-btn:disabled {
@@ -523,8 +523,13 @@ select, textarea {
   cursor: not-allowed;
 }
 
-.bulk-delete-btn .icon {
-  font-size: 14px;
+.bulk-delete-btn.delete-action {
+  color: var(--gem-sys-color--on-surface-variant, var(--local-on-surface-variant));
+}
+
+.bulk-delete-btn.delete-action:hover:not(:disabled) {
+  background-color: rgba(234, 67, 53, 0.1); 
+  color: #ea4335;
 }
 
 .bulk-delete-btn.deleting {
@@ -533,13 +538,11 @@ select, textarea {
 
 .bulk-delete-btn.cancel {
   color: var(--gem-sys-color--on-surface-variant, var(--local-on-surface-variant));
-  border-color: var(--gem-sys-color--outline-variant, rgba(128, 128, 128, 0.2));
 }
 
 .bulk-delete-btn.cancel:hover:not(:disabled) {
-  background-color: var(--gem-sys-color--surface-container-high, rgba(128, 128, 128, 0.1));
+  background-color: var(--gem-sys-color--surface-container-highest, var(--local-surface-container-highest));
   color: var(--gem-sys-color--on-surface, var(--local-on-surface));
-  border-color: var(--gem-sys-color--outline-variant, rgba(128, 128, 128, 0.4));
 }
 
 @keyframes pulse-delete {

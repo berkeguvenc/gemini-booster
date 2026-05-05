@@ -244,7 +244,7 @@ const GeminiBulkDelete = () => {
         onClick={handleStartSelect}
         className="bulk-delete-btn"
         title="Toplu Seç">
-        <span className="icon">☑️</span>
+        <span className="google-symbols" style={{ fontSize: "18px" }}>checklist</span>
         <span className="text">Toplu Seç</span>
       </button>
     )
@@ -263,10 +263,10 @@ const GeminiBulkDelete = () => {
         <button
           onClick={handleDeleteClick}
           disabled={mode === "deleting" || selectedHrefs.size === 0}
-          className={`bulk-delete-btn ${mode === "deleting" ? "deleting" : ""}`}
+          className={`bulk-delete-btn delete-action ${mode === "deleting" ? "deleting" : ""}`}
           style={{ marginLeft: 0 }}
           title="Seçilenleri Sil">
-          <span className="icon">🗑️</span>
+          <span className="google-symbols" style={{ fontSize: "18px" }}>delete</span>
           <span className="text">
             {mode === "deleting" ? "Siliniyor..." : `Sil (${selectedHrefs.size})`}
           </span>
