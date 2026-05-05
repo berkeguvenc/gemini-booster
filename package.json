@@ -1,8 +1,8 @@
 {
   "name": "enhancer-for-gemini",
   "displayName": "Enhancer for Gemini",
-  "version": "0.0.1",
-  "description": "Enhancer for Gemini",
+  "version": "1.0",
+  "description": "Supercharge your Google Gemini experience with a prompt library, favorite answers, and quick notes.",
   "author": "Yağız Berke Güvenç",
   "scripts": {
     "dev": "plasmo dev",
