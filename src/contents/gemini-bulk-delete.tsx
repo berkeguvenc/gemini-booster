@@ -238,6 +238,8 @@ const GeminiBulkDelete = () => {
     setMode("deleting")
     setShowConfirm(false)
 
+    let resultMessage = ""
+
     try {
       // Iterate through selected items
       for (const href of selectedHrefs) {
@@ -303,13 +305,15 @@ const GeminiBulkDelete = () => {
           document.body.click() // try to close dialog
         }
       }
-      setAlertMessage(t("chatsDeletedSuccess"))
+      resultMessage = t("chatsDeletedSuccess")
     } catch (err) {
       console.error("Silme işlemi sırasında hata:", err)
-      setAlertMessage(t("deleteError"))
+      resultMessage = t("deleteError")
     } finally {
+      // All state updates in the same synchronous block so React batches them
       setMode("idle")
       setSelectedHrefs(new Set())
+      setAlertMessage(resultMessage)
     }
   }
 
@@ -360,15 +364,27 @@ const GeminiBulkDelete = () => {
 
   if (mode === "idle") {
     return (
-      <button
-        onClick={handleStartSelect}
-        className="bulk-delete-btn"
-        title={t("bulkSelect")}>
-        <span className="google-symbols" style={{ fontSize: "18px" }}>
-          checklist
-        </span>
-        <span className="text">{t("bulkSelect")}</span>
-      </button>
+      <>
+        <button
+          onClick={handleStartSelect}
+          className="bulk-delete-btn"
+          title={t("bulkSelect")}>
+          <span className="google-symbols" style={{ fontSize: "18px" }}>
+            checklist
+          </span>
+          <span className="text">{t("bulkSelect")}</span>
+        </button>
+
+        {/* Alert Modal — silme tamamlandığında gösterilir */}
+        {alertMessage && (
+          <AlertModal
+            title={t("info")}
+            message={alertMessage}
+            onClose={() => setAlertMessage("")}
+            closeText={t("ok")}
+          />
+        )}
+      </>
     )
   }
 
