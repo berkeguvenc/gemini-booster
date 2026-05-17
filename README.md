@@ -15,6 +15,11 @@ Read this in other languages: [Türkçe](README.tr.md)
 
 ## Installation
 
+### Download
+
+- **Google Chrome:** [Chrome Web Store](YOUR_CHROME_STORE_LINK_HERE)
+- **Firefox:** [Firefox Add-ons](YOUR_FIREFOX_ADDONS_LINK_HERE)
+
 ### Developer Mode (Local Installation)
 
 1. Clone or download this repository to your local machine.

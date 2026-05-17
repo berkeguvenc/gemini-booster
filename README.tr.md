@@ -15,6 +15,11 @@ Diğer dillerde oku: [English](README.md)
 
 ## Kurulum
 
+### İndir / Yükle
+
+- **Google Chrome:** [Chrome Web Mağazası](YOUR_CHROME_STORE_LINK_HERE)
+- **Firefox:** [Firefox Eklentileri](YOUR_FIREFOX_ADDONS_LINK_HERE)
+
 ### Geliştirici Modu (Yerel Kurulum)
 
 1. Bu depoyu (repository) bilgisayarınıza klonlayın veya indirin.
