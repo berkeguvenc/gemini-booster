@@ -1,17 +1,19 @@
 // contents/gemini-favorites.tsx
 import type { PlasmoCSConfig } from "plasmo"
 import { useEffect } from "react"
-import i18n from "../i18n"
 
+import i18n from "../i18n"
+import { TEXT_TRUNCATE_LIMIT, PULSE_ANIMATION_MS } from "../constants"
+import { initLanguageSync } from "../utils/language"
+import { getFavorites, saveFavorites } from "../utils/storage"
 import type { FavoriteAnswer } from "~src/types/favorite"
-import type { LocalStorageData, SyncStorageData } from "../types/storage"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://gemini.google.com/*"]
 }
 
 // =============================================
-// Stil Enjeksiyonu (doğrudan <head>'e)
+// Style Injection (directly into <head>)
 // =============================================
 
 function injectGlobalStyles(): void {
@@ -109,33 +111,14 @@ function injectGlobalStyles(): void {
 }
 
 // =============================================
-// Storage Yardımcıları
-// =============================================
-
-async function getFavorites(): Promise<FavoriteAnswer[]> {
-  return new Promise((resolve) => {
-    chrome.storage.local.get("gemini_favorites", (res) => {
-      const result = res as LocalStorageData
-      resolve(result.gemini_favorites || [])
-    })
-  })
-}
-
-async function saveFavorites(favorites: FavoriteAnswer[]): Promise<void> {
-  return new Promise((resolve) => {
-    chrome.storage.local.set({ gemini_favorites: favorites }, resolve)
-  })
-}
-
-// =============================================
-// DOM Yardımcıları
+// DOM Helpers
 // =============================================
 
 function getResponseId(thumbUpButtonEl: Element): string | null {
   const button = thumbUpButtonEl.querySelector("button[jslog]")
   if (!button) return null
   const jslog = button.getAttribute("jslog") || ""
-  // jslog: '173913;...BardVeMetadataKey:[["r_XXXX","c_YYYY",...]]'
+  // jslog format: '173913;...BardVeMetadataKey:[[\"r_XXXX\",\"c_YYYY\",...]]'
   const match = jslog.match(/"(r_[a-z0-9]+)"/)
   return match ? match[1] : null
 }
@@ -152,12 +135,12 @@ function getResponseText(responseId: string): string {
   const contentEl = document.getElementById(`message-content-id-${responseId}`)
   if (!contentEl) return ""
   const rawText = (contentEl as HTMLElement).innerText?.trim() || ""
-  // 500 karakter limiti (Arayüz performansı ve UX için)
-  return rawText.slice(0, 500) + (rawText.length > 500 ? "..." : "")
+  // Truncate for UI performance and UX
+  return rawText.slice(0, TEXT_TRUNCATE_LIMIT) + (rawText.length > TEXT_TRUNCATE_LIMIT ? "..." : "")
 }
 
 // =============================================
-// Favori Toggle Mantığı
+// Favorite Toggle Logic
 // =============================================
 
 async function toggleFavorite(
@@ -169,13 +152,13 @@ async function toggleFavorite(
   const existingIndex = favorites.findIndex((f) => f.id === responseId)
 
   if (existingIndex !== -1) {
-    // Zaten favoride → kaldır
+    // Already favorited — remove
     favorites.splice(existingIndex, 1)
     await saveFavorites(favorites)
     window.dispatchEvent(new CustomEvent("FAVORITES_UPDATED"))
     return false
   } else {
-    // Favoriye ekle (en başa)
+    // Add to favorites (prepend)
     const newFavorite: FavoriteAnswer = {
       id: responseId,
       text,
@@ -191,7 +174,7 @@ async function toggleFavorite(
 }
 
 // =============================================
-// Buton Oluşturucu
+// Button Creator
 // =============================================
 
 function createStarButton(
@@ -214,7 +197,7 @@ function createStarButton(
 }
 
 // =============================================
-// Enjeksiyon Mantığı
+// Injection Logic
 // =============================================
 
 function injectStarButton(
@@ -227,7 +210,7 @@ function injectStarButton(
   const container = thumbUpButtonEl.closest(".buttons-container-v2")
   if (!container) return
 
-  // Daha önce enjekte edildiyse atla
+  // Skip if already injected
   if (container.querySelector(`[data-response-id="${responseId}"]`)) return
 
   const conversationId = getConversationId(thumbUpButtonEl) || ""
@@ -250,12 +233,12 @@ function injectStarButton(
       nowFavorited ? i18n.t("removeFromFavorites") : i18n.t("addToFavorites")
     )
 
-    // Görsel geri bildirim animasyonu
+    // Visual feedback animation
     btn.classList.add("gbr-star-pulse")
-    setTimeout(() => btn.classList.remove("gbr-star-pulse"), 300)
+    setTimeout(() => btn.classList.remove("gbr-star-pulse"), PULSE_ANIMATION_MS)
   })
 
-  // thumb-up-button'ın hemen soluna yerleştir
+  // Insert before the thumb-up button
   thumbUpButtonEl.insertAdjacentElement("beforebegin", btn)
 }
 
@@ -267,7 +250,7 @@ function observeMessageActions(): () => void {
 
     if (thumbUpButtons.length === 0) return
 
-    // Hepsini asenkron çağırmadân önce anında işaretle ki, diğer mutation'lar bunları kapmasın.
+    // Mark immediately to prevent duplicate processing from concurrent mutations
     for (const el of thumbUpButtons) {
       el.setAttribute("data-gbr-processed", "true")
     }
@@ -279,10 +262,10 @@ function observeMessageActions(): () => void {
     }
   }
 
-  // İlk yükleme
+  // Initial load
   processAll()
 
-  // Yeni yanıtlar DOM'a eklendiğinde tetiklenir
+  // Re-process when new responses are added to the DOM
   const observer = new MutationObserver(() => {
     processAll()
   })
@@ -296,28 +279,18 @@ function observeMessageActions(): () => void {
 }
 
 // =============================================
-// React Bileşeni (Plasmo zorunluluğu)
-// Bu bileşen herhangi bir UI render etmez.
+// React Component (required by Plasmo)
+// This component does not render any UI.
 // =============================================
 
 const GeminiFavorites = () => {
   useEffect(() => {
-    chrome.storage.sync.get("gbr_settings_language", (res) => {
-      const result = res as SyncStorageData
-      if (result.gbr_settings_language) i18n.changeLanguage(result.gbr_settings_language)
-    })
-    const langListener = (changes: any, ns: string) => {
-      if (ns === "sync" && changes.gbr_settings_language) {
-        i18n.changeLanguage(changes.gbr_settings_language.newValue as string)
-      }
-    }
-    chrome.storage.onChanged.addListener(langListener)
-
+    const cleanupLang = initLanguageSync(i18n)
     injectGlobalStyles()
-    const cleanup = observeMessageActions()
+    const cleanupObserver = observeMessageActions()
     return () => {
-      cleanup()
-      chrome.storage.onChanged.removeListener(langListener)
+      cleanupObserver()
+      cleanupLang()
     }
   }, [])
 

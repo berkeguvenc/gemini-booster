@@ -1,16 +1,19 @@
+// contents/gemini-prompts.tsx
 import type { PlasmoCSConfig } from "plasmo"
 import { useEffect } from "react"
-import i18n from "../i18n"
 
+import i18n from "../i18n"
+import { TEXT_TRUNCATE_LIMIT, PULSE_ANIMATION_MS } from "../constants"
+import { initLanguageSync } from "../utils/language"
+import { getPrompts, savePrompts } from "../utils/storage"
 import type { SavedPrompt } from "~src/types/prompt"
-import type { LocalStorageData, SyncStorageData } from "../types/storage"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://gemini.google.com/*"]
 }
 
 // =============================================
-// Stil Enjeksiyonu
+// Style Injection
 // =============================================
 
 function injectGlobalStyles(): void {
@@ -32,7 +35,7 @@ function injectGlobalStyles(): void {
       color: var(--gem-sys-color--on-surface-variant, #c4c7c5);
       transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
       vertical-align: middle;
-      margin-right: 4px; /* Kopyala butonuyla arasına minik boşluk */
+      margin-right: 4px;
       position: relative;
     }
 
@@ -92,14 +95,14 @@ function injectGlobalStyles(): void {
       animation: gbr-prompt-pulse 0.3s ease;
     }
 
-    /* Kendi wrapper'ımız */
+    /* Wrapper — hidden by default, visible on hover */
     .gbr-prompt-wrapper {
       display: inline-flex;
-      opacity: 0; /* Normalde gizli */
+      opacity: 0;
       transition: opacity 0.2s ease;
     }
 
-    /* İstem bölgesinin (satırın) üzerine gelindiğinde görünür yap */
+    /* Show when hovering the prompt row */
     .query-content:hover .gbr-prompt-wrapper {
       opacity: 1;
     }
@@ -108,26 +111,7 @@ function injectGlobalStyles(): void {
 }
 
 // =============================================
-// Storage Yardımcıları
-// =============================================
-
-async function getPrompts(): Promise<SavedPrompt[]> {
-  return new Promise((resolve) => {
-    chrome.storage.local.get("gemini_prompts", (res) => {
-      const result = res as LocalStorageData
-      resolve(result.gemini_prompts || [])
-    })
-  })
-}
-
-async function savePrompts(prompts: SavedPrompt[]): Promise<void> {
-  return new Promise((resolve) => {
-    chrome.storage.local.set({ gemini_prompts: prompts }, resolve)
-  })
-}
-
-// =============================================
-// DOM Yardımcıları
+// DOM Helpers
 // =============================================
 
 function getResponseId(copyBtnEl: Element): string | null {
@@ -149,18 +133,18 @@ function getPromptText(copyBtnEl: Element): string {
   const queryTextEl = queryContent.querySelector(".query-text")
   if (!queryTextEl) return ""
 
-  // cdk-visually-hidden gibi görünmez etiketleri ayıklamak için klonluyoruz
+  // Clone to strip hidden elements like cdk-visually-hidden
   const clone = queryTextEl.cloneNode(true) as HTMLElement
   const hiddenElements = clone.querySelectorAll(".cdk-visually-hidden")
   hiddenElements.forEach((el) => el.remove())
 
   const rawText = clone.innerText?.trim() || ""
-  // Storage limitlerini korumak için max 500 karakter
-  return rawText.slice(0, 500) + (rawText.length > 500 ? "..." : "")
+  // Enforce storage limit
+  return rawText.slice(0, TEXT_TRUNCATE_LIMIT) + (rawText.length > TEXT_TRUNCATE_LIMIT ? "..." : "")
 }
 
 // =============================================
-// İstem (Prompt) Toggle Mantığı
+// Prompt Toggle Logic
 // =============================================
 
 async function togglePrompt(
@@ -172,13 +156,13 @@ async function togglePrompt(
   const existingIndex = prompts.findIndex((p) => p.id === promptId)
 
   if (existingIndex !== -1) {
-    // Zaten kayıtlıysa → çıkar
+    // Already saved — remove
     prompts.splice(existingIndex, 1)
     await savePrompts(prompts)
     window.dispatchEvent(new CustomEvent("PROMPTS_UPDATED"))
     return false
   } else {
-    // Kaydet (en başa)
+    // Save (prepend)
     const newPrompt: SavedPrompt = {
       id: promptId,
       text,
@@ -194,7 +178,7 @@ async function togglePrompt(
 }
 
 // =============================================
-// Buton Oluşturucu
+// Button Creator
 // =============================================
 
 function createPromptButton(
@@ -206,13 +190,12 @@ function createPromptButton(
   btn.setAttribute("data-prompt-id", promptId)
   btn.setAttribute("aria-label", isSaved ? i18n.t("removePrompt") : i18n.t("savePrompt"))
   btn.setAttribute("data-tooltip", isSaved ? i18n.t("removePrompt") : i18n.t("savePrompt"))
-  // İkon olarak Bookmark kullanıldı.
   btn.innerHTML = `<span class="google-symbols">bookmark</span>`
   return btn
 }
 
 // =============================================
-// Enjeksiyon Mantığı
+// Injection Logic
 // =============================================
 
 function injectPromptButton(copyBtnEl: Element, prompts: SavedPrompt[]): void {
@@ -222,10 +205,10 @@ function injectPromptButton(copyBtnEl: Element, prompts: SavedPrompt[]): void {
   const queryContent = copyBtnEl.closest(".query-content")
   if (!queryContent) return
 
-  // Daha önce enjekte edildiyse asenkron tekrarları önle
+  // Prevent duplicate injection
   if (queryContent.querySelector(`[data-prompt-id="${promptId}"]`)) return
 
-  // Kopyala butonunu saran kapsayıcı div'i buluyoruz ki yanına (soluna) ekleyelim.
+  // Find the wrapper div around the copy button to insert beside it
   const wrapper = copyBtnEl.closest(".ng-star-inserted")
   if (!wrapper) return
 
@@ -251,9 +234,9 @@ function injectPromptButton(copyBtnEl: Element, prompts: SavedPrompt[]): void {
       nowSaved ? i18n.t("removePrompt") : i18n.t("savePrompt")
     )
 
-    // Görsel efekt
+    // Visual feedback
     btn.classList.add("gbr-prompt-pulse")
-    setTimeout(() => btn.classList.remove("gbr-prompt-pulse"), 300)
+    setTimeout(() => btn.classList.remove("gbr-prompt-pulse"), PULSE_ANIMATION_MS)
   })
 
   btnWrapper.appendChild(btn)
@@ -266,7 +249,7 @@ function injectPromptButton(copyBtnEl: Element, prompts: SavedPrompt[]): void {
 
 function observePromptActions(): () => void {
   const processAll = async () => {
-    // "İstemi kopyala" (veya İngilizce Copy prompt) butonlarını hedefler.
+    // Target the "Copy prompt" buttons (both EN and TR aria-labels)
     const copyButtons = Array.from(
       document.querySelectorAll(
         'button[aria-label="İstemi kopyala"]:not([data-gbr-prompt-processed]), button[aria-label="Copy prompt"]:not([data-gbr-prompt-processed])'
@@ -275,14 +258,13 @@ function observePromptActions(): () => void {
 
     if (copyButtons.length === 0) return
 
-    // Senkron işaretleme
+    // Mark synchronously to prevent concurrent mutation races
     for (const el of copyButtons) {
       el.setAttribute("data-gbr-prompt-processed", "true")
     }
 
     const prompts = await getPrompts()
 
-    // Bekleme bitince enjekte et
     for (const el of copyButtons) {
       injectPromptButton(el, prompts)
     }
@@ -304,22 +286,12 @@ function observePromptActions(): () => void {
 
 const GeminiPrompts = () => {
   useEffect(() => {
-    chrome.storage.sync.get("gbr_settings_language", (res) => {
-      const result = res as SyncStorageData
-      if (result.gbr_settings_language) i18n.changeLanguage(result.gbr_settings_language)
-    })
-    const langListener = (changes: any, ns: string) => {
-      if (ns === "sync" && changes.gbr_settings_language) {
-        i18n.changeLanguage(changes.gbr_settings_language.newValue as string)
-      }
-    }
-    chrome.storage.onChanged.addListener(langListener)
-
+    const cleanupLang = initLanguageSync(i18n)
     injectGlobalStyles()
-    const cleanup = observePromptActions()
+    const cleanupObserver = observePromptActions()
     return () => {
-      cleanup()
-      chrome.storage.onChanged.removeListener(langListener)
+      cleanupObserver()
+      cleanupLang()
     }
   }, [])
 

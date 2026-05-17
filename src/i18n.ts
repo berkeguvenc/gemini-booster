@@ -74,7 +74,9 @@ const resources = {
       "noFolders": "No folders found.",
       "noFoldersDesc": "You can create a folder to organize your chats.",
       "create": "Create",
-      "folderColor": "Folder Color"
+      "folderColor": "Folder Color",
+      "emptyFolder": "Empty folder",
+      "close": "Close"
     }
   },
   tr: {
@@ -149,7 +151,9 @@ const resources = {
       "noFolders": "Henüz klasör bulunmuyor.",
       "noFoldersDesc": "Sohbetlerinizi düzenlemek için yeni bir klasör oluşturabilirsiniz.",
       "create": "Oluştur",
-      "folderColor": "Klasör Rengi"
+      "folderColor": "Klasör Rengi",
+      "emptyFolder": "Boş klasör",
+      "close": "Kapat"
     }
   }
 };

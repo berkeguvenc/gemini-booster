@@ -1,7 +1,9 @@
 // components/ModalListItem.tsx
 import React, { useState } from "react"
-import { OpenInNewIcon, CopyIcon, CheckIcon, CloseIcon } from "./Icons"
 import { useTranslation } from "react-i18next"
+
+import { EXPAND_THRESHOLD } from "../constants"
+import { OpenInNewIcon, CopyIcon, CheckIcon, CloseIcon } from "./Icons"
 
 interface ModalListItemProps {
   id: string
@@ -28,7 +30,7 @@ const ModalListItem: React.FC<ModalListItemProps> = ({
   isCopied,
   dateFormat = { day: "numeric", month: "long", year: "numeric" }
 }) => {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const [isExpanded, setIsExpanded] = useState(false)
 
   const toggleExpand = () => setIsExpanded(!isExpanded)
@@ -46,14 +48,17 @@ const ModalListItem: React.FC<ModalListItemProps> = ({
           >
             {text}
           </div>
-          {text.length > 200 && (
+          {text.length > EXPAND_THRESHOLD && (
             <button className="favorite-expand-btn" onClick={toggleExpand}>
               {isExpanded ? t("showLess") : t("readMore")}
             </button>
           )}
           <div className="list-item-metadata">
             <span>
-              {new Date(timestamp).toLocaleDateString("tr-TR", dateFormat)}
+              {new Date(timestamp).toLocaleDateString(
+                i18n.language === "tr" ? "tr-TR" : "en-US",
+                dateFormat
+              )}
             </span>
             {url && (
               <>

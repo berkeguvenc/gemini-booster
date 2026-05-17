@@ -1,10 +1,12 @@
+// contents/gemini-sidebar.tsx
 import cssText from "data-text:~style.css"
 import type { PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo"
 import { useEffect } from "react"
 import { useTranslation } from "react-i18next"
+
 import "../i18n"
+import { initLanguageSync } from "../utils/language"
 import SidebarButton from "../components/SidebarButton"
-import type { SyncStorageData } from "../types/storage"
 
 export const getStyle = () => {
   const style = document.createElement("style")
@@ -30,20 +32,11 @@ const GeminiSidebar = () => {
   const { t, i18n } = useTranslation()
 
   useEffect(() => {
-    chrome.storage.sync.get("gbr_settings_language", (res) => {
-      const result = res as SyncStorageData
-      if (result.gbr_settings_language) i18n.changeLanguage(result.gbr_settings_language)
-    })
-    const listener = (changes: any, ns: string) => {
-      if (ns === "sync" && changes.gbr_settings_language) {
-        i18n.changeLanguage(changes.gbr_settings_language.newValue as string)
-      }
-    }
-    chrome.storage.onChanged.addListener(listener)
-    return () => chrome.storage.onChanged.removeListener(listener)
+    const cleanup = initLanguageSync(i18n)
+    return cleanup
   }, [i18n])
 
-  // Modalı açmak için Global bir Event fırlatıyoruz
+  // Dispatch a global event to open the modal
   const openModal = (type: string) => {
     window.dispatchEvent(new CustomEvent("OPEN_GEMINI_MODAL", { detail: type }))
   }
@@ -77,4 +70,5 @@ const GeminiSidebar = () => {
     </div>
   )
 }
+
 export default GeminiSidebar
