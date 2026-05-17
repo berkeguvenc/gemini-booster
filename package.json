@@ -10,6 +10,7 @@
     "package": "plasmo package"
   },
   "dependencies": {
+    "@plasmohq/storage": "^1.15.0",
     "i18next": "^26.0.8",
     "plasmo": "^0.90.5",
     "react": "19.2.5",
