@@ -5,7 +5,7 @@ import ConfirmModal from "./components/ConfirmModal"
 import AlertModal from "./components/AlertModal"
 import StatBox from "./components/StatBox"
 import SearchResultItem from "./components/SearchResultItem"
-import { BookmarkIcon, StarIcon, DocumentIcon } from "./components/Icons"
+import { BookmarkIcon, StarIcon, DocumentIcon, FolderIcon } from "./components/Icons"
 import type { LocalStorageData, SyncStorageData } from "./types/storage"
 
 function IndexPopup() {
@@ -14,6 +14,7 @@ function IndexPopup() {
   const [prompts, setPrompts] = useState<any[]>([])
   const [favorites, setFavorites] = useState<any[]>([])
   const [notes, setNotes] = useState<any[]>([])
+  const [folders, setFolders] = useState<any[]>([])
   const [bulkDeleteEnabled, setBulkDeleteEnabled] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
   const [copiedId, setCopiedId] = useState<string | null>(null)
@@ -24,13 +25,14 @@ function IndexPopup() {
 
   useEffect(() => {
     // Verileri chrome.storage'dan çek
-    chrome.storage.local.get(["gemini_prompts", "gemini_favorites", "gemini_notes"], (localRes) => {
+    chrome.storage.local.get(["gemini_prompts", "gemini_favorites", "gemini_notes", "gemini_folders"], (localRes) => {
       const localResult = localRes as LocalStorageData
       chrome.storage.sync.get(["gbr_settings_bulk_delete", "gbr_settings_language"], (syncRes) => {
         const syncResult = syncRes as SyncStorageData
         setPrompts(localResult.gemini_prompts || [])
         setFavorites(localResult.gemini_favorites || [])
         setNotes(localResult.gemini_notes || [])
+        setFolders(localResult.gemini_folders || [])
         if (syncResult.gbr_settings_bulk_delete !== undefined) {
           setBulkDeleteEnabled(syncResult.gbr_settings_bulk_delete)
         }
@@ -48,12 +50,13 @@ function IndexPopup() {
   }, [i18n])
 
   const handleExport = () => {
-    chrome.storage.local.get(["gemini_prompts", "gemini_favorites", "gemini_notes"], (res) => {
+    chrome.storage.local.get(["gemini_prompts", "gemini_favorites", "gemini_notes", "gemini_folders"], (res) => {
       const result = res as LocalStorageData
       const exportData = {
         prompts: result.gemini_prompts || [],
         favorites: result.gemini_favorites || [],
-        notes: result.gemini_notes || []
+        notes: result.gemini_notes || [],
+        folders: result.gemini_folders || []
       }
       const blob = new Blob([JSON.stringify(exportData, null, 2)], {
         type: "application/json"
@@ -85,16 +88,19 @@ function IndexPopup() {
         const newPrompts = Array.isArray(jsonData.prompts) ? jsonData.prompts : []
         const newFavorites = Array.isArray(jsonData.favorites) ? jsonData.favorites : []
         const newNotes = Array.isArray(jsonData.notes) ? jsonData.notes : []
+        const newFolders = Array.isArray(jsonData.folders) ? jsonData.folders : []
 
         chrome.storage.local.set({
           gemini_prompts: newPrompts,
           gemini_favorites: newFavorites,
-          gemini_notes: newNotes
+          gemini_notes: newNotes,
+          gemini_folders: newFolders
         }, () => {
           setAlertMessage(t("importSuccess"))
           setPrompts(newPrompts)
           setFavorites(newFavorites)
           setNotes(newNotes)
+          setFolders(newFolders)
         })
       } catch (error) {
         setAlertMessage(t("importReadError"))
@@ -116,10 +122,11 @@ function IndexPopup() {
 
   const executeClearAll = () => {
     setShowConfirm(false)
-    chrome.storage.local.remove(["gemini_prompts", "gemini_favorites", "gemini_notes"], () => {
+    chrome.storage.local.remove(["gemini_prompts", "gemini_favorites", "gemini_notes", "gemini_folders"], () => {
       setPrompts([])
       setFavorites([])
       setNotes([])
+      setFolders([])
       setAlertMessage(t("clearedSuccess"))
     })
   }
@@ -306,13 +313,14 @@ function IndexPopup() {
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "1fr 1fr 1fr",
+                gridTemplateColumns: "1fr 1fr",
                 gap: "8px",
                 marginBottom: "20px"
               }}>
               <StatBox icon={<BookmarkIcon size={24} />} value={prompts.length} label={t("prompts")} />
               <StatBox icon={<StarIcon size={24} />} value={favorites.length} label={t("favorites")} />
               <StatBox icon={<DocumentIcon size={24} />} value={notes.length} label={t("notes")} />
+              <StatBox icon={<FolderIcon size={24} />} value={folders.length} label={t("chatFolders")} />
             </div>
 
             {/* Veri Yönetimi */}

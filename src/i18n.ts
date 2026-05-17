@@ -110,7 +110,7 @@ const resources = {
       "deleteError": "Bir hata oluştu, işlem durduruldu.",
       "bulkSelect": "Seç",
       "deleting": "Siliniyor...",
-      "deleteCount": "Sil ({{count}})",
+      "deleteCount": "({{count}})",
       "deleteChatsTitle": "Sohbetleri Sil",
       "deleteChatsDesc": "Seçilen {{count}} sohbeti kalıcı olarak silmek istediğinize emin misiniz? Bu işlem geri alınamaz.",
       "favoriteAnswers": "Favori Cevaplar",

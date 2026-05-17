@@ -2,9 +2,11 @@ import cssText from "data-text:~style.css"
 import type { PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo"
 import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
+
 import "../i18n"
-import ConfirmModal from "../components/ConfirmModal"
+
 import AlertModal from "../components/AlertModal"
+import ConfirmModal from "../components/ConfirmModal"
 import type { LocalStorageData, SyncStorageData } from "../types/storage"
 
 export const getStyle = () => {
@@ -40,15 +42,18 @@ const GeminiBulkDelete = () => {
   const { t, i18n } = useTranslation()
 
   useEffect(() => {
-    chrome.storage.sync.get(["gbr_settings_bulk_delete", "gbr_settings_language"], (res) => {
-      const result = res as SyncStorageData
-      if (result.gbr_settings_bulk_delete !== undefined) {
-        setEnabled(result.gbr_settings_bulk_delete)
+    chrome.storage.sync.get(
+      ["gbr_settings_bulk_delete", "gbr_settings_language"],
+      (res) => {
+        const result = res as SyncStorageData
+        if (result.gbr_settings_bulk_delete !== undefined) {
+          setEnabled(result.gbr_settings_bulk_delete)
+        }
+        if (result.gbr_settings_language) {
+          i18n.changeLanguage(result.gbr_settings_language)
+        }
       }
-      if (result.gbr_settings_language) {
-        i18n.changeLanguage(result.gbr_settings_language)
-      }
-    })
+    )
 
     chrome.storage.local.get("gemini_folders", (res) => {
       const result = res as LocalStorageData
@@ -63,10 +68,15 @@ const GeminiBulkDelete = () => {
     }
     window.addEventListener("FOLDERS_UPDATED", handleFoldersUpdated)
 
-    const listener = (changes: { [key: string]: chrome.storage.StorageChange }, namespace: string) => {
+    const listener = (
+      changes: { [key: string]: chrome.storage.StorageChange },
+      namespace: string
+    ) => {
       if (namespace === "sync") {
-        if (changes.gbr_settings_bulk_delete) setEnabled(changes.gbr_settings_bulk_delete.newValue as boolean)
-        if (changes.gbr_settings_language) i18n.changeLanguage(changes.gbr_settings_language.newValue as string)
+        if (changes.gbr_settings_bulk_delete)
+          setEnabled(changes.gbr_settings_bulk_delete.newValue as boolean)
+        if (changes.gbr_settings_language)
+          i18n.changeLanguage(changes.gbr_settings_language.newValue as string)
       }
     }
     chrome.storage.onChanged.addListener(listener)
@@ -137,7 +147,8 @@ const GeminiBulkDelete = () => {
   }
 
   const getSelectedChatsData = () => {
-    const chats: { id: string, title: string, url: string, addedAt: number }[] = []
+    const chats: { id: string; title: string; url: string; addedAt: number }[] =
+      []
     for (const href of selectedHrefs) {
       const anchor = document.querySelector(`a[href="${href}"]`)
       let title = "Unknown Chat"
@@ -145,12 +156,17 @@ const GeminiBulkDelete = () => {
         // Try to get title from inner span/div, or use textContent
         title = anchor.textContent?.trim() || "Unknown Chat"
         // Clean up title (remove "Options" text if present)
-        title = title.replace(/Options/i, '').replace(/Seçenekler/i, '').trim()
+        title = title
+          .replace(/Options/i, "")
+          .replace(/Seçenekler/i, "")
+          .trim()
       }
       chats.push({
         id: href,
         title,
-        url: href.startsWith('http') ? href : `https://gemini.google.com${href}`,
+        url: href.startsWith("http")
+          ? href
+          : `https://gemini.google.com${href}`,
         addedAt: Date.now()
       })
     }
@@ -167,10 +183,10 @@ const GeminiBulkDelete = () => {
 
   const addChatsToFolder = (folderId: string) => {
     const chatsToAdd = getSelectedChatsData()
-    const updatedFolders = folders.map(f => {
+    const updatedFolders = folders.map((f) => {
       if (f.id === folderId) {
         const existingIds = new Set(f.chats.map((c: any) => c.id))
-        const newChats = chatsToAdd.filter(c => !existingIds.has(c.id))
+        const newChats = chatsToAdd.filter((c) => !existingIds.has(c.id))
         return { ...f, chats: [...newChats, ...f.chats] }
       }
       return f
@@ -189,12 +205,15 @@ const GeminiBulkDelete = () => {
   const handleCreateAndAdd = () => {
     if (!newFolderName.trim()) return
     const newFolder = {
-      id: "folder_" + Date.now().toString() + Math.random().toString(36).substr(2, 5),
+      id:
+        "folder_" +
+        Date.now().toString() +
+        Math.random().toString(36).substr(2, 5),
       name: newFolderName.trim(),
       createdAt: Date.now(),
       chats: getSelectedChatsData()
     }
-    
+
     const updatedFolders = [newFolder, ...folders]
     chrome.storage.local.set({ gemini_folders: updatedFolders }, () => {
       setFolders(updatedFolders)
@@ -345,7 +364,9 @@ const GeminiBulkDelete = () => {
         onClick={handleStartSelect}
         className="bulk-delete-btn"
         title={t("bulkSelect")}>
-        <span className="google-symbols" style={{ fontSize: "18px" }}>checklist</span>
+        <span className="google-symbols" style={{ fontSize: "18px" }}>
+          checklist
+        </span>
         <span className="text">{t("bulkSelect")}</span>
       </button>
     )
@@ -367,8 +388,9 @@ const GeminiBulkDelete = () => {
           className={`bulk-delete-btn ${mode === "deleting" ? "deleting" : ""}`}
           style={{ marginLeft: 0 }}
           title={t("addToFolder")}>
-          <span className="google-symbols" style={{ fontSize: "18px" }}>folder</span>
-          <span className="text">{t("addToFolder")}</span>
+          <span className="google-symbols" style={{ fontSize: "18px" }}>
+            folder
+          </span>
         </button>
         <button
           onClick={handleDeleteClick}
@@ -376,9 +398,13 @@ const GeminiBulkDelete = () => {
           className={`bulk-delete-btn delete-action ${mode === "deleting" ? "deleting" : ""}`}
           style={{ marginLeft: 0 }}
           title={t("deleteChatsTitle")}>
-          <span className="google-symbols" style={{ fontSize: "18px" }}>delete</span>
+          <span className="google-symbols" style={{ fontSize: "18px" }}>
+            delete
+          </span>
           <span className="text">
-            {mode === "deleting" ? t("deleting") : t("deleteCount", { count: selectedHrefs.size })}
+            {mode === "deleting"
+              ? t("deleting")
+              : t("deleteCount", { count: selectedHrefs.size })}
           </span>
         </button>
       </div>
@@ -408,86 +434,131 @@ const GeminiBulkDelete = () => {
       {/* Folder Select Modal */}
       {showFolderModal && (
         <div className="modal-overlay dark" style={{ zIndex: 9999 }}>
-          <div className="modal-clickaway" onClick={() => setShowFolderModal(false)}></div>
-          <div className="modal-box" style={{ padding: "24px", maxWidth: "400px", background: "var(--gem-sys-color--surface, #131314)", borderRadius: "24px" }}>
-            <h2 style={{ color: "var(--gem-sys-color--on-surface, #e3e3e3)", marginBottom: "16px", fontSize: "18px" }}>{t("selectFolder")}</h2>
-            
+          <div
+            className="modal-clickaway"
+            onClick={() => setShowFolderModal(false)}></div>
+          <div
+            className="modal-box"
+            style={{
+              padding: "24px",
+              maxWidth: "400px",
+              background: "var(--gem-sys-color--surface, #131314)",
+              borderRadius: "24px"
+            }}>
+            <h2
+              style={{
+                color: "var(--gem-sys-color--on-surface, #e3e3e3)",
+                marginBottom: "16px",
+                fontSize: "18px"
+              }}>
+              {t("selectFolder")}
+            </h2>
+
             <div style={{ display: "flex", gap: "8px", marginBottom: "16px" }}>
-              <input 
+              <input
                 value={newFolderName}
                 onChange={(e) => setNewFolderName(e.target.value)}
                 placeholder={t("createNewFolder")}
-                style={{ 
-                  flex: 1, 
-                  padding: "12px", 
-                  borderRadius: "12px", 
-                  border: "1px solid var(--gem-sys-color--outline-variant, #444746)", 
-                  background: "var(--gem-sys-color--surface-container-high, #282a2c)", 
+                style={{
+                  flex: 1,
+                  padding: "12px",
+                  borderRadius: "12px",
+                  border:
+                    "1px solid var(--gem-sys-color--outline-variant, #444746)",
+                  background:
+                    "var(--gem-sys-color--surface-container-high, #282a2c)",
                   color: "var(--gem-sys-color--on-surface, #e3e3e3)",
                   outline: "none",
                   fontSize: "14px"
                 }}
               />
-              <button 
+              <button
                 onClick={handleCreateAndAdd}
                 disabled={!newFolderName.trim()}
-                style={{ 
-                  padding: "12px 16px", 
-                  borderRadius: "12px", 
-                  background: "var(--gem-sys-color--primary, #a8c7fa)", 
-                  color: "var(--gem-sys-color--on-primary, #000)", 
+                style={{
+                  padding: "12px 16px",
+                  borderRadius: "12px",
+                  background: "var(--gem-sys-color--primary, #a8c7fa)",
+                  color: "var(--gem-sys-color--on-primary, #000)",
                   border: "none",
                   cursor: newFolderName.trim() ? "pointer" : "not-allowed",
                   opacity: newFolderName.trim() ? 1 : 0.5,
                   fontWeight: 500,
                   fontSize: "14px"
-                }}
-              >{t("create")}</button>
+                }}>
+                {t("create")}
+              </button>
             </div>
 
             {folders.length > 0 ? (
-              <div style={{ display: "flex", flexDirection: "column", gap: "8px", maxHeight: "300px", overflowY: "auto" }}>
-                {folders.map(f => (
-                  <button 
-                    key={f.id} 
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "8px",
+                  maxHeight: "300px",
+                  overflowY: "auto"
+                }}>
+                {folders.map((f) => (
+                  <button
+                    key={f.id}
                     onClick={() => addChatsToFolder(f.id)}
-                    style={{ 
-                      padding: "12px 16px", 
-                      textAlign: "left", 
-                      background: "var(--gem-sys-color--surface-container, #1e1f20)", 
-                      color: "var(--gem-sys-color--on-surface, #e3e3e3)", 
-                      borderRadius: "12px", 
-                      border: "1px solid var(--gem-sys-color--surface-variant, #444746)", 
+                    style={{
+                      padding: "12px 16px",
+                      textAlign: "left",
+                      background:
+                        "var(--gem-sys-color--surface-container, #1e1f20)",
+                      color: "var(--gem-sys-color--on-surface, #e3e3e3)",
+                      borderRadius: "12px",
+                      border:
+                        "1px solid var(--gem-sys-color--surface-variant, #444746)",
                       cursor: "pointer",
                       display: "flex",
                       alignItems: "center"
-                    }}
-                  >
-                    <span className="google-symbols" style={{ fontSize: "20px", marginRight: "12px", color: "var(--gem-sys-color--primary, #a8c7fa)" }}>folder</span>
+                    }}>
+                    <span
+                      className="google-symbols"
+                      style={{
+                        fontSize: "20px",
+                        marginRight: "12px",
+                        color: "var(--gem-sys-color--primary, #a8c7fa)"
+                      }}>
+                      folder
+                    </span>
                     <span style={{ fontSize: "14px" }}>{f.name}</span>
                   </button>
                 ))}
               </div>
             ) : (
-              <div style={{ padding: "16px", textAlign: "center", color: "var(--gem-sys-color--on-surface-variant, #c4c7c5)", fontSize: "14px" }}>
+              <div
+                style={{
+                  padding: "16px",
+                  textAlign: "center",
+                  color: "var(--gem-sys-color--on-surface-variant, #c4c7c5)",
+                  fontSize: "14px"
+                }}>
                 {t("noFolders")}
               </div>
             )}
-            
-            <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "24px" }}>
-              <button 
+
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                marginTop: "24px"
+              }}>
+              <button
                 onClick={() => setShowFolderModal(false)}
-                style={{ 
-                  background: "transparent", 
-                  border: "none", 
-                  color: "var(--gem-sys-color--on-surface-variant, #c4c7c5)", 
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  color: "var(--gem-sys-color--on-surface-variant, #c4c7c5)",
                   cursor: "pointer",
                   padding: "8px 16px",
                   borderRadius: "20px",
                   fontSize: "14px",
                   fontWeight: 500
-                }}
-              >
+                }}>
                 {t("cancel")}
               </button>
             </div>
