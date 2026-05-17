@@ -6,6 +6,7 @@ import AlertModal from "./components/AlertModal"
 import StatBox from "./components/StatBox"
 import SearchResultItem from "./components/SearchResultItem"
 import { BookmarkIcon, StarIcon, DocumentIcon } from "./components/Icons"
+import type { LocalStorageData, SyncStorageData } from "./types/storage"
 
 function IndexPopup() {
   const { t, i18n } = useTranslation()
@@ -23,8 +24,10 @@ function IndexPopup() {
 
   useEffect(() => {
     // Verileri chrome.storage'dan çek
-    chrome.storage.local.get(["gemini_prompts", "gemini_favorites", "gemini_notes"], (localResult) => {
-      chrome.storage.sync.get(["gbr_settings_bulk_delete", "gbr_settings_language"], (syncResult) => {
+    chrome.storage.local.get(["gemini_prompts", "gemini_favorites", "gemini_notes"], (localRes) => {
+      const localResult = localRes as LocalStorageData
+      chrome.storage.sync.get(["gbr_settings_bulk_delete", "gbr_settings_language"], (syncRes) => {
+        const syncResult = syncRes as SyncStorageData
         setPrompts(localResult.gemini_prompts || [])
         setFavorites(localResult.gemini_favorites || [])
         setNotes(localResult.gemini_notes || [])
@@ -45,7 +48,8 @@ function IndexPopup() {
   }, [i18n])
 
   const handleExport = () => {
-    chrome.storage.local.get(["gemini_prompts", "gemini_favorites", "gemini_notes"], (result) => {
+    chrome.storage.local.get(["gemini_prompts", "gemini_favorites", "gemini_notes"], (res) => {
+      const result = res as LocalStorageData
       const exportData = {
         prompts: result.gemini_prompts || [],
         favorites: result.gemini_favorites || [],

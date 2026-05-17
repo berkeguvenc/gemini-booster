@@ -3,6 +3,7 @@ import { useEffect } from "react"
 import i18n from "../i18n"
 
 import type { SavedPrompt } from "~src/types/prompt"
+import type { LocalStorageData, SyncStorageData } from "../types/storage"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://gemini.google.com/*"]
@@ -112,7 +113,8 @@ function injectGlobalStyles(): void {
 
 async function getPrompts(): Promise<SavedPrompt[]> {
   return new Promise((resolve) => {
-    chrome.storage.local.get("gemini_prompts", (result) => {
+    chrome.storage.local.get("gemini_prompts", (res) => {
+      const result = res as LocalStorageData
       resolve(result.gemini_prompts || [])
     })
   })
@@ -303,11 +305,12 @@ function observePromptActions(): () => void {
 const GeminiPrompts = () => {
   useEffect(() => {
     chrome.storage.sync.get("gbr_settings_language", (res) => {
-      if (res.gbr_settings_language) i18n.changeLanguage(res.gbr_settings_language)
+      const result = res as SyncStorageData
+      if (result.gbr_settings_language) i18n.changeLanguage(result.gbr_settings_language)
     })
     const langListener = (changes: any, ns: string) => {
       if (ns === "sync" && changes.gbr_settings_language) {
-        i18n.changeLanguage(changes.gbr_settings_language.newValue)
+        i18n.changeLanguage(changes.gbr_settings_language.newValue as string)
       }
     }
     chrome.storage.onChanged.addListener(langListener)

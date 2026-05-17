@@ -4,6 +4,7 @@ import { useEffect } from "react"
 import i18n from "../i18n"
 
 import type { FavoriteAnswer } from "~src/types/favorite"
+import type { LocalStorageData, SyncStorageData } from "../types/storage"
 
 export const config: PlasmoCSConfig = {
   matches: ["https://gemini.google.com/*"]
@@ -113,7 +114,8 @@ function injectGlobalStyles(): void {
 
 async function getFavorites(): Promise<FavoriteAnswer[]> {
   return new Promise((resolve) => {
-    chrome.storage.local.get("gemini_favorites", (result) => {
+    chrome.storage.local.get("gemini_favorites", (res) => {
+      const result = res as LocalStorageData
       resolve(result.gemini_favorites || [])
     })
   })
@@ -301,11 +303,12 @@ function observeMessageActions(): () => void {
 const GeminiFavorites = () => {
   useEffect(() => {
     chrome.storage.sync.get("gbr_settings_language", (res) => {
-      if (res.gbr_settings_language) i18n.changeLanguage(res.gbr_settings_language)
+      const result = res as SyncStorageData
+      if (result.gbr_settings_language) i18n.changeLanguage(result.gbr_settings_language)
     })
     const langListener = (changes: any, ns: string) => {
       if (ns === "sync" && changes.gbr_settings_language) {
-        i18n.changeLanguage(changes.gbr_settings_language.newValue)
+        i18n.changeLanguage(changes.gbr_settings_language.newValue as string)
       }
     }
     chrome.storage.onChanged.addListener(langListener)

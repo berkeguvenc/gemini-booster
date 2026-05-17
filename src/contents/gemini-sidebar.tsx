@@ -4,6 +4,7 @@ import { useEffect } from "react"
 import { useTranslation } from "react-i18next"
 import "../i18n"
 import SidebarButton from "../components/SidebarButton"
+import type { SyncStorageData } from "../types/storage"
 
 export const getStyle = () => {
   const style = document.createElement("style")
@@ -30,11 +31,12 @@ const GeminiSidebar = () => {
 
   useEffect(() => {
     chrome.storage.sync.get("gbr_settings_language", (res) => {
-      if (res.gbr_settings_language) i18n.changeLanguage(res.gbr_settings_language)
+      const result = res as SyncStorageData
+      if (result.gbr_settings_language) i18n.changeLanguage(result.gbr_settings_language)
     })
     const listener = (changes: any, ns: string) => {
       if (ns === "sync" && changes.gbr_settings_language) {
-        i18n.changeLanguage(changes.gbr_settings_language.newValue)
+        i18n.changeLanguage(changes.gbr_settings_language.newValue as string)
       }
     }
     chrome.storage.onChanged.addListener(listener)
@@ -54,6 +56,11 @@ const GeminiSidebar = () => {
             icon="star"
             label={t("favoriteAnswers")}
             onClick={() => openModal("favorites")}
+          />
+          <SidebarButton
+            icon="folder"
+            label={t("chatFolders")}
+            onClick={() => openModal("folders")}
           />
           <SidebarButton
             icon="bookmark"

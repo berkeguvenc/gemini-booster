@@ -63,7 +63,18 @@ const resources = {
       "removeFromFavorites": "Remove from favorites",
       "addToFavorites": "Add to favorites",
       "removePrompt": "Remove prompt",
-      "savePrompt": "Save prompt"
+      "savePrompt": "Save prompt",
+      "chatFolders": "Chat Folders",
+      "addToFolder": "Add to Folder",
+      "createNewFolder": "Create New Folder",
+      "folderName": "Folder Name",
+      "selectFolder": "Select Folder",
+      "chatsAddedToFolder": "Chats successfully added to the folder.",
+      "removeFromFolder": "Remove from folder",
+      "noFolders": "No folders found.",
+      "noFoldersDesc": "You can create a folder to organize your chats.",
+      "create": "Create",
+      "folderColor": "Folder Color"
     }
   },
   tr: {
@@ -127,7 +138,18 @@ const resources = {
       "removeFromFavorites": "Favorilerden çıkar",
       "addToFavorites": "Favorilere ekle",
       "removePrompt": "İstemi çıkar",
-      "savePrompt": "İstemi kaydet"
+      "savePrompt": "İstemi kaydet",
+      "chatFolders": "Sohbet Klasörleri",
+      "addToFolder": "Klasöre Ekle",
+      "createNewFolder": "Yeni Klasör Oluştur",
+      "folderName": "Klasör Adı",
+      "selectFolder": "Klasör Seç",
+      "chatsAddedToFolder": "Sohbetler klasöre başarıyla eklendi.",
+      "removeFromFolder": "Klasörden çıkar",
+      "noFolders": "Henüz klasör bulunmuyor.",
+      "noFoldersDesc": "Sohbetlerinizi düzenlemek için yeni bir klasör oluşturabilirsiniz.",
+      "create": "Oluştur",
+      "folderColor": "Klasör Rengi"
     }
   }
 };
