@@ -5,8 +5,9 @@ import { useEffect } from "react"
 import { useTranslation } from "react-i18next"
 
 import "../i18n"
-import { initLanguageSync } from "../utils/language"
+
 import SidebarButton from "../components/SidebarButton"
+import { initLanguageSync } from "../utils/language"
 
 export const getStyle = () => {
   const style = document.createElement("style")
@@ -46,14 +47,14 @@ const GeminiSidebar = () => {
       <div className="gemini-sidebar-content">
         <div className="sidebar-btn-group">
           <SidebarButton
-            icon="star"
-            label={t("favoriteAnswers")}
-            onClick={() => openModal("favorites")}
-          />
-          <SidebarButton
             icon="folder"
             label={t("chatFolders")}
             onClick={() => openModal("folders")}
+          />
+          <SidebarButton
+            icon="star"
+            label={t("favoriteAnswers")}
+            onClick={() => openModal("favorites")}
           />
           <SidebarButton
             icon="bookmark"
