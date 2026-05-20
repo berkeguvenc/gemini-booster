@@ -9,6 +9,7 @@ Read this in other languages: [Türkçe](README.tr.md)
 - **Favorite Answers:** Save your favorite Gemini responses to access them later instantly.
 - **Prompt Library:** Build and manage your own library of frequently used prompts.
 - **My Notes:** Keep personal notes directly within the Gemini interface.
+- **Chat Folders:** Organize your chats by moving them into folders.
 - **Search Functionality:** Easily search through all your saved prompts, favorites, and notes from the extension popup.
 - **Data Export & Import:** Backup your data by exporting it to a JSON file and restore it on any device.
 - **Bilingual Support:** Fully supports both English and Turkish languages.
@@ -25,11 +26,11 @@ Read this in other languages: [Türkçe](README.tr.md)
 1. Clone or download this repository to your local machine.
 2. Install the dependencies:
    ```bash
-   npm install
+   pnpm install
    ```
 3. Build the extension:
    ```bash
-   npm run build
+   pnpm run build
    ```
 4. Open Google Chrome and navigate to `chrome://extensions/`.
 5. Enable **"Developer mode"** in the top right corner.
@@ -42,22 +43,22 @@ This project is built using [Plasmo](https://docs.plasmo.com/) and React.
 
 - **Start development server:**
   ```bash
-  npm run dev
+  pnpm run dev
   ```
 - **Build for production:**
   ```bash
-  npm run build
+  pnpm run build
   ```
 - **Package the extension:**
   ```bash
-  npm run package
+  pnpm run package
   ```
 
 ## Technologies Used
 - React
 - TypeScript
 - Plasmo Framework
-- i18next (for localization)
+- i18next
 
 ## License
 MIT License

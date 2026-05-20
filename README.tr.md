@@ -9,6 +9,7 @@ Diğer dillerde oku: [English](README.md)
 - **Favori Cevaplar:** Beğendiğiniz Gemini yanıtlarını kaydedin ve daha sonra anında erişin.
 - **İstem Kütüphanesi:** Sık kullandığınız istemlerden (prompts) oluşan kendi kütüphanenizi oluşturun ve yönetin.
 - **Notlarım:** Doğrudan Gemini arayüzü içinde kişisel notlarınızı tutun.
+- **Sohbet Klasörleri:** Sohbetlerinizi klasörlere ayırarak düzenleyin.
 - **Arama İşlevi:** Eklenti açılır penceresinden (popup) tüm kayıtlı istemleriniz, favorileriniz ve notlarınız arasında kolayca arama yapın.
 - **Veri İçe/Dışa Aktarma:** Verilerinizi bir JSON dosyasına dışa aktararak yedekleyin ve istediğiniz cihazda geri yükleyin.
 - **Çift Dil Desteği:** İngilizce ve Türkçe dillerini tam olarak destekler.
@@ -25,11 +26,11 @@ Diğer dillerde oku: [English](README.md)
 1. Bu depoyu (repository) bilgisayarınıza klonlayın veya indirin.
 2. Gerekli paketleri yükleyin:
    ```bash
-   npm install
+   pnpm install
    ```
 3. Eklentiyi derleyin:
    ```bash
-   npm run build
+   pnpm run build
    ```
 4. Google Chrome'u açın ve `chrome://extensions/` adresine gidin.
 5. Sağ üst köşedeki **"Geliştirici modu"** (Developer mode) seçeneğini aktifleştirin.
@@ -42,22 +43,22 @@ Bu proje [Plasmo](https://docs.plasmo.com/) ve React kullanılarak geliştirilmi
 
 - **Geliştirme sunucusunu başlatmak için:**
   ```bash
-  npm run dev
+  pnpm run dev
   ```
 - **Üretim (production) için derlemek için:**
   ```bash
-  npm run build
+  pnpm run build
   ```
 - **Eklentiyi paketlemek için:**
   ```bash
-  npm run package
+  pnpm run package
   ```
 
 ## Kullanılan Teknolojiler
 - React
 - TypeScript
 - Plasmo Framework
-- i18next (yerelleştirme için)
+- i18next
 
 ## Lisans
 MIT Lisansı
