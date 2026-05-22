@@ -796,3 +796,51 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
   width: 100%;
   box-sizing: border-box;
 }
+
+/* =============================================
+   Collapsed Sidebar Styling
+   ============================================= */
+
+.gemini-sidebar-container.collapsed {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 8px 0;
+  box-sizing: border-box;
+}
+
+.sidebar-collapsed-btn-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.side-nav-collapsed-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--gem-sys-color--on-surface-variant, var(--local-on-surface-variant));
+  transition: background-color 0.2s cubic-bezier(0.2, 0, 0, 1), color 0.2s ease;
+  outline: none;
+}
+
+.side-nav-collapsed-btn:hover {
+  background-color: var(--gem-sys-color--surface-container-highest, var(--local-surface-container-highest));
+  color: var(--gem-sys-color--on-surface, var(--local-on-surface));
+}
+
+.side-nav-collapsed-btn .side-nav-icon {
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

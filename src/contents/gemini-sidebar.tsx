@@ -1,12 +1,13 @@
 // contents/gemini-sidebar.tsx
 import cssText from "data-text:~style.css"
-import type { PlasmoCSConfig, PlasmoGetInlineAnchor } from "plasmo"
-import { useEffect } from "react"
+import type { PlasmoCSConfig, PlasmoGetInlineAnchorList } from "plasmo"
+import { useEffect, useState } from "react"
 import { useTranslation } from "react-i18next"
 
 import "../i18n"
 
 import SidebarButton from "../components/SidebarButton"
+import SidebarCollapsedButton from "../components/SidebarCollapsedButton"
 import { initLanguageSync } from "../utils/language"
 
 export const getStyle = () => {
@@ -19,25 +20,86 @@ export const config: PlasmoCSConfig = {
   matches: ["https://gemini.google.com/*"]
 }
 
-export const getInlineAnchor: PlasmoGetInlineAnchor = async () => {
-  const element =
-    document.querySelector('.top-action-list-scrollable [data-test-id="my-stuff-side-nav-entry-button"]') ||
-    document.querySelector('mat-nav-list:not(.removed) [data-test-id="my-stuff-side-nav-entry-button"]') ||
-    document.querySelector('[data-test-id="my-stuff-side-nav-entry-button"]')
-  return element ? { element, insertPosition: "afterend" } : null
+export const getInlineAnchorList: PlasmoGetInlineAnchorList = async () => {
+  const elements = document.querySelectorAll('[data-test-id="my-stuff-side-nav-entry-button"]')
+  return Array.from(elements).map((element) => ({
+    element,
+    insertPosition: "afterend"
+  }))
 }
 
 const GeminiSidebar = () => {
   const { t, i18n } = useTranslation()
+  const [isCollapsed, setIsCollapsed] = useState(false)
 
   useEffect(() => {
     const cleanup = initLanguageSync(i18n)
     return cleanup
   }, [i18n])
 
+  useEffect(() => {
+    let observer: MutationObserver | null = null
+
+    const initObserver = () => {
+      const sidenav = document.querySelector("bard-sidenav")
+      if (!sidenav) {
+        setTimeout(initObserver, 200)
+        return
+      }
+
+      setIsCollapsed(sidenav.classList.contains("collapsed"))
+
+      observer = new MutationObserver(() => {
+        setIsCollapsed(sidenav.classList.contains("collapsed"))
+      })
+
+      observer.observe(sidenav, {
+        attributes: true,
+        attributeFilter: ["class"]
+      })
+    }
+
+    initObserver()
+
+    return () => {
+      if (observer) {
+        observer.disconnect()
+      }
+    }
+  }, [])
+
   // Dispatch a global event to open the modal
   const openModal = (type: string) => {
     window.dispatchEvent(new CustomEvent("OPEN_GEMINI_MODAL", { detail: type }))
+  }
+
+  if (isCollapsed) {
+    return (
+      <div className="gemini-sidebar-container collapsed">
+        <div className="sidebar-collapsed-btn-group">
+          <SidebarCollapsedButton
+            icon="folder"
+            label={t("chatFolders")}
+            onClick={() => openModal("folders")}
+          />
+          <SidebarCollapsedButton
+            icon="star"
+            label={t("favoriteAnswers")}
+            onClick={() => openModal("favorites")}
+          />
+          <SidebarCollapsedButton
+            icon="bookmark"
+            label={t("promptLibrary")}
+            onClick={() => openModal("prompts")}
+          />
+          <SidebarCollapsedButton
+            icon="note_stack"
+            label={t("myNotes")}
+            onClick={() => openModal("notes")}
+          />
+        </div>
+      </div>
+    )
   }
 
   return (
