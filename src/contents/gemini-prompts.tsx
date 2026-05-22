@@ -103,7 +103,8 @@ function injectGlobalStyles(): void {
     }
 
     /* Show when hovering the prompt row */
-    .query-content:hover .gbr-prompt-wrapper {
+    .user-query-container:hover .gbr-prompt-wrapper,
+    .luminous-actions-container:focus-within .gbr-prompt-wrapper {
       opacity: 1;
     }
   `
@@ -127,10 +128,10 @@ function getConversationId(copyBtnEl: Element): string | null {
 }
 
 function getPromptText(copyBtnEl: Element): string {
-  const queryContent = copyBtnEl.closest(".query-content")
-  if (!queryContent) return ""
+  const queryContainer = copyBtnEl.closest(".user-query-container")
+  if (!queryContainer) return ""
 
-  const queryTextEl = queryContent.querySelector(".query-text")
+  const queryTextEl = queryContainer.querySelector(".query-text")
   if (!queryTextEl) return ""
 
   // Clone to strip hidden elements like cdk-visually-hidden
@@ -202,15 +203,15 @@ function injectPromptButton(copyBtnEl: Element, prompts: SavedPrompt[]): void {
   const promptId = getResponseId(copyBtnEl)
   if (!promptId) return
 
-  const queryContent = copyBtnEl.closest(".query-content")
-  if (!queryContent) return
+  const queryContainer = copyBtnEl.closest(".user-query-container")
+  if (!queryContainer) return
 
   // Prevent duplicate injection
-  if (queryContent.querySelector(`[data-prompt-id="${promptId}"]`)) return
+  if (queryContainer.querySelector(`[data-prompt-id="${promptId}"]`)) return
 
-  // Find the wrapper div around the copy button to insert beside it
-  const wrapper = copyBtnEl.closest(".ng-star-inserted")
-  if (!wrapper) return
+  // Find the gem-icon-button sibling wrapper to insert beside
+  const gemIconButton = copyBtnEl.closest("gem-icon-button")
+  if (!gemIconButton) return
 
   const conversationId = getConversationId(copyBtnEl) || ""
   const isSaved = prompts.some((p) => p.id === promptId)
@@ -240,7 +241,7 @@ function injectPromptButton(copyBtnEl: Element, prompts: SavedPrompt[]): void {
   })
 
   btnWrapper.appendChild(btn)
-  wrapper.insertAdjacentElement("beforebegin", btnWrapper)
+  gemIconButton.insertAdjacentElement("beforebegin", btnWrapper)
 }
 
 // =============================================
@@ -249,10 +250,10 @@ function injectPromptButton(copyBtnEl: Element, prompts: SavedPrompt[]): void {
 
 function observePromptActions(): () => void {
   const processAll = async () => {
-    // Target the "Copy prompt" buttons (both EN and TR aria-labels)
+    // Target the "Copy prompt" buttons under prompt-copy-button test ID
     const copyButtons = Array.from(
       document.querySelectorAll(
-        'button[aria-label="İstemi kopyala"]:not([data-gbr-prompt-processed]), button[aria-label="Copy prompt"]:not([data-gbr-prompt-processed])'
+        '[data-test-id="prompt-copy-button"] button:not([data-gbr-prompt-processed])'
       )
     )
 

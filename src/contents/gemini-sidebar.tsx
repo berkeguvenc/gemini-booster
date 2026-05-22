@@ -19,15 +19,13 @@ export const config: PlasmoCSConfig = {
   matches: ["https://gemini.google.com/*"]
 }
 
-export const getInlineAnchor: PlasmoGetInlineAnchor = async () => ({
-  element:
-    document.querySelector(
-      '.side-nav-entry-container:has([data-test-id="my-stuff-side-nav-entry-button"])'
-    ) ||
+export const getInlineAnchor: PlasmoGetInlineAnchor = async () => {
+  const element =
+    document.querySelector('.top-action-list-scrollable [data-test-id="my-stuff-side-nav-entry-button"]') ||
+    document.querySelector('mat-nav-list:not(.removed) [data-test-id="my-stuff-side-nav-entry-button"]') ||
     document.querySelector('[data-test-id="my-stuff-side-nav-entry-button"]')
-      ?.parentElement,
-  insertPosition: "afterend"
-})
+  return element ? { element, insertPosition: "afterend" } : null
+}
 
 const GeminiSidebar = () => {
   const { t, i18n } = useTranslation()

@@ -27,10 +27,9 @@ export const config: PlasmoCSConfig = {
 
 export const getInlineAnchor: PlasmoGetInlineAnchor = async () => {
   const container =
-    document.querySelector(
-      "conversations-list .title-container:has(h1.title)"
-    ) || document.querySelector(".title-container:has(h1.title)")
-  return container ? { element: container, insertPosition: "beforeend" } : null
+    document.querySelector('conversations-list[data-test-id="all-conversations"]') ||
+    document.querySelector('conversations-list')
+  return container ? { element: container, insertPosition: "beforebegin" } : null
 }
 
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms))
@@ -97,19 +96,6 @@ const GeminiBulkDelete = () => {
     }
   }, [i18n])
 
-  // Apply flexbox styles to the parent container for button alignment
-  useEffect(() => {
-    const container = document.querySelector(
-      "conversations-list .title-container:has(h1.title)"
-    ) as HTMLElement
-    if (container) {
-      container.style.display = "flex"
-      container.style.justifyContent = "space-between"
-      container.style.alignItems = "center"
-      container.style.paddingRight = "12px"
-      container.style.visibility = "visible"
-    }
-  }, [])
 
   // Handle global clicks during "selecting" mode
   useEffect(() => {
@@ -117,7 +103,8 @@ const GeminiBulkDelete = () => {
 
     const handleClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement
-      const anchor = target.closest('a[data-test-id="conversation"]')
+      const listItem = target.closest('gem-nav-list-item[data-test-id="conversation"]')
+      const anchor = listItem?.querySelector('a')
 
       if (anchor) {
         e.preventDefault()
@@ -161,7 +148,7 @@ const GeminiBulkDelete = () => {
   const getSelectedChatsData = (): FolderChatItem[] => {
     const chats: FolderChatItem[] = []
     for (const href of selectedHrefs) {
-      const anchor = document.querySelector(`a[href="${href}"]`)
+      const anchor = document.querySelector(`gem-nav-list-item[data-test-id="conversation"] a[href="${href}"]`) || document.querySelector(`a[href="${href}"]`)
       let title = "Unknown Chat"
       if (anchor) {
         title = anchor.textContent?.trim() || "Unknown Chat"
@@ -249,14 +236,15 @@ const GeminiBulkDelete = () => {
 
     try {
       for (const href of selectedHrefs) {
-        const anchor = document.querySelector(`a[href="${href}"]`)
+        const anchor = document.querySelector(`gem-nav-list-item[data-test-id="conversation"] a[href="${href}"]`) || document.querySelector(`a[href="${href}"]`)
         if (!anchor) {
           console.warn(`Chat not found or not visible in DOM: ${href}`)
           continue
         }
 
         // Find the options/actions button next to the conversation link
-        const actionsBtn = anchor.parentElement?.querySelector(
+        const listItem = anchor.closest('gem-nav-list-item[data-test-id="conversation"]')
+        const actionsBtn = listItem?.querySelector(
           'button[data-test-id="actions-menu-button"]'
         ) as HTMLElement
 
@@ -337,7 +325,7 @@ const GeminiBulkDelete = () => {
     }
 
     const cssRules = [
-      `body.gemini-bulk-select-mode a[data-test-id="conversation"] {
+      `body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a {
          cursor: pointer !important;
          border: 2px dashed rgba(26, 115, 232, 0.4) !important;
          border-radius: 8px;
@@ -345,7 +333,7 @@ const GeminiBulkDelete = () => {
          margin-bottom: 2px;
          transition: all 0.2s ease;
       }`,
-      `body.gemini-bulk-select-mode a[data-test-id="conversation"]:hover {
+      `body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:hover {
          background-color: rgba(26, 115, 232, 0.1) !important;
          border-style: solid !important;
       }`
@@ -353,7 +341,7 @@ const GeminiBulkDelete = () => {
 
     Array.from(selectedHrefs).forEach((href) => {
       cssRules.push(
-        `body.gemini-bulk-select-mode a[data-test-id="conversation"][href="${href}"] { 
+        `body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a[href="${href}"] { 
            background-color: rgba(26, 115, 232, 0.15) !important; 
            border: 2px solid #1a73e8 !important; 
         }`
@@ -367,7 +355,7 @@ const GeminiBulkDelete = () => {
 
   if (mode === "idle") {
     return (
-      <>
+      <div className="gbr-bulk-delete-header-container">
         <button
           onClick={handleStartSelect}
           className="bulk-delete-btn"
@@ -387,12 +375,12 @@ const GeminiBulkDelete = () => {
             closeText={t("ok")}
           />
         )}
-      </>
+      </div>
     )
   }
 
   return (
-    <>
+    <div className="gbr-bulk-delete-header-container">
       <div style={{ display: "flex", gap: "8px", marginLeft: "auto" }}>
         <button
           onClick={handleCancelSelect}
@@ -461,7 +449,7 @@ const GeminiBulkDelete = () => {
           onClose={() => setShowFolderModal(false)}
         />
       )}
-    </>
+    </div>
   )
 }
 

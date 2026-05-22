@@ -9,9 +9,9 @@ interface SidebarButtonProps {
 
 const SidebarButton: React.FC<SidebarButtonProps> = ({ icon, label, onClick }) => {
   return (
-    <button onClick={onClick} className="side-nav-btn">
+    <button onClick={onClick} className="side-nav-btn" title={label}>
       <span className="google-symbols side-nav-icon icon-gray">{icon}</span>
-      <span className="gds-label-l">{label}</span>
+      <span className="title-text gds-body-s">{label}</span>
     </button>
   )
 }
