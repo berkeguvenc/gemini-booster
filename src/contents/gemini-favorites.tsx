@@ -41,26 +41,46 @@ function injectGlobalStyles(): void {
     .gbr-star-btn::after {
       content: attr(data-tooltip);
       position: absolute;
-      top: 115%;
+      top: calc(100% + 8px);
       left: 50%;
       transform: translateX(-50%);
-      background-color: var(--gem-sys-color--inverse-surface, #303030);
-      color: var(--gem-sys-color--inverse-on-surface, #f5f5f5);
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-family: "Google Sans", "Google Sans Flex", Roboto, sans-serif;
+      background-color: var(--lumi-sys-color--on-surface, #1f1f1f);
+      color: var(--lumi-sys-color--surface-dim, #f5f5f5);
+      padding: var(--gem-sys-spacing--s, 8px) var(--gem-sys-spacing--l, 16px);
+      border-radius: var(--gem-sys-shape--corner-medium, 8px);
+      font-family: "Google Sans Flex", "Google Sans", Roboto, sans-serif;
       font-size: 12px;
       font-weight: 400;
+      line-height: 16px;
       letter-spacing: 0.1px;
       white-space: nowrap;
       pointer-events: none;
+      box-shadow: 0 1px 2px 0 rgba(0,0,0,0.3), 0 1px 3px 1px rgba(0,0,0,0.15);
       opacity: 0;
       visibility: hidden;
-      transition: opacity 0.2s ease, visibility 0.2s ease;
+      transition: opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.15s;
       z-index: 999999;
     }
 
-    .gbr-star-btn:hover::after {
+    .gbr-star-btn::before {
+      content: "";
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 50%;
+      transform: translateX(-50%);
+      border-style: solid;
+      border-color: transparent;
+      border-bottom-color: var(--lumi-sys-color--on-surface, #1f1f1f);
+      border-width: 0 var(--gem-sys-spacing--xs, 4px) var(--gem-sys-spacing--xs, 4px) var(--gem-sys-spacing--xs, 4px);
+      pointer-events: none;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.15s;
+      z-index: 999999;
+    }
+
+    .gbr-star-btn:hover::after,
+    .gbr-star-btn:hover::before {
       opacity: 1;
       visibility: visible;
     }
