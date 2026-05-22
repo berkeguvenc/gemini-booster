@@ -31,7 +31,7 @@ const NotesTab: React.FC<NotesTabProps> = ({
   const { t } = useTranslation()
 
   return (
-    <div className="notes-container">
+    <div>
       <div className="note-input-area">
         <textarea
           className="note-textarea"

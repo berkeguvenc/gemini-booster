@@ -37,7 +37,7 @@ const FoldersTab: React.FC<FoldersTabProps> = ({
   const { t } = useTranslation()
 
   return (
-    <div className="folders-container">
+    <div>
       <div className="folder-create-row">
         <input
           type="text"

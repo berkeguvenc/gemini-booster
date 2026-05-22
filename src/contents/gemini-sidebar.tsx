@@ -42,7 +42,7 @@ const GeminiSidebar = () => {
 
   return (
     <div className="gemini-sidebar-container">
-      <div className="gemini-sidebar-content">
+      <div>
         <div className="sidebar-btn-group">
           <SidebarButton
             icon="folder"

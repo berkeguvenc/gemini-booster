@@ -363,7 +363,7 @@ const GeminiBulkDelete = () => {
           <span className="google-symbols" style={{ fontSize: "18px" }}>
             checklist
           </span>
-          <span className="text">{t("bulkSelect")}</span>
+          <span>{t("bulkSelect")}</span>
         </button>
 
         {/* Alert modal — shown after delete completes */}
@@ -387,7 +387,7 @@ const GeminiBulkDelete = () => {
           disabled={mode === "deleting"}
           className="bulk-delete-btn cancel"
           style={{ marginLeft: 0 }}>
-          <span className="text">{t("cancel")}</span>
+          <span>{t("cancel")}</span>
         </button>
         <button
           onClick={handleAddToFolderClick}
@@ -408,7 +408,7 @@ const GeminiBulkDelete = () => {
           <span className="google-symbols" style={{ fontSize: "18px" }}>
             delete
           </span>
-          <span className="text">
+          <span>
             {mode === "deleting"
               ? t("deleting")
               : t("deleteCount", { count: selectedHrefs.size })}
