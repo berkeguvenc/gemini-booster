@@ -801,29 +801,39 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
    Collapsed Sidebar Styling
    ============================================= */
 
+:host {
+  overflow: visible !important;
+}
+
+.gemini-sidebar-container {
+  overflow: visible !important;
+}
+
 .gemini-sidebar-container.collapsed {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
-  padding: 8px 0;
+  padding: 4px 0;
   box-sizing: border-box;
+  overflow: visible !important;
 }
 
 .sidebar-collapsed-btn-group {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
   width: 100%;
+  overflow: visible !important;
 }
 
 .side-nav-collapsed-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   background: transparent;
   border: none;
@@ -843,4 +853,60 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+/* Tooltip for collapsed sidebar buttons matching Gemini design */
+.side-nav-collapsed-btn-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.side-nav-collapsed-btn-wrapper .gbr-collapsed-tooltip {
+  position: absolute;
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%) translateX(8px);
+  z-index: 999999;
+  pointer-events: none;
+  white-space: nowrap;
+  
+  /* Hidden by default with smooth micro-animation transition */
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.15s;
+}
+
+.side-nav-collapsed-btn-wrapper:hover .gbr-collapsed-tooltip,
+.side-nav-collapsed-btn-wrapper:focus-within .gbr-collapsed-tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
+.side-nav-collapsed-btn-wrapper .mat-mdc-tooltip-surface {
+  background-color: var(--lumi-sys-color--on-surface, #1f1f1f);
+  color: var(--lumi-sys-color--surface-dim, #f5f5f5);
+  border-radius: var(--gem-sys-shape--corner-medium, 8px);
+  padding: var(--gem-sys-spacing--s, 8px) var(--gem-sys-spacing--l, 16px);
+  font-family: "Google Sans Flex", "Google Sans", Roboto, sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: 0.1px;
+  position: relative;
+  box-shadow: 0 1px 2px 0 rgba(0,0,0,0.3), 0 1px 3px 1px rgba(0,0,0,0.15);
+}
+
+.side-nav-collapsed-btn-wrapper .mat-mdc-tooltip-surface::after {
+  content: "";
+  position: absolute;
+  border-style: solid;
+  border-color: transparent;
+  right: 100%;
+  left: auto;
+  top: 50%;
+  transform: translateY(-50%);
+  border-right-color: var(--lumi-sys-color--on-surface, #1f1f1f);
+  border-width: var(--gem-sys-spacing--xs, 4px) var(--gem-sys-spacing--xs, 4px) var(--gem-sys-spacing--xs, 4px) 0;
 }

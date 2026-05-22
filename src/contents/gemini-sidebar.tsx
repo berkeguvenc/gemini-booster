@@ -38,6 +38,25 @@ const GeminiSidebar = () => {
   }, [i18n])
 
   useEffect(() => {
+    if (document.getElementById("gbr-sidebar-global-style")) return
+    const style = document.createElement("style")
+    style.id = "gbr-sidebar-global-style"
+    style.textContent = `
+      bard-sidenav.collapsed,
+      bard-sidenav.collapsed side-navigation-content,
+      bard-sidenav.collapsed .sidenav-with-history-container,
+      bard-sidenav.collapsed .overflow-container,
+      bard-sidenav.collapsed mat-nav-list,
+      bard-sidenav.collapsed gem-nav-list-item,
+      bard-sidenav.collapsed .icon-button-badge-container,
+      bard-sidenav.collapsed plasmo-csui {
+        overflow: visible !important;
+      }
+    `
+    document.head.appendChild(style)
+  }, [])
+
+  useEffect(() => {
     let observer: MutationObserver | null = null
 
     const initObserver = () => {
