@@ -1,13 +1,13 @@
-// components/FoldersTab.tsx — Folders tab content for the main modal
+// components/FoldersModal.tsx — Folders tab content for the main modal
 import React from "react"
 import { useTranslation } from "react-i18next"
 
 import type { ChatFolder } from "../../types/folder"
-import EmptyState from "../EmptyState"
+import EmptyState from "./components/EmptyState"
 import { FolderIcon } from "../Icons"
-import ModalListItem from "./ModalListItem"
+import ListItem from "./components/ListItem"
 
-interface FoldersTabProps {
+interface FoldersModalProps {
   folders: ChatFolder[]
   filteredFolders: ChatFolder[]
   newFolderName: string
@@ -21,7 +21,7 @@ interface FoldersTabProps {
   onCopy: (id: string, text: string) => Promise<void>
 }
 
-const FoldersTab: React.FC<FoldersTabProps> = ({
+const FoldersModal: React.FC<FoldersModalProps> = ({
   folders,
   filteredFolders,
   newFolderName,
@@ -99,7 +99,7 @@ const FoldersTab: React.FC<FoldersTabProps> = ({
                   ) : (
                     <ul style={{ padding: 0, margin: 0 }}>
                       {f.chats.map((chat) => (
-                        <ModalListItem
+                        <ListItem
                           key={chat.id}
                           id={chat.id}
                           text={chat.title}
@@ -129,4 +129,4 @@ const FoldersTab: React.FC<FoldersTabProps> = ({
   )
 }
 
-export default FoldersTab
+export default FoldersModal

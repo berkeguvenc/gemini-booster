@@ -1,13 +1,13 @@
-// components/NotesTab.tsx — Notes tab content for the main modal
+// components/NotesModal.tsx — Notes tab content for the main modal
 import React from "react"
 import { useTranslation } from "react-i18next"
 
 import type { Note } from "../../types/note"
-import EmptyState from "../EmptyState"
+import EmptyState from "./components/EmptyState"
 import { DocumentIcon } from "../Icons"
-import ModalListItem from "./ModalListItem"
+import ListItem from "./components/ListItem"
 
-interface NotesTabProps {
+interface NotesModalProps {
   notes: Note[]
   filteredNotes: Note[]
   newNoteText: string
@@ -18,7 +18,7 @@ interface NotesTabProps {
   onDelete: (id: string) => void
 }
 
-const NotesTab: React.FC<NotesTabProps> = ({
+const NotesModal: React.FC<NotesModalProps> = ({
   notes,
   filteredNotes,
   newNoteText,
@@ -61,7 +61,7 @@ const NotesTab: React.FC<NotesTabProps> = ({
       ) : (
         <ul className="item-list">
           {filteredNotes.map((n) => (
-            <ModalListItem
+            <ListItem
               key={n.id}
               id={n.id}
               text={n.text}
@@ -86,4 +86,4 @@ const NotesTab: React.FC<NotesTabProps> = ({
   )
 }
 
-export default NotesTab
+export default NotesModal

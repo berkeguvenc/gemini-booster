@@ -27,10 +27,10 @@ import {
   FolderIcon
 } from "../components/Icons"
 
-import FavoritesTab from "../components/sidebar/FavoritesModal"
-import PromptsTab from "../components/sidebar/PromptsTab"
-import NotesTab from "../components/sidebar/NotesTab"
-import FoldersTab from "../components/sidebar/FoldersTab"
+import FavoritesModal from "../components/modal/FavoritesModal"
+import PromptsModal from "../components/modal/PromptsModal"
+import NotesModal from "../components/modal/NotesModal"
+import FoldersModal from "../components/modal/FoldersModal"
 
 export const getStyle = () => {
   const style = document.createElement("style")
@@ -299,7 +299,7 @@ const GeminiModal = () => {
           )}
 
           {activeModal === "favorites" ? (
-            <FavoritesTab
+            <FavoritesModal
               favorites={favorites}
               filteredFavorites={filteredFavorites}
               copiedIds={copiedIds}
@@ -307,7 +307,7 @@ const GeminiModal = () => {
               onDelete={deleteFavorite}
             />
           ) : activeModal === "prompts" ? (
-            <PromptsTab
+            <PromptsModal
               prompts={prompts}
               filteredPrompts={filteredPrompts}
               copiedIds={copiedIds}
@@ -315,7 +315,7 @@ const GeminiModal = () => {
               onDelete={deletePrompt}
             />
           ) : activeModal === "notes" ? (
-            <NotesTab
+            <NotesModal
               notes={notes}
               filteredNotes={filteredNotes}
               newNoteText={newNoteText}
@@ -326,7 +326,7 @@ const GeminiModal = () => {
               onDelete={deleteNote}
             />
           ) : activeModal === "folders" ? (
-            <FoldersTab
+            <FoldersModal
               folders={folders}
               filteredFolders={filteredFolders}
               newFolderName={newFolderName}

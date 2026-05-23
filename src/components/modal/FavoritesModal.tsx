@@ -3,9 +3,9 @@ import React from "react"
 import { useTranslation } from "react-i18next"
 
 import type { FavoriteAnswer } from "../../types/favorite"
-import EmptyState from "../EmptyState"
+import EmptyState from "./components/EmptyState"
 import { StarIcon } from "../Icons"
-import ModalListItem from "./ModalListItem"
+import ListItem from "./components/ListItem"
 
 interface FavoritesModalProps {
   favorites: FavoriteAnswer[]
@@ -45,7 +45,7 @@ const FavoritesModal: React.FC<FavoritesModalProps> = ({
   return (
     <ul className="item-list">
       {filteredFavorites.map((fav) => (
-        <ModalListItem
+        <ListItem
           key={fav.id}
           id={fav.id}
           text={fav.text}

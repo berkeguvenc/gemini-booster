@@ -6,8 +6,8 @@ import { useTranslation } from "react-i18next"
 
 import "../i18n"
 
-import SidebarButton from "../components/SidebarButton"
-import SidebarCollapsedButton from "../components/SidebarCollapsedButton"
+import SidebarButton from "../components/sidebar/SidebarButton"
+import SidebarCollapsedButton from "../components/sidebar/SidebarCollapsedButton"
 import { initLanguageSync } from "../utils/language"
 
 export const getStyle = () => {

@@ -1,13 +1,13 @@
-// components/PromptsTab.tsx — Prompts tab content for the main modal
+// components/PromptsModal.tsx — Prompts tab content for the main modal
 import React from "react"
 import { useTranslation } from "react-i18next"
 
 import type { SavedPrompt } from "../../types/prompt"
-import EmptyState from "../EmptyState"
+import EmptyState from "./components/EmptyState"
 import { BookmarkIcon } from "../Icons"
-import ModalListItem from "./ModalListItem"
+import ListItem from "./components/ListItem"
 
-interface PromptsTabProps {
+interface PromptsModalProps {
   prompts: SavedPrompt[]
   filteredPrompts: SavedPrompt[]
   copiedIds: Record<string, boolean>
@@ -15,7 +15,7 @@ interface PromptsTabProps {
   onDelete: (id: string) => void
 }
 
-const PromptsTab: React.FC<PromptsTabProps> = ({
+const PromptsModal: React.FC<PromptsModalProps> = ({
   prompts,
   filteredPrompts,
   copiedIds,
@@ -45,7 +45,7 @@ const PromptsTab: React.FC<PromptsTabProps> = ({
   return (
     <ul className="item-list">
       {filteredPrompts.map((p) => (
-        <ModalListItem
+        <ListItem
           key={p.id}
           id={p.id}
           text={p.text}
@@ -62,4 +62,4 @@ const PromptsTab: React.FC<PromptsTabProps> = ({
   )
 }
 
-export default PromptsTab
+export default PromptsModal

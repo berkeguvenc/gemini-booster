@@ -1,11 +1,11 @@
-// components/ModalListItem.tsx
+// components/ListItem.tsx
 import React, { useState } from "react"
 import { useTranslation } from "react-i18next"
 
-import { EXPAND_THRESHOLD } from "../../constants"
-import { OpenInNewIcon, CopyIcon, CheckIcon, CloseIcon } from "../Icons"
+import { EXPAND_THRESHOLD } from "../../../constants"
+import { OpenInNewIcon, CopyIcon, CheckIcon, CloseIcon } from "../../Icons"
 
-interface ModalListItemProps {
+interface ListItemProps {
   id: string
   text: string
   timestamp: number
@@ -18,7 +18,7 @@ interface ModalListItemProps {
   dateFormat?: Intl.DateTimeFormatOptions
 }
 
-const ModalListItem: React.FC<ModalListItemProps> = ({
+const ListItem: React.FC<ListItemProps> = ({
   id,
   text,
   timestamp,
@@ -97,4 +97,4 @@ const ModalListItem: React.FC<ModalListItemProps> = ({
   )
 }
 
-export default ModalListItem
+export default ListItem
