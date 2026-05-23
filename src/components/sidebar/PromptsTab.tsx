@@ -2,9 +2,9 @@
 import React from "react"
 import { useTranslation } from "react-i18next"
 
-import type { SavedPrompt } from "../types/prompt"
-import EmptyState from "./EmptyState"
-import { BookmarkIcon } from "./Icons"
+import type { SavedPrompt } from "../../types/prompt"
+import EmptyState from "../EmptyState"
+import { BookmarkIcon } from "../Icons"
 import ModalListItem from "./ModalListItem"
 
 interface PromptsTabProps {

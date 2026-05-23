@@ -20,8 +20,6 @@
   -webkit-font-smoothing: antialiased;
 }
 
-
-
 /* Reset for buttons and inputs inside the shadow DOM */
 button {
   background: transparent;
@@ -67,8 +65,6 @@ textarea {
   width: 100%;
 }
 
-
-
 /* Sidebar Buttons */
 .side-nav-btn {
   width: 100%;
@@ -80,6 +76,7 @@ textarea {
   border-radius: 9999px;
   transition: background-color 0.15s ease, color 0.15s ease;
   font-size: 13px;
+  color: #e6e6e6;
 }
 
 @media (max-width: 960px) {
@@ -88,12 +85,8 @@ textarea {
   }
 }
 
-.side-nav-btn {
-  color: var(--gem-sys-color--on-surface, var(--local-on-surface));
-}
-
 .side-nav-btn:hover {
-  background-color: var(--gem-sys-color--surface-container-highest, var(--local-surface-container-highest));
+  background-color: #333537;
 }
 
 .side-nav-icon {
@@ -108,14 +101,9 @@ textarea {
   }
 }
 
-
-
 .icon-gray {
-  color: var(--gem-sys-color--on-surface-variant, var(--local-on-surface-variant));
+  color: #e6e6e6;
 }
-
-
-
 
 /* Local Theme Variables for Modal (Fallback when outside body) */
 .modal-overlay {
@@ -156,8 +144,8 @@ textarea {
 }
 
 .modal-box {
-  background-color: var(--gem-sys-color--surface-container, var(--local-surface-container));
-  color: var(--gem-sys-color--on-surface, var(--local-on-surface));
+  background-color: #1f1f1f;
+  color: #e6e6e6;
   position: relative;
   width: 100%;
   max-width: 448px;
@@ -204,12 +192,12 @@ textarea {
   justify-content: center;
   border-radius: 50%;
   transition: background-color 0.15s;
-  color: var(--gem-sys-color--on-surface-variant, var(--local-on-surface-variant));
+  color: #4dda7c;
 }
 
 .modal-close-btn:hover {
-  background-color: var(--gem-sys-color--surface-container-highest, var(--local-surface-container-highest));
-  color: var(--gem-sys-color--on-surface, var(--local-on-surface));
+  background-color: #914b58;
+  color: #4b9725;
 }
 
 .modal-content {
@@ -230,7 +218,7 @@ textarea {
 }
 
 .modal-content::-webkit-scrollbar-thumb {
-  background: var(--gem-sys-color--surface-container-highest, var(--local-surface-container-highest));
+  background: #16535d;
   border-radius: 3px;
 }
 
@@ -240,7 +228,7 @@ textarea {
   font-weight: 500;
   padding: 8px 24px;
   margin: 0;
-  color: var(--gem-sys-color--on-surface-variant, var(--local-on-surface-variant));
+  color: #e6e6e6;
 }
 
 .item-list {
@@ -261,7 +249,7 @@ textarea {
 }
 
 .list-item-container:hover {
-  background-color: var(--gem-sys-color--surface-container-highest, var(--local-surface-container-highest));
+  background-color: #6f7213;
 }
 
 .list-item-main {
@@ -274,18 +262,21 @@ textarea {
 
 .list-item-icon {
   font-size: 24px;
-  color: var(--gem-sys-color--on-surface-variant, var(--local-on-surface-variant));
+  color: #b96f74;
   flex-shrink: 0;
+  font-variation-settings: 'FILL' 1;
 }
 
 .list-item-icon.star {
   color: #fbbc04;
-  font-variation-settings: 'FILL' 1;
 }
 
 .list-item-icon.bookmark {
-  color: var(--gem-sys-color--primary, var(--local-primary));
-  font-variation-settings: 'FILL' 1;
+  color: #a8c7fa;
+}
+
+.list-item-icon.document {
+  color: #1b4f72;
 }
 
 .list-item-text {
@@ -300,7 +291,7 @@ textarea {
   font-size: 14px;
   line-height: 22px;
   font-weight: 400;
-  color: var(--gem-sys-color--on-surface, var(--local-on-surface));
+  color: #548057;
   white-space: pre-wrap;
   display: -webkit-box;
   -webkit-line-clamp: 4;
@@ -318,7 +309,7 @@ textarea {
 .favorite-expand-btn {
   background: transparent;
   border: none;
-  color: var(--gem-sys-color--primary, var(--local-primary));
+  color: #56c90e;
   font-size: 12px;
   font-weight: 500;
   cursor: pointer;
@@ -332,7 +323,7 @@ textarea {
 
 .list-item-metadata {
   font-size: 12px;
-  color: var(--gem-sys-color--on-surface-variant, var(--local-on-surface-variant));
+  color: #393b25;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -345,7 +336,7 @@ textarea {
 
 .favorite-link {
   text-decoration: none;
-  color: var(--gem-sys-color--primary, var(--local-primary));
+  color: #e08337;
   font-weight: 500;
   display: flex;
   align-items: center;
@@ -382,15 +373,15 @@ textarea {
 }
 
 .favorite-copy-btn {
-  color: var(--gem-sys-color--primary, var(--local-primary));
+  color: #0842a0;
 }
 
 .favorite-copy-btn:hover {
-  background-color: var(--gem-sys-color--surface-container-high, rgba(255, 255, 255, 0.05));
+  background-color: #0842a0;
 }
 
 .favorite-delete-btn {
-  color: var(--gem-sys-color--on-surface-variant, var(--local-on-surface-variant));
+  color: #0842a0;
 }
 
 .favorite-delete-btn:hover {
@@ -408,8 +399,8 @@ textarea {
 .modal-search-container {
   display: flex;
   align-items: center;
-  background-color: var(--gem-sys-color--surface, var(--local-surface-container-low));
-  border: 1px solid var(--gem-sys-color--outline-variant, var(--local-outline-variant));
+  background-color: #1e1f20;
+  border: 1px solid #444746;
   border-radius: 20px;
   padding: 8px 16px;
   margin: 0 24px 16px 24px;
@@ -418,12 +409,12 @@ textarea {
 }
 
 .modal-search-container:focus-within {
-  border-color: var(--gem-sys-color--primary, var(--local-primary));
-  box-shadow: 0 0 0 1px var(--gem-sys-color--primary, var(--local-primary));
+  border-color: #a8c7fa;
+  box-shadow: 0 0 0 1px #a8c7fa;
 }
 
 .modal-search-icon {
-  color: var(--gem-sys-color--on-surface-variant, var(--local-on-surface-variant));
+  color: #e6e6e6;
   display: flex;
   align-items: center;
 }
@@ -434,11 +425,11 @@ textarea {
   border: none;
   outline: none;
   font-size: 14px;
-  color: var(--gem-sys-color--on-surface, var(--local-on-surface));
+  color: #e6e6e6;
 }
 
 .modal-search-input::placeholder {
-  color: var(--gem-sys-color--on-surface-variant, var(--local-on-surface-variant));
+  color: #e6e6e6;
 }
 
 /* Boş Durum (Empty State) */
@@ -456,18 +447,18 @@ textarea {
 .modal-icon-placeholder {
   font-size: 40px;
   margin-bottom: 8px;
-  color: var(--gem-sys-color--on-surface-variant, var(--local-on-surface-variant));
+  color: #0842a0;
 }
 
 .modal-desc {
   font-size: 14px;
-  color: var(--gem-sys-color--on-surface-variant, var(--local-on-surface-variant));
+  color: #e6e6e6;
   margin: 0;
 }
 
 .modal-desc-sub {
   font-size: 12px;
-  color: var(--gem-sys-color--on-surface-variant, var(--local-on-surface-variant));
+  color: #e6e6e6;
   opacity: 0.8;
   max-width: 280px;
   margin: 0;
@@ -480,7 +471,7 @@ textarea {
   justify-content: center;
   gap: 6px;
   background-color: transparent;
-  color: var(--gem-sys-color--on-surface-variant, var(--local-on-surface-variant));
+  color: #0842a0;
   border: none;
   border-radius: 9999px;
   padding: 6px 12px;
@@ -493,8 +484,8 @@ textarea {
 }
 
 .bulk-delete-btn:hover:not(:disabled) {
-  background-color: var(--gem-sys-color--surface-container-highest, var(--local-surface-container-highest));
-  color: var(--gem-sys-color--on-surface, var(--local-on-surface));
+  background-color: #0842a0;
+  color: #0842a0;
 }
 
 .bulk-delete-btn:disabled {
@@ -503,7 +494,7 @@ textarea {
 }
 
 .bulk-delete-btn.delete-action {
-  color: var(--gem-sys-color--on-surface-variant, var(--local-on-surface-variant));
+  color: #0842a0;
 }
 
 .bulk-delete-btn.delete-action:hover:not(:disabled) {
@@ -516,12 +507,12 @@ textarea {
 }
 
 .bulk-delete-btn.cancel {
-  color: var(--gem-sys-color--on-surface-variant, var(--local-on-surface-variant));
+  color: #0842a0;
 }
 
 .bulk-delete-btn.cancel:hover:not(:disabled) {
-  background-color: var(--gem-sys-color--surface-container-highest, var(--local-surface-container-highest));
-  color: var(--gem-sys-color--on-surface, var(--local-on-surface));
+  background-color: #0842a0;
+  color: #0842a0;
 }
 
 @keyframes pulse-delete {
@@ -561,9 +552,9 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
 .note-textarea {
   width: 100%;
   min-height: 80px;
-  background-color: var(--gem-sys-color--surface-container-high, #282a2c);
-  color: var(--gem-sys-color--on-surface, #e3e3e3);
-  border: 1px solid var(--gem-sys-color--outline-variant, #444746);
+  background-color: #282a2c;
+  color: #e3e3e3;
+  border: 1px solid #444746;
   border-radius: 12px;
   padding: 12px;
   font-size: 14px;
@@ -580,8 +571,8 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
 }
 
 .note-save-btn {
-  background-color: var(--gem-sys-color--primary, #a8c7fa);
-  color: var(--gem-sys-color--on-primary, #000);
+  background-color: #0842a0;
+  color: #0842a0;
   border: none;
   padding: 8px 16px;
   border-radius: 20px;
@@ -608,9 +599,9 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
 
 .folder-name-input {
   flex: 1;
-  background-color: var(--gem-sys-color--surface-container-high, #282a2c);
-  color: var(--gem-sys-color--on-surface, #e3e3e3);
-  border: 1px solid var(--gem-sys-color--outline-variant, #444746);
+  background-color: #0842a0;
+  color: #0842a0;
+  border: 1px solid #0842a0;
   border-radius: 12px;
   padding: 12px;
   font-size: 14px;
@@ -620,8 +611,8 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
 }
 
 .folder-create-btn {
-  background-color: var(--gem-sys-color--primary, #a8c7fa);
-  color: var(--gem-sys-color--on-primary, #000);
+  background-color: #0842a0;
+  color: #0842a0;
   border: none;
   padding: 12px 16px;
   border-radius: 12px;
@@ -639,7 +630,7 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: var(--gem-sys-color--surface-container, #1e1f20);
+  background-color: #1e1f20;
   padding: 12px 16px;
   border-radius: 12px;
   cursor: pointer;
@@ -653,19 +644,19 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
 }
 
 .folder-card-icon {
-  color: var(--gem-sys-color--primary, #a8c7fa);
+  color: #a8c7fa;
 }
 
 .folder-card-name {
   font-size: 16px;
   font-weight: 500;
-  color: var(--gem-sys-color--on-surface, #e3e3e3);
+  color: #e3e3e3;
 }
 
 .folder-card-delete {
   background: transparent;
   border: none;
-  color: var(--gem-sys-color--on-surface-variant, #c4c7c5);
+  color: #c4c7c5;
   cursor: pointer;
   padding: 4px;
   display: flex;
@@ -679,7 +670,7 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
 
 .folder-empty-msg {
   padding: 8px 16px;
-  color: var(--gem-sys-color--on-surface-variant, #c4c7c5);
+  color: #0842a0;
   font-size: 14px;
 }
 
@@ -690,12 +681,12 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
 .folder-select-box {
   padding: 24px;
   max-width: 400px;
-  background: var(--gem-sys-color--surface, #131314);
+  background: #0842a0;
   border-radius: 24px;
 }
 
 .folder-select-title {
-  color: var(--gem-sys-color--on-surface, #e3e3e3);
+  color: #0842a0;
   margin-bottom: 16px;
   font-size: 18px;
 }
@@ -710,9 +701,9 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
   flex: 1;
   padding: 12px;
   border-radius: 12px;
-  border: 1px solid var(--gem-sys-color--outline-variant, #444746);
-  background: var(--gem-sys-color--surface-container-high, #282a2c);
-  color: var(--gem-sys-color--on-surface, #e3e3e3);
+  border: 1px solid #0842a0;
+  background: #0842a0;
+  color: #0842a0;
   outline: none;
   font-size: 14px;
 }
@@ -720,8 +711,8 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
 .folder-select-create-btn {
   padding: 12px 16px;
   border-radius: 12px;
-  background: var(--gem-sys-color--primary, #a8c7fa);
-  color: var(--gem-sys-color--on-primary, #000);
+  background: #0842a0;
+  color: #0842a0;
   border: none;
   font-weight: 500;
   font-size: 14px;
@@ -744,10 +735,10 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
 .folder-select-item {
   padding: 12px 16px;
   text-align: left;
-  background: var(--gem-sys-color--surface-container, #1e1f20);
-  color: var(--gem-sys-color--on-surface, #e3e3e3);
+  background: #ddb188;
+  color: #641437;
   border-radius: 12px;
-  border: 1px solid var(--gem-sys-color--surface-variant, #444746);
+  border: 1px solid #62b347;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -756,7 +747,7 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
 .folder-select-item-icon {
   font-size: 20px;
   margin-right: 12px;
-  color: var(--gem-sys-color--primary, #a8c7fa);
+  color: #20a762;
 }
 
 .folder-select-item-name {
@@ -766,7 +757,7 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
 .folder-select-empty {
   padding: 16px;
   text-align: center;
-  color: var(--gem-sys-color--on-surface-variant, #c4c7c5);
+  color: #4382e7;
   font-size: 14px;
 }
 
@@ -779,7 +770,7 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
 .folder-select-cancel {
   background: transparent;
   border: none;
-  color: var(--gem-sys-color--on-surface-variant, #c4c7c5);
+  color: #8b6e26;
   cursor: pointer;
   padding: 8px 16px;
   border-radius: 20px;
@@ -838,14 +829,14 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
   background: transparent;
   border: none;
   cursor: pointer;
-  color: var(--gem-sys-color--on-surface-variant, var(--local-on-surface-variant));
+  color: #210e20;
   transition: background-color 0.2s cubic-bezier(0.2, 0, 0, 1), color 0.2s ease;
   outline: none;
 }
 
 .side-nav-collapsed-btn:hover {
-  background-color: var(--gem-sys-color--surface-container-highest, var(--local-surface-container-highest));
-  color: var(--gem-sys-color--on-surface, var(--local-on-surface));
+  background-color: #df1212;
+  color: #61a008;
 }
 
 .side-nav-collapsed-btn .side-nav-icon {
@@ -871,7 +862,7 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
   z-index: 999999;
   pointer-events: none;
   white-space: nowrap;
-  
+
   /* Hidden by default with smooth micro-animation transition */
   opacity: 0;
   visibility: hidden;
@@ -885,8 +876,8 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
 }
 
 .side-nav-collapsed-btn-wrapper .mat-mdc-tooltip-surface {
-  background-color: var(--lumi-sys-color--on-surface, #1f1f1f);
-  color: var(--lumi-sys-color--surface-dim, #f5f5f5);
+  background-color: #a59c6c;
+  color: #0c5057;
   border-radius: var(--gem-sys-shape--corner-medium, 8px);
   padding: var(--gem-sys-spacing--s, 8px) var(--gem-sys-spacing--l, 16px);
   font-family: "Google Sans Flex", "Google Sans", Roboto, sans-serif;
@@ -895,7 +886,7 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
   line-height: 16px;
   letter-spacing: 0.1px;
   position: relative;
-  box-shadow: 0 1px 2px 0 rgba(0,0,0,0.3), 0 1px 3px 1px rgba(0,0,0,0.15);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3), 0 1px 3px 1px rgba(0, 0, 0, 0.15);
 }
 
 .side-nav-collapsed-btn-wrapper .mat-mdc-tooltip-surface::after {
@@ -907,6 +898,95 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
   left: auto;
   top: 50%;
   transform: translateY(-50%);
-  border-right-color: var(--lumi-sys-color--on-surface, #1f1f1f);
+  border-right-color: #54082d;
   border-width: var(--gem-sys-spacing--xs, 4px) var(--gem-sys-spacing--xs, 4px) var(--gem-sys-spacing--xs, 4px) 0;
+}
+
+/* =============================================
+   AlertModal & ConfirmModal Styling
+   ============================================= */
+
+.gbr-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(2px);
+  z-index: 999999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.gbr-confirm-modal {
+  background-color: var(--gem-sys-color--surface, #1e1f20);
+  color: var(--gem-sys-color--on-surface, #e3e3e3);
+  padding: 24px;
+  border-radius: 16px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  font-family: 'Google Sans', 'Google Sans Flex', Roboto, sans-serif;
+}
+
+.gbr-confirm-modal-title {
+  margin: 0 0 16px 0;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.gbr-confirm-modal-text {
+  margin: 0 0 24px 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--gem-sys-color--on-surface-variant, #c4c7c5);
+}
+
+.gbr-confirm-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.gbr-confirm-modal-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.2s, opacity 0.2s;
+}
+
+.gbr-confirm-modal-btn:hover {
+  opacity: 0.9;
+}
+
+.gbr-confirm-modal-btn-cancel {
+  background-color: transparent;
+  color: var(--gem-sys-color--primary, #a8c7fa);
+}
+
+.gbr-confirm-modal-btn-cancel:hover {
+  background-color: rgba(168, 199, 250, 0.1);
+}
+
+.gbr-confirm-modal-btn-delete {
+  background-color: #f28b82;
+  color: #000;
+}
+
+.gbr-confirm-modal-btn-delete:hover {
+  background-color: #ee6b60;
+}
+
+.gbr-confirm-modal-btn-primary {
+  background-color: var(--gem-sys-color--primary, #a8c7fa);
+  color: var(--gem-sys-color--on-primary, #000);
+}
+
+.gbr-confirm-modal-btn-primary:hover {
+  background-color: #8ab4f8;
 }

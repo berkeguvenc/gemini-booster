@@ -27,10 +27,10 @@ import {
   FolderIcon
 } from "../components/Icons"
 
-import FavoritesTab from "../components/FavoritesTab"
-import PromptsTab from "../components/PromptsTab"
-import NotesTab from "../components/NotesTab"
-import FoldersTab from "../components/FoldersTab"
+import FavoritesTab from "../components/sidebar/FavoritesModal"
+import PromptsTab from "../components/sidebar/PromptsTab"
+import NotesTab from "../components/sidebar/NotesTab"
+import FoldersTab from "../components/sidebar/FoldersTab"
 
 export const getStyle = () => {
   const style = document.createElement("style")
@@ -234,9 +234,9 @@ const GeminiModal = () => {
 
   const modalIconColors: Record<ModalTab, string> = {
     favorites: "#fbbc04",
-    prompts: "var(--gem-sys-color--primary, #a8c7fa)",
-    notes: "var(--gem-sys-color--on-surface-variant)",
-    folders: "var(--gem-sys-color--primary, #a8c7fa)"
+    prompts: "#0842a0",
+    notes: "#455b78",
+    folders: "#1a73e8"
   }
 
   // Filtered data for search

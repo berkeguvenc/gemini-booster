@@ -2,9 +2,9 @@
 import React from "react"
 import { useTranslation } from "react-i18next"
 
-import type { Note } from "../types/note"
-import EmptyState from "./EmptyState"
-import { DocumentIcon } from "./Icons"
+import type { Note } from "../../types/note"
+import EmptyState from "../EmptyState"
+import { DocumentIcon } from "../Icons"
 import ModalListItem from "./ModalListItem"
 
 interface NotesTabProps {

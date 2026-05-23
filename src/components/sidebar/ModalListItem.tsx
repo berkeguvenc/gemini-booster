@@ -2,8 +2,8 @@
 import React, { useState } from "react"
 import { useTranslation } from "react-i18next"
 
-import { EXPAND_THRESHOLD } from "../constants"
-import { OpenInNewIcon, CopyIcon, CheckIcon, CloseIcon } from "./Icons"
+import { EXPAND_THRESHOLD } from "../../constants"
+import { OpenInNewIcon, CopyIcon, CheckIcon, CloseIcon } from "../Icons"
 
 interface ModalListItemProps {
   id: string

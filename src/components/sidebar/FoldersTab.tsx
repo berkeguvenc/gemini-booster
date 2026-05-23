@@ -2,9 +2,9 @@
 import React from "react"
 import { useTranslation } from "react-i18next"
 
-import type { ChatFolder } from "../types/folder"
-import EmptyState from "./EmptyState"
-import { FolderIcon } from "./Icons"
+import type { ChatFolder } from "../../types/folder"
+import EmptyState from "../EmptyState"
+import { FolderIcon } from "../Icons"
 import ModalListItem from "./ModalListItem"
 
 interface FoldersTabProps {

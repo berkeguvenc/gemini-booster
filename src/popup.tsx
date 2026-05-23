@@ -5,8 +5,8 @@ import "./i18n"
 import "./popup.css"
 
 import { COPY_FEEDBACK_TIMEOUT_MS, STORAGE_KEYS } from "./constants"
-import ConfirmModal from "./components/ConfirmModal"
-import AlertModal from "./components/AlertModal"
+import ConfirmModal from "./components/modal/ConfirmModal"
+import AlertModal from "./components/modal/AlertModal"
 import StatBox from "./components/StatBox"
 import SearchResultItem from "./components/SearchResultItem"
 import { BookmarkIcon, StarIcon, DocumentIcon, FolderIcon } from "./components/Icons"
@@ -27,7 +27,7 @@ function IndexPopup() {
   const [bulkDeleteEnabled, setBulkDeleteEnabled] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
   const [copiedId, setCopiedId] = useState<string | null>(null)
-  
+
   // Custom modals state
   const [alertMessage, setAlertMessage] = useState("")
   const [showConfirm, setShowConfirm] = useState(false)
@@ -106,7 +106,7 @@ function IndexPopup() {
     reader.onload = (event) => {
       try {
         const jsonData = JSON.parse(event.target?.result as string)
-        
+
         // Basic format validation
         if (typeof jsonData !== 'object' || Array.isArray(jsonData)) {
           setAlertMessage(t("importFormatError"))
@@ -189,7 +189,7 @@ function IndexPopup() {
   return (
     <>
       <div className="popup-container">
-        
+
         {/* Header */}
         <div className="popup-header">
           <h2 className="popup-title">
@@ -221,7 +221,7 @@ function IndexPopup() {
         {/* Search Mode — Results */}
         {isSearching ? (
           <div className="popup-search-results">
-            
+
             {/* Prompt results */}
             {filteredPrompts.length > 0 && (
               <div className="popup-search-group">
@@ -293,7 +293,7 @@ function IndexPopup() {
             {/* Data Management */}
             <div className="popup-section">
               <h3 className="popup-section-title">{t("dataManagement")}</h3>
-              
+
               <div className="popup-data-section">
                 <div className="popup-data-header">
                   <span className="popup-data-label">{t("allData")}</span>

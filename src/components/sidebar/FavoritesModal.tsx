@@ -1,13 +1,13 @@
-// components/FavoritesTab.tsx — Favorites tab content for the main modal
+// components/FavoritesModal.tsx — Favorites tab content for the main modal
 import React from "react"
 import { useTranslation } from "react-i18next"
 
-import type { FavoriteAnswer } from "../types/favorite"
-import EmptyState from "./EmptyState"
-import { StarIcon } from "./Icons"
+import type { FavoriteAnswer } from "../../types/favorite"
+import EmptyState from "../EmptyState"
+import { StarIcon } from "../Icons"
 import ModalListItem from "./ModalListItem"
 
-interface FavoritesTabProps {
+interface FavoritesModalProps {
   favorites: FavoriteAnswer[]
   filteredFavorites: FavoriteAnswer[]
   copiedIds: Record<string, boolean>
@@ -15,7 +15,7 @@ interface FavoritesTabProps {
   onDelete: (id: string) => void
 }
 
-const FavoritesTab: React.FC<FavoritesTabProps> = ({
+const FavoritesModal: React.FC<FavoritesModalProps> = ({
   favorites,
   filteredFavorites,
   copiedIds,
@@ -62,4 +62,4 @@ const FavoritesTab: React.FC<FavoritesTabProps> = ({
   )
 }
 
-export default FavoritesTab
+export default FavoritesModal

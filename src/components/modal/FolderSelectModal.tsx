@@ -2,7 +2,7 @@
 import React from "react"
 import { useTranslation } from "react-i18next"
 
-import type { ChatFolder } from "../types/folder"
+import type { ChatFolder } from "../../types/folder"
 
 interface FolderSelectModalProps {
   folders: ChatFolder[]
