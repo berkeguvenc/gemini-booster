@@ -1,5 +1,5 @@
 // components/FolderSelectModal.tsx — Modal for selecting/creating a folder (used in bulk delete)
-import React from "react"
+import React, { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 
 import type { ChatFolder } from "../../types/folder"
@@ -22,9 +22,26 @@ const FolderSelectModal: React.FC<FolderSelectModalProps> = ({
   onClose
 }) => {
   const { t } = useTranslation()
+  const [isDark, setIsDark] = useState(true)
+
+  useEffect(() => {
+    const checkTheme = () =>
+      setIsDark(document.body.classList.contains("dark-theme"))
+
+    checkTheme()
+
+    const observer = new MutationObserver(checkTheme)
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ["class"]
+    })
+
+    return () => observer.disconnect()
+  }, [])
+
 
   return (
-    <div className="modal-overlay dark" style={{ zIndex: 9999 }}>
+    <div className={`modal-overlay ${isDark ? "dark" : ""}`} style={{ zIndex: 9999 }}>
       <div className="modal-clickaway" onClick={onClose}></div>
       <div className="modal-box folder-select-box">
         <h2 className="folder-select-title">{t("selectFolder")}</h2>
@@ -34,12 +51,12 @@ const FolderSelectModal: React.FC<FolderSelectModalProps> = ({
             value={newFolderName}
             onChange={(e) => onNewFolderNameChange(e.target.value)}
             placeholder={t("createNewFolder")}
-            className="folder-select-input"
+            className="folder-name-input"
           />
           <button
             onClick={onCreateAndAdd}
             disabled={!newFolderName.trim()}
-            className="folder-select-create-btn">
+            className="folder-create-btn">
             {t("create")}
           </button>
         </div>

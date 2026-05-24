@@ -11,7 +11,7 @@ import { generateId } from "../utils/id"
 import { initLanguageSync } from "../utils/language"
 import AlertModal from "../components/modal/AlertModal"
 import ConfirmModal from "../components/modal/ConfirmModal"
-import FolderSelectModal from "../components/modal/FolderSelectModal"
+import { FolderSelectModal } from "../components/modal/FoldersModal"
 import type { ChatFolder, FolderChatItem } from "../types/folder"
 import type { LocalStorageData, SyncStorageData } from "../types/storage"
 

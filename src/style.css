@@ -86,7 +86,7 @@ textarea {
 }
 
 .side-nav-btn:hover {
-  background-color: #333537;
+  background-color: #2a2a2a;
 }
 
 .side-nav-icon {
@@ -121,7 +121,7 @@ textarea {
   /* Original dark modal */
   --local-surface-container-low: #1e1f20;
   --local-surface-container-highest: #333537;
-  --local-on-surface: #e3e3e3;
+  --local-on-surface: #e6e6e6;
   --local-on-surface-variant: #c4c7c5;
   --local-outline-variant: #444746;
   --local-primary: #a8c7fa;
@@ -180,7 +180,7 @@ textarea {
 
 .modal-title {
   font-size: 22px;
-  font-weight: 400;
+  font-weight: 300;
   margin: 0;
 }
 
@@ -192,12 +192,11 @@ textarea {
   justify-content: center;
   border-radius: 50%;
   transition: background-color 0.15s;
-  color: #4dda7c;
+  color: #c4c7c5;
 }
 
 .modal-close-btn:hover {
-  background-color: #914b58;
-  color: #4b9725;
+  background-color: #2a2a2a;
 }
 
 .modal-content {
@@ -225,7 +224,7 @@ textarea {
 /* Liste Başlığı (Örn: En son) */
 .list-header {
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 300;
   padding: 8px 24px;
   margin: 0;
   color: #e6e6e6;
@@ -262,7 +261,7 @@ textarea {
 
 .list-item-icon {
   font-size: 24px;
-  color: #b96f74;
+  color: #e6e6e6;
   flex-shrink: 0;
   font-variation-settings: 'FILL' 1;
 }
@@ -290,8 +289,8 @@ textarea {
 .list-item-title {
   font-size: 14px;
   line-height: 22px;
-  font-weight: 400;
-  color: #548057;
+  font-weight: 300;
+  color: #e6e6e6;
   white-space: pre-wrap;
   display: -webkit-box;
   -webkit-line-clamp: 4;
@@ -309,9 +308,9 @@ textarea {
 .favorite-expand-btn {
   background: transparent;
   border: none;
-  color: #56c90e;
+  color: #9aa0a6;
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 300;
   cursor: pointer;
   padding: 0;
   align-self: flex-start;
@@ -323,7 +322,7 @@ textarea {
 
 .list-item-metadata {
   font-size: 12px;
-  color: #393b25;
+  color: #9aa0a6;
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -336,8 +335,8 @@ textarea {
 
 .favorite-link {
   text-decoration: none;
-  color: #e08337;
-  font-weight: 500;
+  color: #9aa0a6;
+  font-weight: 300;
   display: flex;
   align-items: center;
   gap: 4px;
@@ -373,20 +372,20 @@ textarea {
 }
 
 .favorite-copy-btn {
-  color: #0842a0;
+  color: #e6e6e6;
 }
 
 .favorite-copy-btn:hover {
-  background-color: #0842a0;
+  background-color: #a0a0a0;
 }
 
 .favorite-delete-btn {
-  color: #0842a0;
+  color: #e6e6e6;
 }
 
 .favorite-delete-btn:hover {
   background-color: rgba(234, 67, 53, 0.1);
-  color: #ea4335;
+  color: #ea4435;
   /* Google Red */
 }
 
@@ -476,7 +475,7 @@ textarea {
   border-radius: 9999px;
   padding: 6px 12px;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 300;
   cursor: pointer;
   transition: background-color 0.15s ease, color 0.15s ease;
   margin-left: auto;
@@ -553,7 +552,7 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
   width: 100%;
   min-height: 80px;
   background-color: #282a2c;
-  color: #e3e3e3;
+  color: #e6e6e6;
   border: 1px solid #444746;
   border-radius: 12px;
   padding: 12px;
@@ -571,13 +570,13 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
 }
 
 .note-save-btn {
-  background-color: #0842a0;
-  color: #0842a0;
+  background-color: #171717;
+  color: #e6e6e6;
   border: none;
   padding: 8px 16px;
   border-radius: 20px;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 15px;
+  font-weight: 300;
   cursor: pointer;
 }
 
@@ -599,9 +598,9 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
 
 .folder-name-input {
   flex: 1;
-  background-color: #0842a0;
-  color: #0842a0;
-  border: 1px solid #0842a0;
+  background-color: #282a2c;
+  color: #e6e6e6;
+  border: 1px solid #444746;
   border-radius: 12px;
   padding: 12px;
   font-size: 14px;
@@ -611,13 +610,13 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
 }
 
 .folder-create-btn {
-  background-color: #0842a0;
-  color: #0842a0;
+  background-color: #171717;
+  color: #e6e6e6;
   border: none;
-  padding: 12px 16px;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 15px;
+  font-weight: 300;
   cursor: pointer;
 }
 
@@ -649,8 +648,8 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
 
 .folder-card-name {
   font-size: 16px;
-  font-weight: 500;
-  color: #e3e3e3;
+  font-weight: 300;
+  color: #e6e6e6;
 }
 
 .folder-card-delete {
@@ -686,7 +685,7 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
 }
 
 .folder-select-title {
-  color: #0842a0;
+  color: #e6e6e6;
   margin-bottom: 16px;
   font-size: 18px;
 }
@@ -695,33 +694,6 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
   display: flex;
   gap: 8px;
   margin-bottom: 16px;
-}
-
-.folder-select-input {
-  flex: 1;
-  padding: 12px;
-  border-radius: 12px;
-  border: 1px solid #0842a0;
-  background: #0842a0;
-  color: #0842a0;
-  outline: none;
-  font-size: 14px;
-}
-
-.folder-select-create-btn {
-  padding: 12px 16px;
-  border-radius: 12px;
-  background: #0842a0;
-  color: #0842a0;
-  border: none;
-  font-weight: 500;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-.folder-select-create-btn:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
 }
 
 .folder-select-list {
@@ -735,10 +707,10 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
 .folder-select-item {
   padding: 12px 16px;
   text-align: left;
-  background: #ddb188;
-  color: #641437;
+  background: #282a2c;
+  color: #e6e6e6;
   border-radius: 12px;
-  border: 1px solid #62b347;
+  border: 1px solid #444746;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -774,8 +746,8 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
   cursor: pointer;
   padding: 8px 16px;
   border-radius: 20px;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 15px;
+  font-weight: 300;
 }
 
 /* Bulk Delete Header Container */
@@ -882,7 +854,7 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
   padding: var(--gem-sys-spacing--s, 8px) var(--gem-sys-spacing--l, 16px);
   font-family: "Google Sans Flex", "Google Sans", Roboto, sans-serif;
   font-size: 12px;
-  font-weight: 400;
+  font-weight: 300;
   line-height: 16px;
   letter-spacing: 0.1px;
   position: relative;

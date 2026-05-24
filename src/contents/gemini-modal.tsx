@@ -232,13 +232,6 @@ const GeminiModal = () => {
     folders: <FolderIcon size={32} />
   }
 
-  const modalIconColors: Record<ModalTab, string> = {
-    favorites: "#fbbc04",
-    prompts: "#0842a0",
-    notes: "#455b78",
-    folders: "#1a73e8"
-  }
-
   // Filtered data for search
   const filteredFavorites = favorites.filter((f) =>
     f.text.toLowerCase().includes(searchQuery.toLowerCase())
@@ -263,8 +256,7 @@ const GeminiModal = () => {
         <div className="modal-header">
           <div className="modal-title-container">
             <span
-              className="header-icon"
-              style={{ color: modalIconColors[activeModal] }}>
+              className="header-icon">
               {modalIcons[activeModal]}
             </span>
             <h2 className="modal-title">

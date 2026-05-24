@@ -44,7 +44,6 @@ const ListItem: React.FC<ListItemProps> = ({
         <div className="list-item-text">
           <div
             className={`list-item-title ${isExpanded ? "expanded" : ""}`}
-            style={iconColorClass === "document" ? { whiteSpace: "pre-wrap", wordBreak: "break-word" } : {}}
           >
             {text}
           </div>
