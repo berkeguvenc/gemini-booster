@@ -1,11 +1,122 @@
-// components/FoldersModal.tsx — Folders tab content for the main modal
-import React from "react"
+import React, { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 
 import type { ChatFolder } from "../../types/folder"
 import EmptyState from "./components/EmptyState"
 import { FolderIcon } from "../Icons"
 import ListItem from "./components/ListItem"
+
+export interface FolderSelectModalProps {
+  folders: ChatFolder[]
+  newFolderName: string
+  onNewFolderNameChange: (name: string) => void
+  onCreateAndAdd: () => void
+  onSelectFolder: (folderId: string) => void
+  onClose: () => void
+}
+
+export const FolderSelectModal: React.FC<FolderSelectModalProps> = ({
+  folders,
+  newFolderName,
+  onNewFolderNameChange,
+  onCreateAndAdd,
+  onSelectFolder,
+  onClose
+}) => {
+  const { t } = useTranslation()
+  const [isDark, setIsDark] = useState(true)
+
+  useEffect(() => {
+    const checkTheme = () =>
+      setIsDark(document.body.classList.contains("dark-theme"))
+
+    checkTheme()
+
+    const observer = new MutationObserver(checkTheme)
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ["class"]
+    })
+
+    return () => observer.disconnect()
+  }, [])
+
+  return (
+    <div className={`modal-overlay ${isDark ? "dark" : ""}`} style={{ zIndex: 9999 }}>
+      <div className="modal-clickaway" onClick={onClose}></div>
+      <div className="modal-box">
+        <div className="modal-header" style={{ paddingBottom: "16px" }}>
+          <div className="modal-title-container">
+            <span className="header-icon" style={{ color: "#a8c7fa" }}>
+              <FolderIcon size={32} />
+            </span>
+            <h2 className="modal-title">{t("selectFolder")}</h2>
+          </div>
+          <button
+            onClick={onClose}
+            className="modal-close-btn"
+            aria-label={t("close")}>
+            <span className="google-symbols" style={{ fontSize: "24px" }}>close</span>
+          </button>
+        </div>
+
+        <div className="modal-content" style={{ maxHeight: "400px", padding: "0 24px 24px 24px", overflowY: "auto" }}>
+          <div className="folder-create-row" style={{ margin: "0 0 16px 0" }}>
+            <input
+              type="text"
+              value={newFolderName}
+              onChange={(e) => onNewFolderNameChange(e.target.value)}
+              placeholder={t("createNewFolder")}
+              className="folder-name-input"
+            />
+            <button
+              onClick={onCreateAndAdd}
+              disabled={!newFolderName.trim()}
+              className="folder-create-btn">
+              {t("create")}
+            </button>
+          </div>
+
+          {folders.length === 0 ? (
+            <EmptyState
+              icon={<FolderIcon size={40} />}
+              title={t("noFolders")}
+              description={t("noFoldersDesc")}
+            />
+          ) : (
+            <ul className="item-list" style={{ padding: 0, margin: 0 }}>
+              {folders.map((f) => (
+                <li key={f.id} style={{ marginBottom: "12px", listStyle: "none" }}>
+                  <div
+                    className="folder-card"
+                    onClick={() => onSelectFolder(f.id)}>
+                    <div className="folder-card-info">
+                      <span className="folder-card-icon">
+                        <FolderIcon size={24} />
+                      </span>
+                      <span className="folder-card-name">
+                        {f.name} ({f.chats.length})
+                      </span>
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+
+          <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "24px" }}>
+            <button
+              onClick={onClose}
+              className="folder-create-btn"
+              style={{ background: "transparent", color: "#a8c7fa" }}>
+              {t("cancel")}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 interface FoldersModalProps {
   folders: ChatFolder[]
