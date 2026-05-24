@@ -677,6 +677,29 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
    Folder Select Modal (gemini-bulk-delete)
    ============================================= */
 
+.folder-select-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 24px;
+  padding: 0 24px;
+}
+
+.folder-select-cancel {
+  background: transparent;
+  border: none;
+  color: #a8c7fa;
+  cursor: pointer;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 15px;
+  font-weight: 300;
+  transition: background-color 0.15s ease;
+}
+
+.folder-select-cancel:hover {
+  background-color: rgba(168, 199, 250, 0.1);
+}
+
 /* Bulk Delete Header Container */
 .gbr-bulk-delete-header-container {
   display: flex;

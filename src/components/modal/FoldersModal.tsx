@@ -6,20 +6,40 @@ import EmptyState from "./components/EmptyState"
 import { FolderIcon } from "../Icons"
 import ListItem from "./components/ListItem"
 
-export interface FolderSelectModalProps {
+export interface FoldersModalProps {
+  mode?: "manage" | "select"
   folders: ChatFolder[]
   newFolderName: string
   onNewFolderNameChange: (name: string) => void
-  onCreateAndAdd: () => void
-  onSelectFolder: (folderId: string) => void
-  onClose: () => void
+  onCreateFolder: () => void
+
+  // Manage mode specific props (optional)
+  filteredFolders?: ChatFolder[]
+  expandedFolderId?: string | null
+  copiedIds?: Record<string, boolean>
+  onDeleteFolder?: (id: string) => void
+  onToggleExpand?: (id: string) => void
+  onRemoveChatFromFolder?: (folderId: string, chatId: string) => void
+  onCopy?: (id: string, text: string) => Promise<void>
+
+  // Select mode specific props (optional)
+  onSelectFolder?: (folderId: string) => void
+  onClose?: () => void
 }
 
-export const FolderSelectModal: React.FC<FolderSelectModalProps> = ({
+const FoldersModal: React.FC<FoldersModalProps> = ({
+  mode = "manage",
   folders,
+  filteredFolders,
   newFolderName,
+  expandedFolderId,
+  copiedIds,
   onNewFolderNameChange,
-  onCreateAndAdd,
+  onCreateFolder,
+  onDeleteFolder,
+  onToggleExpand,
+  onRemoveChatFromFolder,
+  onCopy,
   onSelectFolder,
   onClose
 }) => {
@@ -27,6 +47,8 @@ export const FolderSelectModal: React.FC<FolderSelectModalProps> = ({
   const [isDark, setIsDark] = useState(true)
 
   useEffect(() => {
+    if (mode !== "select") return
+
     const checkTheme = () =>
       setIsDark(document.body.classList.contains("dark-theme"))
 
@@ -39,115 +61,11 @@ export const FolderSelectModal: React.FC<FolderSelectModalProps> = ({
     })
 
     return () => observer.disconnect()
-  }, [])
+  }, [mode])
 
-  return (
-    <div className={`modal-overlay ${isDark ? "dark" : ""}`} style={{ zIndex: 9999 }}>
-      <div className="modal-clickaway" onClick={onClose}></div>
-      <div className="modal-box">
-        <div className="modal-header" style={{ paddingBottom: "16px" }}>
-          <div className="modal-title-container">
-            <span className="header-icon" style={{ color: "#a8c7fa" }}>
-              <FolderIcon size={32} />
-            </span>
-            <h2 className="modal-title">{t("selectFolder")}</h2>
-          </div>
-          <button
-            onClick={onClose}
-            className="modal-close-btn"
-            aria-label={t("close")}>
-            <span className="google-symbols" style={{ fontSize: "24px" }}>close</span>
-          </button>
-        </div>
+  const foldersToList = mode === "select" ? folders : (filteredFolders || folders)
 
-        <div className="modal-content" style={{ maxHeight: "400px", padding: "0 24px 24px 24px", overflowY: "auto" }}>
-          <div className="folder-create-row" style={{ margin: "0 0 16px 0" }}>
-            <input
-              type="text"
-              value={newFolderName}
-              onChange={(e) => onNewFolderNameChange(e.target.value)}
-              placeholder={t("createNewFolder")}
-              className="folder-name-input"
-            />
-            <button
-              onClick={onCreateAndAdd}
-              disabled={!newFolderName.trim()}
-              className="folder-create-btn">
-              {t("create")}
-            </button>
-          </div>
-
-          {folders.length === 0 ? (
-            <EmptyState
-              icon={<FolderIcon size={40} />}
-              title={t("noFolders")}
-              description={t("noFoldersDesc")}
-            />
-          ) : (
-            <ul className="item-list" style={{ padding: 0, margin: 0 }}>
-              {folders.map((f) => (
-                <li key={f.id} style={{ marginBottom: "12px", listStyle: "none" }}>
-                  <div
-                    className="folder-card"
-                    onClick={() => onSelectFolder(f.id)}>
-                    <div className="folder-card-info">
-                      <span className="folder-card-icon">
-                        <FolderIcon size={24} />
-                      </span>
-                      <span className="folder-card-name">
-                        {f.name} ({f.chats.length})
-                      </span>
-                    </div>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
-
-          <div style={{ display: "flex", justifyContent: "flex-end", marginTop: "24px" }}>
-            <button
-              onClick={onClose}
-              className="folder-create-btn"
-              style={{ background: "transparent", color: "#a8c7fa" }}>
-              {t("cancel")}
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-interface FoldersModalProps {
-  folders: ChatFolder[]
-  filteredFolders: ChatFolder[]
-  newFolderName: string
-  expandedFolderId: string | null
-  copiedIds: Record<string, boolean>
-  onNewFolderNameChange: (name: string) => void
-  onCreateFolder: () => void
-  onDeleteFolder: (id: string) => void
-  onToggleExpand: (id: string) => void
-  onRemoveChatFromFolder: (folderId: string, chatId: string) => void
-  onCopy: (id: string, text: string) => Promise<void>
-}
-
-const FoldersModal: React.FC<FoldersModalProps> = ({
-  folders,
-  filteredFolders,
-  newFolderName,
-  expandedFolderId,
-  copiedIds,
-  onNewFolderNameChange,
-  onCreateFolder,
-  onDeleteFolder,
-  onToggleExpand,
-  onRemoveChatFromFolder,
-  onCopy
-}) => {
-  const { t } = useTranslation()
-
-  return (
+  const renderContent = () => (
     <div>
       <div className="folder-create-row">
         <input
@@ -171,17 +89,23 @@ const FoldersModal: React.FC<FoldersModalProps> = ({
           title={t("noFolders")}
           description={t("noFoldersDesc")}
         />
-      ) : filteredFolders.length === 0 ? (
+      ) : foldersToList.length === 0 ? (
         <div className="favorites-empty">
           <p className="modal-desc">{t("noFolders")}</p>
         </div>
       ) : (
         <ul className="item-list" style={{ marginTop: "16px", padding: "0 12px" }}>
-          {filteredFolders.map((f) => (
+          {foldersToList.map((f) => (
             <li key={f.id} style={{ marginBottom: "12px", listStyle: "none" }}>
               <div
                 className="folder-card"
-                onClick={() => onToggleExpand(f.id)}>
+                onClick={() => {
+                  if (mode === "select") {
+                    onSelectFolder?.(f.id)
+                  } else {
+                    onToggleExpand?.(f.id)
+                  }
+                }}>
                 <div className="folder-card-info">
                   <span className="folder-card-icon">
                     <FolderIcon size={24} />
@@ -190,18 +114,20 @@ const FoldersModal: React.FC<FoldersModalProps> = ({
                     {f.name} ({f.chats.length})
                   </span>
                 </div>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    if (window.confirm(t("delete"))) onDeleteFolder(f.id)
-                  }}
-                  className="folder-card-delete"
-                  title={t("delete")}>
-                  <span className="google-symbols" style={{ fontSize: "20px" }}>delete</span>
-                </button>
+                {mode === "manage" && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      if (window.confirm(t("delete"))) onDeleteFolder?.(f.id)
+                    }}
+                    className="folder-card-delete"
+                    title={t("delete")}>
+                    <span className="google-symbols" style={{ fontSize: "20px" }}>delete</span>
+                  </button>
+                )}
               </div>
 
-              {expandedFolderId === f.id && (
+              {mode === "manage" && expandedFolderId === f.id && (
                 <div className="folder-chats-list">
                   {f.chats.length === 0 ? (
                     <div className="folder-empty-msg">
@@ -218,8 +144,8 @@ const FoldersModal: React.FC<FoldersModalProps> = ({
                           url={chat.url}
                           icon={<span className="google-symbols" style={{ fontSize: "20px" }}>chat</span>}
                           iconColorClass="default"
-                          onCopy={onCopy}
-                          onDelete={(id) => onRemoveChatFromFolder(f.id, id)}
+                          onCopy={onCopy || (async () => {})}
+                          onDelete={(id) => onRemoveChatFromFolder?.(f.id, id)}
                           isCopied={false}
                           dateFormat={{
                             day: "numeric",
@@ -236,8 +162,46 @@ const FoldersModal: React.FC<FoldersModalProps> = ({
           ))}
         </ul>
       )}
+
+      {mode === "select" && (
+        <div className="folder-select-footer">
+          <button onClick={onClose} className="folder-select-cancel">
+            {t("cancel")}
+          </button>
+        </div>
+      )}
     </div>
   )
+
+  if (mode === "select") {
+    return (
+      <div className={`modal-overlay ${isDark ? "dark" : ""}`} style={{ zIndex: 9999 }}>
+        <div className="modal-clickaway" onClick={onClose}></div>
+        <div className="modal-box">
+          <div className="modal-header">
+            <div className="modal-title-container">
+              <span className="header-icon">
+                <FolderIcon size={32} />
+              </span>
+              <h2 className="modal-title">{t("selectFolder")}</h2>
+            </div>
+            <button
+              onClick={onClose}
+              className="modal-close-btn"
+              aria-label={t("close")}>
+              <span className="google-symbols" style={{ fontSize: "24px" }}>close</span>
+            </button>
+          </div>
+
+          <div className="modal-content">
+            {renderContent()}
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  return renderContent()
 }
 
 export default FoldersModal
