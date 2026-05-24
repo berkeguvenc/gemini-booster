@@ -28,13 +28,13 @@ const SidebarCollapsedButton: React.FC<SidebarCollapsedButtonProps> = ({
         <span className="google-symbols side-nav-icon icon-gray">{icon}</span>
       </button>
 
-      <div className="cdk-overlay-pane mat-mdc-tooltip-panel-right mat-mdc-tooltip-panel gbr-collapsed-tooltip">
-        <div className="ng-star-inserted">
+      <div className="gbr-collapsed-tooltip">
+        <div>
           <div
-            className="mdc-tooltip mat-mdc-tooltip gds-body-s gem-tooltip lm-enabled mat-mdc-tooltip-show"
+            className="mdc-tooltip mat-mdc-tooltip"
             style={{ transformOrigin: "left center" }}
           >
-            <div className="mat-mdc-tooltip-surface mdc-tooltip__surface">
+            <div className="mat-mdc-tooltip-surface">
               {label}
             </div>
           </div>

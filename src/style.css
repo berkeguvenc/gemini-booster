@@ -497,7 +497,7 @@ textarea {
 }
 
 .bulk-delete-btn.delete-action:hover:not(:disabled) {
-  background-color: rgba(234, 67, 53, 0.1);
+  background-color: rgba(11, 148, 132, 0.1);
   color: #ea4335;
 }
 
@@ -757,8 +757,8 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
 }
 
 .side-nav-collapsed-btn:hover {
-  background-color: #df1212;
-  color: #61a008;
+  background-color: #444746;
+  color: #e6e6e6;
 }
 
 .side-nav-collapsed-btn .side-nav-icon {
@@ -798,8 +798,8 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
 }
 
 .side-nav-collapsed-btn-wrapper .mat-mdc-tooltip-surface {
-  background-color: #a59c6c;
-  color: #0c5057;
+  background-color: #e6e6e6;
+  color: #171717;
   border-radius: var(--gem-sys-shape--corner-medium, 8px);
   padding: var(--gem-sys-spacing--s, 8px) var(--gem-sys-spacing--l, 16px);
   font-family: "Google Sans Flex", "Google Sans", Roboto, sans-serif;
@@ -820,6 +820,6 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
   left: auto;
   top: 50%;
   transform: translateY(-50%);
-  border-right-color: #54082d;
+  border-right-color: #e6e6e6;
   border-width: var(--gem-sys-spacing--xs, 4px) var(--gem-sys-spacing--xs, 4px) var(--gem-sys-spacing--xs, 4px) 0;
 }
