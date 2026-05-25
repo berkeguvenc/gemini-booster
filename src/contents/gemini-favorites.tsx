@@ -1,320 +1,268 @@
-// contents/gemini-favorites.tsx
-import type { PlasmoCSConfig } from "plasmo"
-import { useEffect } from "react"
+import type { PlasmoCSConfig } from "plasmo";
+import { useEffect } from "react";
 
-import i18n from "../i18n"
-import { TEXT_TRUNCATE_LIMIT, PULSE_ANIMATION_MS } from "../constants"
-import { initLanguageSync } from "../utils/language"
-import { getFavorites, saveFavorites } from "../utils/storage"
-import type { FavoriteAnswer } from "~src/types/favorite"
+import i18n from "../i18n";
+import { TEXT_TRUNCATE_LIMIT, PULSE_ANIMATION_MS } from "../constants";
+import { initLanguageSync } from "../utils/language";
+import { getFavorites, saveFavorites } from "../utils/storage";
 
 export const config: PlasmoCSConfig = {
   matches: ["https://gemini.google.com/*"]
-}
+};
 
-// =============================================
-// Style Injection (directly into <head>)
-// =============================================
-
-function injectGlobalStyles(): void {
-  if (document.getElementById("gbr-favorites-style")) return
-  const style = document.createElement("style")
-  style.id = "gbr-favorites-style"
+// --- STYLES ---
+function injectStyles() {
+  if (document.getElementById("gb-fav-btn-styles")) return;
+  const style = document.createElement("style");
+  style.id = "gb-fav-btn-styles";
   style.textContent = `
-    .gbr-star-btn {
+    /* Light Theme (Default) */
+    :root {
+      --gb-fav-color: #5f6368;
+      --gb-fav-hover-bg: rgba(0, 0, 0, 0.06);
+      --gb-fav-hover-color: #fbbc04;
+      --gb-fav-active: #f9ab00;
+      
+      --gb-tooltip-bg: #1f1f1f;
+      --gb-tooltip-color: #f5f5f5;
+    }
+
+    /* Dark Theme Override */
+    body.dark-theme {
+      --gb-fav-color: #c4c7c5;
+      --gb-fav-hover-bg: rgba(255, 255, 255, 0.08);
+      --gb-fav-hover-color: #fbbc04;
+      --gb-fav-active: #fbbc04;
+      
+      --gb-tooltip-bg: #e3e3e3;
+      --gb-tooltip-color: #1f1f1f;
+    }
+
+    /* Action Button */
+    .gb-fav-btn {
+      position: relative;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
+      width: 32px;
+      height: 32px;
       border: none;
-      background: transparent;
+      border-radius: 50%;
+      background-color: transparent;
+      color: var(--gb-fav-color);
       cursor: pointer;
       padding: 0;
-      color: #c4c7c5;
       transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
       vertical-align: middle;
-      position: relative;
     }
 
-    .gbr-star-btn::after {
-      content: attr(data-tooltip);
+    .gb-fav-btn:hover {
+      background-color: var(--gb-fav-hover-bg);
+      color: var(--gb-fav-hover-color);
+    }
+
+    .gb-fav-btn.is-active {
+      color: var(--gb-fav-active);
+    }
+
+    .gb-fav-btn .google-symbols {
+      font-size: 20px;
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+    }
+
+    .gb-fav-btn.is-active .google-symbols {
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+    }
+
+    /* Tooltip Base */
+    .gb-fav-btn::before,
+    .gb-fav-btn::after {
       position: absolute;
-      top: calc(100% + 8px);
       left: 50%;
       transform: translateX(-50%);
-      background-color: var(--lumi-sys-color--on-surface, #1f1f1f);
-      color: var(--lumi-sys-color--surface-dim, #f5f5f5);
-      padding: var(--gem-sys-spacing--s, 8px) var(--gem-sys-spacing--l, 16px);
-      border-radius: var(--gem-sys-shape--corner-medium, 8px);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.15s;
+      z-index: 999999;
+    }
+
+    /* Tooltip Arrow */
+    .gb-fav-btn::before {
+      content: "";
+      top: calc(100% + 4px);
+      border-style: solid;
+      border-color: transparent;
+      border-bottom-color: var(--gb-tooltip-bg);
+      border-width: 0 4px 4px 4px;
+    }
+
+    /* Tooltip Body */
+    .gb-fav-btn::after {
+      content: attr(data-gb-tooltip);
+      top: calc(100% + 8px);
+      background-color: var(--gb-tooltip-bg);
+      color: var(--gb-tooltip-color);
+      padding: 8px 16px;
+      border-radius: 12px;
       font-family: "Google Sans Flex", "Google Sans", Roboto, sans-serif;
       font-size: 12px;
       font-weight: 400;
       line-height: 16px;
       letter-spacing: 0.1px;
       white-space: nowrap;
-      pointer-events: none;
       box-shadow: 0 1px 2px 0 rgba(0,0,0,0.3), 0 1px 3px 1px rgba(0,0,0,0.15);
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.15s;
-      z-index: 999999;
     }
 
-    .gbr-star-btn::before {
-      content: "";
-      position: absolute;
-      top: calc(100% + 4px);
-      left: 50%;
-      transform: translateX(-50%);
-      border-style: solid;
-      border-color: transparent;
-      border-bottom-color: var(--lumi-sys-color--on-surface, #1f1f1f);
-      border-width: 0 var(--gem-sys-spacing--xs, 4px) var(--gem-sys-spacing--xs, 4px) var(--gem-sys-spacing--xs, 4px);
-      pointer-events: none;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.15s;
-      z-index: 999999;
-    }
-
-    .gbr-star-btn:hover::after,
-    .gbr-star-btn:hover::before {
+    .gb-fav-btn:hover::before,
+    .gb-fav-btn:hover::after {
       opacity: 1;
       visibility: visible;
     }
 
-    .gbr-star-btn .google-symbols {
-      font-size: 20px;
-      line-height: 1;
-      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
-    }
-
-    .gbr-star-btn:hover {
-      background-color: rgba(255, 255, 255, 0.08);
-      color: #fbbc04;
-    }
-
-    .gbr-star-btn.gbr-star-active {
-      color: #fbbc04;
-    }
-
-    .gbr-star-btn.gbr-star-active .google-symbols {
-      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;
-    }
-
-    @keyframes gbr-star-pulse {
+    /* Pulse Animation */
+    @keyframes gb-fav-pulse-anim {
       0%   { transform: scale(1); }
       50%  { transform: scale(1.35); }
       100% { transform: scale(1); }
     }
 
-    .gbr-star-btn.gbr-star-pulse {
-      animation: gbr-star-pulse 0.3s ease;
+    .gb-fav-btn.is-pulsing {
+      animation: gb-fav-pulse-anim 0.3s ease-out;
     }
-
-    body:not(.dark-theme) .gbr-star-btn {
-      color: #5f6368;
-    }
-
-    body:not(.dark-theme) .gbr-star-btn:hover {
-      background-color: rgba(0, 0, 0, 0.06);
-      color: #fbbc04;
-    }
-
-    body:not(.dark-theme) .gbr-star-btn.gbr-star-active {
-      color: #f9ab00;
-    }
-  `
-  document.head.appendChild(style)
+  `;
+  document.head.appendChild(style);
 }
 
-// =============================================
-// DOM Helpers
-// =============================================
+// --- DOM EXTRACTORS ---
+const getResponseId = (el: Element) => {
+  const btn = el.querySelector("button[jslog]");
+  return btn?.getAttribute("jslog")?.match(/"(r_[a-z0-9]+)"/)?.[1];
+};
 
-function getResponseId(thumbUpButtonEl: Element): string | null {
-  const button = thumbUpButtonEl.querySelector("button[jslog]")
-  if (!button) return null
-  const jslog = button.getAttribute("jslog") || ""
-  // jslog format: '173913;...BardVeMetadataKey:[[\"r_XXXX\",\"c_YYYY\",...]]'
-  const match = jslog.match(/"(r_[a-z0-9]+)"/)
-  return match ? match[1] : null
-}
+const getConversationId = (el: Element) => {
+  const btn = el.querySelector("button[jslog]");
+  return btn?.getAttribute("jslog")?.match(/"r_[a-z0-9]+","(c_[a-z0-9]+)"/)?.[1];
+};
 
-function getConversationId(thumbUpButtonEl: Element): string | null {
-  const button = thumbUpButtonEl.querySelector("button[jslog]")
-  if (!button) return null
-  const jslog = button.getAttribute("jslog") || ""
-  const match = jslog.match(/"r_[a-z0-9]+","(c_[a-z0-9]+)"/)
-  return match ? match[1] : null
-}
+const extractResponseText = (responseId: string): string => {
+  const contentEl = document.getElementById(`message-content-id-${responseId}`);
+  if (!contentEl) return "";
+  const rawText = contentEl.innerText?.trim() || "";
+  return rawText.length > TEXT_TRUNCATE_LIMIT ? rawText.slice(0, TEXT_TRUNCATE_LIMIT) + "..." : rawText;
+};
 
-function getResponseText(responseId: string): string {
-  const contentEl = document.getElementById(`message-content-id-${responseId}`)
-  if (!contentEl) return ""
-  const rawText = (contentEl as HTMLElement).innerText?.trim() || ""
-  // Truncate for UI performance and UX
-  return rawText.slice(0, TEXT_TRUNCATE_LIMIT) + (rawText.length > TEXT_TRUNCATE_LIMIT ? "..." : "")
-}
+// --- LOGIC ---
+async function toggleFavoriteState(btn: HTMLButtonElement, responseId: string, conversationId: string, text: string) {
+  const favorites = await getFavorites();
+  const index = favorites.findIndex(f => f.id === responseId);
+  const isCurrentlySaved = index !== -1;
 
-// =============================================
-// Favorite Toggle Logic
-// =============================================
-
-async function toggleFavorite(
-  responseId: string,
-  conversationId: string,
-  text: string
-): Promise<boolean> {
-  const favorites = await getFavorites()
-  const existingIndex = favorites.findIndex((f) => f.id === responseId)
-
-  if (existingIndex !== -1) {
-    // Already favorited — remove
-    favorites.splice(existingIndex, 1)
-    await saveFavorites(favorites)
-    window.dispatchEvent(new CustomEvent("FAVORITES_UPDATED"))
-    return false
+  if (isCurrentlySaved) {
+    favorites.splice(index, 1);
   } else {
-    // Add to favorites (prepend)
-    const newFavorite: FavoriteAnswer = {
+    favorites.unshift({
       id: responseId,
       text,
       conversationId,
       savedAt: Date.now(),
       url: window.location.href
-    }
-    favorites.unshift(newFavorite)
-    await saveFavorites(favorites)
-    window.dispatchEvent(new CustomEvent("FAVORITES_UPDATED"))
-    return true
-  }
-}
-
-// =============================================
-// Button Creator
-// =============================================
-
-function createStarButton(
-  responseId: string,
-  isFavorited: boolean
-): HTMLButtonElement {
-  const btn = document.createElement("button")
-  btn.className = `gbr-star-btn${isFavorited ? " gbr-star-active" : ""}`
-  btn.setAttribute("data-response-id", responseId)
-  btn.setAttribute(
-    "aria-label",
-    isFavorited ? i18n.t("removeFromFavorites") : i18n.t("addToFavorites")
-  )
-  btn.setAttribute(
-    "data-tooltip",
-    isFavorited ? i18n.t("removeFromFavorites") : i18n.t("addToFavorites")
-  )
-  btn.innerHTML = `<span class="google-symbols">star</span>`
-  return btn
-}
-
-// =============================================
-// Injection Logic
-// =============================================
-
-function injectStarButton(
-  thumbUpButtonEl: Element,
-  favorites: FavoriteAnswer[]
-): void {
-  const responseId = getResponseId(thumbUpButtonEl)
-  if (!responseId) return
-
-  const container = thumbUpButtonEl.closest(".buttons-container-v2")
-  if (!container) return
-
-  // Skip if already injected
-  if (container.querySelector(`[data-response-id="${responseId}"]`)) return
-
-  const conversationId = getConversationId(thumbUpButtonEl) || ""
-  const isFavorited = favorites.some((f) => f.id === responseId)
-
-  const btn = createStarButton(responseId, isFavorited)
-
-  btn.addEventListener("click", async (e) => {
-    e.stopPropagation()
-    const text = getResponseText(responseId)
-    const nowFavorited = await toggleFavorite(responseId, conversationId, text)
-
-    btn.classList.toggle("gbr-star-active", nowFavorited)
-    btn.setAttribute(
-      "aria-label",
-      nowFavorited ? i18n.t("removeFromFavorites") : i18n.t("addToFavorites")
-    )
-    btn.setAttribute(
-      "data-tooltip",
-      nowFavorited ? i18n.t("removeFromFavorites") : i18n.t("addToFavorites")
-    )
-
-    // Visual feedback animation
-    btn.classList.add("gbr-star-pulse")
-    setTimeout(() => btn.classList.remove("gbr-star-pulse"), PULSE_ANIMATION_MS)
-  })
-
-  // Insert before the thumb-up button
-  thumbUpButtonEl.insertAdjacentElement("beforebegin", btn)
-}
-
-function observeMessageActions(): () => void {
-  const processAll = async () => {
-    const thumbUpButtons = Array.from(
-      document.querySelectorAll("thumb-up-button:not([data-gbr-processed])")
-    )
-
-    if (thumbUpButtons.length === 0) return
-
-    // Mark immediately to prevent duplicate processing from concurrent mutations
-    for (const el of thumbUpButtons) {
-      el.setAttribute("data-gbr-processed", "true")
-    }
-
-    const favorites = await getFavorites()
-
-    for (const el of thumbUpButtons) {
-      injectStarButton(el, favorites)
-    }
+    });
   }
 
-  // Initial load
-  processAll()
+  await saveFavorites(favorites);
+  window.dispatchEvent(new CustomEvent("FAVORITES_UPDATED"));
 
-  // Re-process when new responses are added to the DOM
-  const observer = new MutationObserver(() => {
-    processAll()
-  })
+  const nowFavorited = !isCurrentlySaved;
+  btn.classList.toggle("is-active", nowFavorited);
 
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true
-  })
+  const label = nowFavorited ? i18n.t("removeFromFavorites") : i18n.t("addToFavorites");
+  btn.setAttribute("aria-label", label);
+  btn.setAttribute("data-gb-tooltip", label);
 
-  return () => observer.disconnect()
+  btn.classList.add("is-pulsing");
+  setTimeout(() => btn.classList.remove("is-pulsing"), PULSE_ANIMATION_MS || 300);
 }
 
-// =============================================
-// React Component (required by Plasmo)
-// This component does not render any UI.
-// =============================================
+// --- INJECTION ---
+function mountButtonTo(thumbUpBtn: Element, favoritedIds: Set<string>) {
+  const responseId = getResponseId(thumbUpBtn);
+  if (!responseId || thumbUpBtn.hasAttribute("data-gb-mounted")) return;
 
-const GeminiFavorites = () => {
+  const containerWrapper = thumbUpBtn.closest(".buttons-container-v2");
+  if (!containerWrapper) return;
+
+  // Mark immediately to prevent race conditions during async operations
+  thumbUpBtn.setAttribute("data-gb-mounted", "true");
+
+  const conversationId = getConversationId(thumbUpBtn) || "";
+  const isFavorited = favoritedIds.has(responseId);
+  const label = isFavorited ? i18n.t("removeFromFavorites") : i18n.t("addToFavorites");
+
+  const btn = document.createElement("button");
+  btn.className = `gb-fav-btn ${isFavorited ? "is-active" : ""}`;
+  btn.setAttribute("aria-label", label);
+  btn.setAttribute("data-gb-tooltip", label);
+  btn.innerHTML = `<span class="google-symbols">star</span>`;
+
+  btn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    const text = extractResponseText(responseId);
+    if (text) toggleFavoriteState(btn, responseId, conversationId, text);
+  });
+
+  thumbUpBtn.insertAdjacentElement("beforebegin", btn);
+}
+
+// --- OBSERVER ---
+function initObserver() {
+  let isProcessing = false;
+
+  const processDOM = async () => {
+    if (isProcessing) return;
+    isProcessing = true;
+
+    try {
+      // Find thumb-up buttons that haven't been processed
+      const thumbUpBtns = Array.from(document.querySelectorAll("thumb-up-button:not([data-gb-mounted])"));
+      if (thumbUpBtns.length === 0) return;
+
+      const favorites = await getFavorites();
+      // O(1) Set lookup for favorited IDs
+      const favoritedIds = new Set(favorites.map(f => f.id));
+
+      thumbUpBtns.forEach(btn => mountButtonTo(btn, favoritedIds));
+    } finally {
+      isProcessing = false;
+    }
+  };
+
+  // Initial process
+  processDOM();
+
+  const observer = new MutationObserver((mutations) => {
+    // Process only if real nodes were added
+    if (mutations.some(m => m.addedNodes.length > 0)) {
+      requestAnimationFrame(processDOM);
+    }
+  });
+
+  observer.observe(document.body, { childList: true, subtree: true });
+  return () => observer.disconnect();
+}
+
+// --- MAIN COMPONENT ---
+export default function GeminiFavorites() {
   useEffect(() => {
-    const cleanupLang = initLanguageSync(i18n)
-    injectGlobalStyles()
-    const cleanupObserver = observeMessageActions()
+    const cleanupLang = initLanguageSync(i18n);
+    injectStyles();
+    const cleanupObserver = initObserver();
+
     return () => {
-      cleanupObserver()
-      cleanupLang()
-    }
-  }, [])
+      cleanupObserver();
+      cleanupLang();
+    };
+  }, []);
 
-  return null
+  return null;
 }
-
-export default GeminiFavorites

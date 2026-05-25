@@ -86,7 +86,7 @@ textarea {
 }
 
 .side-nav-btn:hover {
-  background-color: #2a2a2a;
+  background-color: rgba(255, 255, 255, 0.08);
 }
 
 .side-nav-icon {
@@ -196,7 +196,7 @@ textarea {
 }
 
 .modal-close-btn:hover {
-  background-color: #2a2a2a;
+  background-color: rgba(255, 255, 255, 0.08);
 }
 
 .modal-content {
@@ -245,10 +245,6 @@ textarea {
   padding: 12px 24px;
   cursor: default;
   transition: background-color 0.15s;
-}
-
-.list-item-container:hover {
-  background-color: #6f7213;
 }
 
 .list-item-main {
@@ -376,7 +372,7 @@ textarea {
 }
 
 .favorite-copy-btn:hover {
-  background-color: #a0a0a0;
+  background-color: rgba(255, 255, 255, 0.08);
 }
 
 .favorite-delete-btn {
@@ -537,7 +533,7 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a {
 }
 
 body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:hover {
-  background-color: rgba(26, 115, 232, 0.1) !important;
+  background-color: rgba(255, 255, 255, 0.08) !important;
 }
 
 /* =============================================
@@ -636,6 +632,10 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
   user-select: none;
 }
 
+.folder-card:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
 .folder-card-info {
   display: flex;
   align-items: center;
@@ -697,7 +697,7 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
 }
 
 .folder-select-cancel:hover {
-  background-color: rgba(168, 199, 250, 0.1);
+  background-color: rgba(255, 255, 255, 0.08);
 }
 
 /* Bulk Delete Header Container */
@@ -757,7 +757,7 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
 }
 
 .side-nav-collapsed-btn:hover {
-  background-color: #444746;
+  background-color: rgba(255, 255, 255, 0.08);
   color: #e6e6e6;
 }
 
