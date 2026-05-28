@@ -466,7 +466,7 @@ textarea {
   justify-content: center;
   gap: 6px;
   background-color: transparent;
-  color: #0842a0;
+  color: #e6e6e6;
   border: none;
   border-radius: 9999px;
   padding: 6px 12px;
@@ -479,8 +479,7 @@ textarea {
 }
 
 .bulk-delete-btn:hover:not(:disabled) {
-  background-color: #0842a0;
-  color: #0842a0;
+  background-color: rgba(255, 255, 255, 0.08);
 }
 
 .bulk-delete-btn:disabled {
@@ -489,11 +488,11 @@ textarea {
 }
 
 .bulk-delete-btn.delete-action {
-  color: #0842a0;
+  color: #e6e6e6;
 }
 
 .bulk-delete-btn.delete-action:hover:not(:disabled) {
-  background-color: rgba(11, 148, 132, 0.1);
+  background-color: rgba(255, 255, 255, 0.08);
   color: #ea4335;
 }
 
@@ -502,12 +501,11 @@ textarea {
 }
 
 .bulk-delete-btn.cancel {
-  color: #0842a0;
+  color: #e6e6e6;
 }
 
 .bulk-delete-btn.cancel:hover:not(:disabled) {
-  background-color: #0842a0;
-  color: #0842a0;
+  background-color: rgba(255, 255, 255, 0.08);
 }
 
 @keyframes pulse-delete {
@@ -669,7 +667,7 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
 
 .folder-empty-msg {
   padding: 8px 16px;
-  color: #0842a0;
+  color: #e6e6e6;
   font-size: 14px;
 }
 

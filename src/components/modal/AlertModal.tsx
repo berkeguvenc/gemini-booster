@@ -36,7 +36,7 @@ const AlertModal: React.FC<AlertModalProps> = ({
           background-color: #1e1f20;
           color: #e3e3e3;
           padding: 24px;
-          border-radius: 16px;
+          border-radius: 28px;
           max-width: 400px;
           width: 90%;
           box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
@@ -89,7 +89,7 @@ const AlertModal: React.FC<AlertModalProps> = ({
 
         .gbr-confirm-modal-btn {
           padding: 10px 20px;
-          border-radius: 8px;
+          border-radius: 20px;
           font-size: 14px;
           font-weight: 500;
           cursor: pointer;
@@ -110,12 +110,12 @@ const AlertModal: React.FC<AlertModalProps> = ({
         }
 
         .gbr-confirm-modal-btn-primary {
-          background-color: #6c5ce7;
-          color: #fff;
+          background-color: #171717;
+          color: #e3e3e3;
         }
 
         .gbr-confirm-modal-btn-primary:hover {
-          background-color: #5b4bc4;
+          background-color: rgba(255, 255, 255, 0.08);
         }
       `}</style>
       <div className="gbr-modal-overlay">
