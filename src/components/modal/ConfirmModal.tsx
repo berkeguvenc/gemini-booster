@@ -5,9 +5,10 @@ interface ConfirmModalProps {
   title: string
   description: React.ReactNode
   onConfirm: () => void
-  onCancel: () => void
   confirmText: string
-  cancelText: string
+  onCancel?: () => void
+  cancelText?: string
+  variant?: "danger" | "primary"
 }
 
 const ConfirmModal: React.FC<ConfirmModalProps> = ({
@@ -16,7 +17,8 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
   onConfirm,
   onCancel,
   confirmText,
-  cancelText
+  cancelText,
+  variant = "danger"
 }) => {
   return (
     <>
@@ -27,7 +29,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
           left: 0;
           width: 100vw;
           height: 100vh;
-          background-color: rgba(0, 0, 0, 0.6);
+          background-color: var(--shadow-primary, rgba(0, 0, 0, 0.6));
           backdrop-filter: blur(2px);
           z-index: 9999999;
           display: flex;
@@ -37,14 +39,14 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
         }
 
         .gbr-confirm-modal {
-          background-color: #1e1f20;
-          color: #e3e3e3;
+          background-color: var(--bg-secondary, #1e1f20);
+          color: var(--color-primary, #e3e3e3);
           padding: 24px;
-          border-radius: 16px;
-          max-width: 400px;
+          border-radius: 28px;
+          max-width: 448px;
           width: 90%;
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-          font-family: 'Google Sans', 'Google Sans Flex', 'Segoe UI', Roboto, sans-serif;
+          box-shadow: 0 24px 38px 3px rgba(0, 0, 0, .14), 0 9px 46px 8px rgba(0, 0, 0, .12), 0 11px 15px -7px rgba(0, 0, 0, .2);
+          font-family: "Google Sans Flex", "Google Sans", Roboto, Arial, sans-serif !important;
           box-sizing: border-box;
         }
 
@@ -52,20 +54,21 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
           .gbr-confirm-modal {
             max-width: 280px;
             padding: 20px;
+            border-radius: 20px;
           }
         }
 
         .gbr-confirm-modal-title {
           margin: 0 0 16px 0;
-          font-size: 20px;
-          font-weight: 500;
+          font-size: 22px;
+          font-weight: 400;
           text-align: left;
-          color: #e3e3e3;
+          color: var(--color-primary, #e3e3e3);
         }
 
         @media (max-width: 360px) {
           .gbr-confirm-modal-title {
-            font-size: 16px;
+            font-size: 18px;
             margin-bottom: 12px;
           }
         }
@@ -74,7 +77,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
           margin: 0 0 24px 0;
           font-size: 14px;
           line-height: 1.5;
-          color: #c4c7c5;
+          color: var(--color-secondary, #c4c7c5);
           text-align: left;
         }
 
@@ -92,20 +95,19 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
         }
 
         .gbr-confirm-modal-btn {
-          padding: 10px 20px;
-          border-radius: 8px;
+          padding: 10px 24px;
+          border-radius: 9999px;
           font-size: 14px;
           font-weight: 500;
           cursor: pointer;
           border: none;
-          transition: background-color 0.2s, opacity 0.2s;
+          transition: background-color 0.15s, opacity 0.15s;
         }
 
         @media (max-width: 360px) {
           .gbr-confirm-modal-btn {
-            padding: 8px 16px;
+            padding: 8px 18px;
             font-size: 13px;
-            border-radius: 6px;
           }
         }
 
@@ -115,31 +117,46 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
 
         .gbr-confirm-modal-btn-cancel {
           background-color: transparent;
-          color: #a8c7fa;
+          color: var(--color-accent, #a8c7fa);
         }
 
         .gbr-confirm-modal-btn-cancel:hover {
-          background-color: rgba(168, 199, 250, 0.1);
+          background-color: var(--bg-tertiary, rgba(255, 255, 255, 0.08));
         }
 
         .gbr-confirm-modal-btn-delete {
-          background-color: #f28b82;
-          color: #000;
+          background-color: var(--color-danger, #ff605c);
+          color: var(--bg-primary, #131314);
         }
 
         .gbr-confirm-modal-btn-delete:hover {
-          background-color: #ee6b60;
+          background-color: var(--color-danger, #ff605c);
+          opacity: 0.85;
+        }
+
+        .gbr-confirm-modal-btn-primary {
+          background-color: var(--bg-tertiary, rgba(255, 255, 255, 0.08));
+          color: var(--color-primary, #e3e3e3);
+        }
+
+        .gbr-confirm-modal-btn-primary:hover {
+          background-color: var(--border-primary, #444746);
         }
       `}</style>
       <div className="gbr-modal-overlay">
         <div className="gbr-confirm-modal">
           <h3 className="gbr-confirm-modal-title">{title}</h3>
-          <p className="gbr-confirm-modal-text">{description}</p>
+          <div className="gbr-confirm-modal-text">{description}</div>
           <div className="gbr-confirm-modal-actions">
-            <button onClick={onCancel} className="gbr-confirm-modal-btn gbr-confirm-modal-btn-cancel">
-              {cancelText}
-            </button>
-            <button onClick={onConfirm} className="gbr-confirm-modal-btn gbr-confirm-modal-btn-delete">
+            {onCancel && cancelText && (
+              <button onClick={onCancel} className="gbr-confirm-modal-btn gbr-confirm-modal-btn-cancel">
+                {cancelText}
+              </button>
+            )}
+            <button
+              onClick={onConfirm}
+              className={`gbr-confirm-modal-btn ${variant === "danger" ? "gbr-confirm-modal-btn-delete" : "gbr-confirm-modal-btn-primary"}`}
+            >
               {confirmText}
             </button>
           </div>
