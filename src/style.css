@@ -2,6 +2,60 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
 
+:host {
+  overflow: visible !important;
+
+  /* ==========================================================================
+     GLOBAL (PRIMITIVE) DARK MODE PALETTE (Default Base)
+     ========================================================================== */
+  --bg-primary: #131314;       /* Main deep dark background */
+  --bg-secondary: #1e1f20;     /* Cards, Modals, Containers background */
+  --bg-tertiary: #2d2f31;      /* Hover states, active highlights, scrollbars */
+  
+  --color-primary: #e3e3e3;    /* Main high-contrast text, active inputs */
+  --color-secondary: #c4c7c5;  /* Icons, description/secondary texts, placeholders */
+  
+  --color-accent: #a8c7fa;     /* Primary buttons, links, active icons, accents */
+  --color-hover: #c2e7ff;      /* Primary button hover state */
+  
+  --color-success: #34a853;    /* Confirmed actions, copy success */
+  --color-danger: #ff605c;     /* Destructive actions, delete hovers */
+  
+  --border-primary: #444746;   /* Input and separator borders */
+  --shadow-primary: rgba(0, 0, 0, 0.6); /* Backdrop overlays, dropdown shadows */
+
+  /* Icon Branding (Optional overrides) */
+  --color-star: #fbbc04;
+  --color-bookmark: #a8c7fa;
+  --color-document: #7cc0ff;
+}
+
+/* ==========================================================================
+   GLOBAL (PRIMITIVE) LIGHT MODE PALETTE (Overrides when .dark class is NOT present)
+   ========================================================================== */
+.modal-overlay:not(.dark),
+.gemini-sidebar-container:not(.dark) {
+  --bg-primary: ;
+  --bg-secondary: ;
+  --bg-tertiary: ;
+  
+  --color-primary: ;
+  --color-secondary: ;
+  
+  --color-accent: ;
+  --color-hover: ;
+  
+  --color-success: ;
+  --color-danger: ;
+  
+  --border-primary: ;
+  --shadow-primary: ;
+
+  --color-star: ;
+  --color-bookmark: ;
+  --color-document: ;
+}
+
 *:not(.google-symbols) {
   font-family: "Google Sans Flex", "Google Sans", Roboto, Arial, sans-serif !important;
 }
@@ -76,7 +130,8 @@ textarea {
   border-radius: 9999px;
   transition: background-color 0.15s ease, color 0.15s ease;
   font-size: 13px;
-  color: #e6e6e6;
+  color: var(--color-primary);
+  background-color: transparent;
 }
 
 @media (max-width: 960px) {
@@ -86,7 +141,7 @@ textarea {
 }
 
 .side-nav-btn:hover {
-  background-color: rgba(255, 255, 255, 0.08);
+  background-color: var(--bg-tertiary);
 }
 
 .side-nav-icon {
@@ -102,30 +157,9 @@ textarea {
 }
 
 .icon-gray {
-  color: #e6e6e6;
+  color: var(--color-secondary);
 }
 
-/* Local Theme Variables for Modal (Fallback when outside body) */
-.modal-overlay {
-  --local-surface-container: #f0f4f9;
-  --local-surface-container-low: #ffffff;
-  --local-surface-container-highest: #e4e9f0;
-  --local-on-surface: #1f1f1f;
-  --local-on-surface-variant: #5f6368;
-  --local-outline-variant: #e2e8f0;
-  --local-primary: #1a73e8;
-}
-
-.modal-overlay.dark {
-  --local-surface-container: #131314;
-  /* Original dark modal */
-  --local-surface-container-low: #1e1f20;
-  --local-surface-container-highest: #333537;
-  --local-on-surface: #e6e6e6;
-  --local-on-surface-variant: #c4c7c5;
-  --local-outline-variant: #444746;
-  --local-primary: #a8c7fa;
-}
 
 /* Modal */
 .modal-overlay {
@@ -135,7 +169,7 @@ textarea {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: var(--shadow-primary);
 }
 
 .modal-clickaway {
@@ -144,8 +178,8 @@ textarea {
 }
 
 .modal-box {
-  background-color: #1f1f1f;
-  color: #e6e6e6;
+  background-color: var(--bg-secondary);
+  color: var(--color-primary);
   position: relative;
   width: 100%;
   max-width: 448px;
@@ -180,7 +214,7 @@ textarea {
 
 .modal-title {
   font-size: 22px;
-  font-weight: 300;
+  font-weight: 400;
   margin: 0;
 }
 
@@ -192,11 +226,12 @@ textarea {
   justify-content: center;
   border-radius: 50%;
   transition: background-color 0.15s;
-  color: #c4c7c5;
+  color: var(--color-secondary);
 }
 
 .modal-close-btn:hover {
-  background-color: rgba(255, 255, 255, 0.08);
+  background-color: var(--bg-tertiary);
+  color: var(--color-danger);
 }
 
 .modal-content {
@@ -217,17 +252,17 @@ textarea {
 }
 
 .modal-content::-webkit-scrollbar-thumb {
-  background: #16535d;
+  background: var(--bg-tertiary);
   border-radius: 3px;
 }
 
 /* Liste Başlığı (Örn: En son) */
 .list-header {
   font-size: 14px;
-  font-weight: 300;
+  font-weight: 500;
   padding: 8px 24px;
   margin: 0;
-  color: #e6e6e6;
+  color: var(--color-secondary);
 }
 
 .item-list {
@@ -247,6 +282,10 @@ textarea {
   transition: background-color 0.15s;
 }
 
+.list-item-container:hover {
+  background-color: var(--bg-tertiary);
+}
+
 .list-item-main {
   display: flex;
   flex: 1;
@@ -257,21 +296,21 @@ textarea {
 
 .list-item-icon {
   font-size: 24px;
-  color: #e6e6e6;
+  color: var(--color-secondary);
   flex-shrink: 0;
   font-variation-settings: 'FILL' 1;
 }
 
 .list-item-icon.star {
-  color: #fbbc04;
+  color: var(--color-star);
 }
 
 .list-item-icon.bookmark {
-  color: #a8c7fa;
+  color: var(--color-bookmark);
 }
 
 .list-item-icon.document {
-  color: #1b4f72;
+  color: var(--color-document);
 }
 
 .list-item-text {
@@ -285,8 +324,8 @@ textarea {
 .list-item-title {
   font-size: 14px;
   line-height: 22px;
-  font-weight: 300;
-  color: #e6e6e6;
+  font-weight: 400;
+  color: var(--color-primary);
   white-space: pre-wrap;
   display: -webkit-box;
   -webkit-line-clamp: 4;
@@ -304,9 +343,9 @@ textarea {
 .favorite-expand-btn {
   background: transparent;
   border: none;
-  color: #9aa0a6;
+  color: var(--color-accent);
   font-size: 12px;
-  font-weight: 300;
+  font-weight: 500;
   cursor: pointer;
   padding: 0;
   align-self: flex-start;
@@ -318,7 +357,7 @@ textarea {
 
 .list-item-metadata {
   font-size: 12px;
-  color: #9aa0a6;
+  color: var(--color-secondary);
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -331,8 +370,8 @@ textarea {
 
 .favorite-link {
   text-decoration: none;
-  color: #9aa0a6;
-  font-weight: 300;
+  color: var(--color-accent);
+  font-weight: 500;
   display: flex;
   align-items: center;
   gap: 4px;
@@ -368,34 +407,33 @@ textarea {
 }
 
 .favorite-copy-btn {
-  color: #e6e6e6;
+  color: var(--color-secondary);
 }
 
 .favorite-copy-btn:hover {
-  background-color: rgba(255, 255, 255, 0.08);
+  background-color: var(--bg-tertiary);
+  color: var(--color-accent);
 }
 
 .favorite-delete-btn {
-  color: #e6e6e6;
+  color: var(--color-secondary);
 }
 
 .favorite-delete-btn:hover {
-  background-color: rgba(234, 67, 53, 0.1);
-  color: #ea4435;
-  /* Google Red */
+  background-color: var(--bg-delete-btn-hover);
+  color: var(--color-danger);
 }
 
 .favorite-copy-btn.copied {
-  color: #34a853;
-  /* Success green */
+  color: var(--color-success);
 }
 
 /* Modal Search */
 .modal-search-container {
   display: flex;
   align-items: center;
-  background-color: #1e1f20;
-  border: 1px solid #444746;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-primary);
   border-radius: 20px;
   padding: 8px 16px;
   margin: 0 24px 16px 24px;
@@ -404,12 +442,12 @@ textarea {
 }
 
 .modal-search-container:focus-within {
-  border-color: #a8c7fa;
-  box-shadow: 0 0 0 1px #a8c7fa;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 1px var(--color-accent);
 }
 
 .modal-search-icon {
-  color: #e6e6e6;
+  color: var(--color-secondary);
   display: flex;
   align-items: center;
 }
@@ -420,11 +458,11 @@ textarea {
   border: none;
   outline: none;
   font-size: 14px;
-  color: #e6e6e6;
+  color: var(--color-primary);
 }
 
 .modal-search-input::placeholder {
-  color: #e6e6e6;
+  color: var(--color-secondary);
 }
 
 /* Boş Durum (Empty State) */
@@ -442,18 +480,18 @@ textarea {
 .modal-icon-placeholder {
   font-size: 40px;
   margin-bottom: 8px;
-  color: #0842a0;
+  color: var(--color-accent);
 }
 
 .modal-desc {
   font-size: 14px;
-  color: #e6e6e6;
+  color: var(--color-primary);
   margin: 0;
 }
 
 .modal-desc-sub {
   font-size: 12px;
-  color: #e6e6e6;
+  color: var(--color-secondary);
   opacity: 0.8;
   max-width: 280px;
   margin: 0;
@@ -466,20 +504,20 @@ textarea {
   justify-content: center;
   gap: 6px;
   background-color: transparent;
-  color: #e6e6e6;
+  color: var(--color-accent);
   border: none;
   border-radius: 9999px;
   padding: 6px 12px;
   font-size: 13px;
-  font-weight: 300;
+  font-weight: 500;
   cursor: pointer;
   transition: background-color 0.15s ease, color 0.15s ease;
   margin-left: auto;
-  /* Push it to the right of the header */
 }
 
 .bulk-delete-btn:hover:not(:disabled) {
-  background-color: rgba(255, 255, 255, 0.08);
+  background-color: var(--bg-tertiary);
+  color: var(--color-accent);
 }
 
 .bulk-delete-btn:disabled {
@@ -488,12 +526,12 @@ textarea {
 }
 
 .bulk-delete-btn.delete-action {
-  color: #e6e6e6;
+  color: var(--color-accent);
 }
 
 .bulk-delete-btn.delete-action:hover:not(:disabled) {
-  background-color: rgba(255, 255, 255, 0.08);
-  color: #ea4335;
+  background-color: var(--bg-delete-btn-hover);
+  color: var(--color-danger);
 }
 
 .bulk-delete-btn.deleting {
@@ -501,27 +539,28 @@ textarea {
 }
 
 .bulk-delete-btn.cancel {
-  color: #e6e6e6;
+  color: var(--color-accent);
 }
 
 .bulk-delete-btn.cancel:hover:not(:disabled) {
-  background-color: rgba(255, 255, 255, 0.08);
+  background-color: var(--bg-tertiary);
+  color: var(--color-accent);
 }
 
 @keyframes pulse-delete {
   0% {
     opacity: 1;
-    color: #ea4335;
+    color: var(--color-danger);
   }
 
   50% {
     opacity: 0.5;
-    color: #ea4335;
+    color: var(--color-danger);
   }
 
   100% {
     opacity: 1;
-    color: #ea4335;
+    color: var(--color-danger);
   }
 }
 
@@ -531,7 +570,7 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a {
 }
 
 body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:hover {
-  background-color: rgba(255, 255, 255, 0.08) !important;
+  background-color: rgba(26, 115, 232, 0.1) !important;
 }
 
 /* =============================================
@@ -545,9 +584,9 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
 .note-textarea {
   width: 100%;
   min-height: 80px;
-  background-color: #282a2c;
-  color: #e6e6e6;
-  border: 1px solid #444746;
+  background-color: var(--bg-primary);
+  color: var(--color-primary);
+  border: 1px solid var(--border-primary);
   border-radius: 12px;
   padding: 12px;
   font-size: 14px;
@@ -564,18 +603,24 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
 }
 
 .note-save-btn {
-  background-color: #171717;
-  color: #e6e6e6;
+  background-color: var(--color-accent);
+  color: var(--bg-primary);
   border: none;
   padding: 8px 16px;
   border-radius: 20px;
-  font-size: 15px;
-  font-weight: 300;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.note-save-btn:hover:not(:disabled) {
+  background-color: var(--color-hover);
 }
 
 .note-save-btn:disabled {
-  opacity: 0.5;
+  background-color: var(--bg-tertiary);
+  color: var(--color-secondary);
   cursor: not-allowed;
 }
 
@@ -592,9 +637,9 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
 
 .folder-name-input {
   flex: 1;
-  background-color: #282a2c;
-  color: #e6e6e6;
-  border: 1px solid #444746;
+  background-color: var(--bg-primary);
+  color: var(--color-primary);
+  border: 1px solid var(--border-primary);
   border-radius: 12px;
   padding: 12px;
   font-size: 14px;
@@ -604,18 +649,24 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
 }
 
 .folder-create-btn {
-  background-color: #171717;
-  color: #e6e6e6;
+  background-color: var(--color-accent);
+  color: var(--bg-primary);
   border: none;
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-size: 15px;
-  font-weight: 300;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.folder-create-btn:hover:not(:disabled) {
+  background-color: var(--color-hover);
 }
 
 .folder-create-btn:disabled {
-  opacity: 0.5;
+  background-color: var(--bg-tertiary);
+  color: var(--color-secondary);
   cursor: not-allowed;
 }
 
@@ -623,15 +674,11 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #1e1f20;
+  background-color: var(--bg-secondary);
   padding: 12px 16px;
   border-radius: 12px;
   cursor: pointer;
   user-select: none;
-}
-
-.folder-card:hover {
-  background-color: rgba(255, 255, 255, 0.08);
 }
 
 .folder-card-info {
@@ -641,23 +688,27 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
 }
 
 .folder-card-icon {
-  color: #a8c7fa;
+  color: var(--color-accent);
 }
 
 .folder-card-name {
   font-size: 16px;
-  font-weight: 300;
-  color: #e6e6e6;
+  font-weight: 500;
+  color: var(--color-primary);
 }
 
 .folder-card-delete {
   background: transparent;
   border: none;
-  color: #c4c7c5;
+  color: var(--color-secondary);
   cursor: pointer;
   padding: 4px;
   display: flex;
   align-items: center;
+}
+
+.folder-card-delete:hover {
+  color: var(--color-danger);
 }
 
 .folder-chats-list {
@@ -667,7 +718,7 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
 
 .folder-empty-msg {
   padding: 8px 16px;
-  color: #e6e6e6;
+  color: var(--color-secondary);
   font-size: 14px;
 }
 
@@ -675,27 +726,120 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
    Folder Select Modal (gemini-bulk-delete)
    ============================================= */
 
+.folder-select-box {
+  padding: 24px;
+  max-width: 400px;
+  background: var(--bg-secondary);
+  border-radius: 24px;
+}
+
+.folder-select-title {
+  color: var(--color-primary);
+  margin-bottom: 16px;
+  font-size: 18px;
+}
+
+.folder-select-create-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.folder-select-input {
+  flex: 1;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border-primary);
+  background: var(--bg-primary);
+  color: var(--color-primary);
+  outline: none;
+  font-size: 14px;
+}
+
+.folder-select-create-btn {
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: var(--color-accent);
+  color: var(--bg-primary);
+  border: none;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.folder-select-create-btn:hover:not(:disabled) {
+  background-color: var(--color-hover);
+}
+
+.folder-select-create-btn:disabled {
+  background-color: var(--bg-tertiary);
+  color: var(--color-secondary);
+  cursor: not-allowed;
+}
+
+.folder-select-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.folder-select-item {
+  padding: 12px 16px;
+  text-align: left;
+  background: var(--bg-tertiary);
+  color: var(--color-primary);
+  border-radius: 12px;
+  border: 1px solid var(--border-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.15s ease;
+}
+
+.folder-select-item:hover {
+  background-color: var(--bg-secondary);
+}
+
+.folder-select-item-icon {
+  font-size: 20px;
+  margin-right: 12px;
+  color: var(--color-accent);
+}
+
+.folder-select-item-name {
+  font-size: 14px;
+}
+
+.folder-select-empty {
+  padding: 16px;
+  text-align: center;
+  color: var(--color-secondary);
+  font-size: 14px;
+}
+
 .folder-select-footer {
   display: flex;
   justify-content: flex-end;
   margin-top: 24px;
-  padding: 0 24px;
 }
 
 .folder-select-cancel {
   background: transparent;
   border: none;
-  color: #a8c7fa;
+  color: var(--color-secondary);
   cursor: pointer;
   padding: 8px 16px;
   border-radius: 20px;
-  font-size: 15px;
-  font-weight: 300;
+  font-size: 14px;
+  font-weight: 500;
   transition: background-color 0.15s ease;
 }
 
 .folder-select-cancel:hover {
-  background-color: rgba(255, 255, 255, 0.08);
+  background-color: var(--bg-tertiary);
 }
 
 /* Bulk Delete Header Container */
@@ -712,21 +856,7 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
    Collapsed Sidebar Styling
    ============================================= */
 
-:host {
-  overflow: visible !important;
-}
-
 .gemini-sidebar-container {
-  overflow: visible !important;
-}
-
-.gemini-sidebar-container.collapsed {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  padding: 4px 0;
-  box-sizing: border-box;
   overflow: visible !important;
 }
 
@@ -734,70 +864,21 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
   width: 100%;
-  overflow: visible !important;
+  gap: 8px;
 }
 
-.side-nav-collapsed-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  color: #210e20;
-  transition: background-color 0.2s cubic-bezier(0.2, 0, 0, 1), color 0.2s ease;
-  outline: none;
-}
-
-.side-nav-collapsed-btn:hover {
-  background-color: rgba(255, 255, 255, 0.08);
-  color: #e6e6e6;
-}
-
-.side-nav-collapsed-btn .side-nav-icon {
-  font-size: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Tooltip for collapsed sidebar buttons matching Gemini design */
 .side-nav-collapsed-btn-wrapper {
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: inline-block;
+  overflow: visible !important;
+  z-index: 99999;
 }
 
-.side-nav-collapsed-btn-wrapper .gbr-collapsed-tooltip {
-  position: absolute;
-  left: 100%;
-  top: 50%;
-  transform: translateY(-50%) translateX(8px);
-  z-index: 999999;
-  pointer-events: none;
-  white-space: nowrap;
-
-  /* Hidden by default with smooth micro-animation transition */
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.15s;
-}
-
-.side-nav-collapsed-btn-wrapper:hover .gbr-collapsed-tooltip,
-.side-nav-collapsed-btn-wrapper:focus-within .gbr-collapsed-tooltip {
-  opacity: 1;
-  visibility: visible;
-}
-
+/* Tooltip container overrides inside collapsed sidebar */
 .side-nav-collapsed-btn-wrapper .mat-mdc-tooltip-surface {
-  background-color: #e6e6e6;
-  color: #171717;
+  background-color: var(--color-primary);
+  color: var(--bg-primary);
   border-radius: var(--gem-sys-shape--corner-medium, 8px);
   padding: var(--gem-sys-spacing--s, 8px) var(--gem-sys-spacing--l, 16px);
   font-family: "Google Sans Flex", "Google Sans", Roboto, sans-serif;
@@ -818,6 +899,6 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
   left: auto;
   top: 50%;
   transform: translateY(-50%);
-  border-right-color: #e6e6e6;
+  border-right-color: var(--color-primary);
   border-width: var(--gem-sys-spacing--xs, 4px) var(--gem-sys-spacing--xs, 4px) var(--gem-sys-spacing--xs, 4px) 0;
 }
