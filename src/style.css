@@ -51,7 +51,7 @@
   --bg-tertiary: ;
 
   --color-primary: ;
-  --color-secondary: ;
+  --color-primary: ;
 
   --color-accent: ;
   --color-hover: ;
@@ -168,7 +168,7 @@ textarea {
 }
 
 .icon-gray {
-  color: var(--color-secondary);
+  color: var(--color-primary);
 }
 
 
@@ -237,7 +237,7 @@ textarea {
   justify-content: center;
   border-radius: 50%;
   transition: background-color 0.15s;
-  color: var(--color-secondary);
+  color: var(--color-primary);
 }
 
 .modal-close-btn:hover {
@@ -273,7 +273,7 @@ textarea {
   font-weight: 500;
   padding: 8px 24px;
   margin: 0;
-  color: var(--color-secondary);
+  color: var(--color-primary);
 }
 
 .item-list {
@@ -307,7 +307,7 @@ textarea {
 
 .list-item-icon {
   font-size: 24px;
-  color: var(--color-secondary);
+  color: var(--color-primary);
   flex-shrink: 0;
   font-variation-settings: 'FILL' 1;
 }
@@ -418,7 +418,7 @@ textarea {
 }
 
 .favorite-copy-btn {
-  color: var(--color-secondary);
+  color: var(--color-primary);
 }
 
 .favorite-copy-btn:hover {
@@ -427,7 +427,7 @@ textarea {
 }
 
 .favorite-delete-btn {
-  color: var(--color-secondary);
+  color: var(--color-primary);
 }
 
 .favorite-delete-btn:hover {
@@ -458,7 +458,7 @@ textarea {
 }
 
 .modal-search-icon {
-  color: var(--color-secondary);
+  color: var(--color-primary);
   display: flex;
   align-items: center;
 }
@@ -473,7 +473,7 @@ textarea {
 }
 
 .modal-search-input::placeholder {
-  color: var(--color-secondary);
+  color: var(--color-primary);
 }
 
 /* Boş Durum (Empty State) */
@@ -502,7 +502,7 @@ textarea {
 
 .modal-desc-sub {
   font-size: 12px;
-  color: var(--color-secondary);
+  color: var(--color-primary);
   opacity: 0.8;
   max-width: 280px;
   margin: 0;
@@ -631,7 +631,7 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
 
 .note-save-btn:disabled {
   background-color: var(--bg-tertiary);
-  color: var(--color-secondary);
+  color: var(--color-primary);
   cursor: not-allowed;
 }
 
@@ -651,8 +651,8 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
   background-color: var(--bg-primary);
   color: var(--color-primary);
   border: 1px solid var(--border-primary);
-  border-radius: 12px;
-  padding: 12px;
+  border-radius: 20px;
+  padding: 8px 16px;
   font-size: 14px;
   font-family: inherit;
   outline: none;
@@ -664,7 +664,7 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
   color: var(--bg-primary);
   border: none;
   padding: 12px 16px;
-  border-radius: 12px;
+  border-radius: 20px;
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
@@ -677,7 +677,7 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
 
 .folder-create-btn:disabled {
   background-color: var(--bg-tertiary);
-  color: var(--color-secondary);
+  color: var(--color-primary);
   cursor: not-allowed;
 }
 
@@ -711,7 +711,7 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
 .folder-card-delete {
   background: transparent;
   border: none;
-  color: var(--color-secondary);
+  color: var(--color-primary);
   cursor: pointer;
   padding: 4px;
   display: flex;
@@ -729,7 +729,7 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
 
 .folder-empty-msg {
   padding: 8px 16px;
-  color: var(--color-secondary);
+  color: var(--color-primary);
   font-size: 14px;
 }
 
@@ -785,7 +785,7 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
 
 .folder-select-create-btn:disabled {
   background-color: var(--bg-tertiary);
-  color: var(--color-secondary);
+  color: var(--color-primary);
   cursor: not-allowed;
 }
 
@@ -827,20 +827,20 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
 .folder-select-empty {
   padding: 16px;
   text-align: center;
-  color: var(--color-secondary);
+  color: var(--color-primary);
   font-size: 14px;
 }
 
 .folder-select-footer {
   display: flex;
   justify-content: flex-end;
-  margin-top: 24px;
+  margin: 0 24px;
 }
 
 .folder-select-cancel {
   background: transparent;
   border: none;
-  color: var(--color-secondary);
+  color: var(--color-primary);
   cursor: pointer;
   padding: 8px 16px;
   border-radius: 20px;
@@ -876,7 +876,6 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
   flex-direction: column;
   align-items: center;
   width: 100%;
-  gap: 8px;
 }
 
 .side-nav-collapsed-btn-wrapper {
@@ -899,7 +898,7 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
 }
 
 .side-nav-collapsed-btn:hover {
-  background-color: var(--color-primary);
+  background-color: var(--bg-tertiary);
 }
 
 /* Tooltip Positioning and Show/Hide logic */
