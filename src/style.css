@@ -8,21 +8,32 @@
   /* ==========================================================================
      GLOBAL (PRIMITIVE) DARK MODE PALETTE (Default Base)
      ========================================================================== */
-  --bg-primary: #131314;       /* Main deep dark background */
-  --bg-secondary: #1e1f20;     /* Cards, Modals, Containers background */
-  --bg-tertiary: #2d2f31;      /* Hover states, active highlights, scrollbars */
-  
-  --color-primary: #e3e3e3;    /* Main high-contrast text, active inputs */
-  --color-secondary: #c4c7c5;  /* Icons, description/secondary texts, placeholders */
-  
-  --color-accent: #a8c7fa;     /* Primary buttons, links, active icons, accents */
-  --color-hover: #c2e7ff;      /* Primary button hover state */
-  
-  --color-success: #34a853;    /* Confirmed actions, copy success */
-  --color-danger: #ff605c;     /* Destructive actions, delete hovers */
-  
-  --border-primary: #444746;   /* Input and separator borders */
-  --shadow-primary: rgba(0, 0, 0, 0.6); /* Backdrop overlays, dropdown shadows */
+  --bg-primary: #131314;
+  /* Main deep dark background */
+  --bg-secondary: #1e1f20;
+  /* Cards, Modals, Containers background */
+  --bg-tertiary: rgba(255, 255, 255, 0.08);
+  /* Hover states, active highlights, scrollbars */
+
+  --color-primary: #e6e6e6;
+  /* Main high-contrast text, active inputs */
+  --color-secondary: #c4c7c5;
+  /* Icons, description/secondary texts, placeholders */
+
+  --color-accent: #a8c7fa;
+  /* Primary buttons, links, active icons, accents */
+  --color-hover: #c2e7ff;
+  /* Primary button hover state */
+
+  --color-success: #34a853;
+  /* Confirmed actions, copy success */
+  --color-danger: #ff605c;
+  /* Destructive actions, delete hovers */
+
+  --border-primary: #444746;
+  /* Input and separator borders */
+  --shadow-primary: rgba(0, 0, 0, 0.6);
+  /* Backdrop overlays, dropdown shadows */
 
   /* Icon Branding (Optional overrides) */
   --color-star: #fbbc04;
@@ -31,23 +42,23 @@
 }
 
 /* ==========================================================================
-   GLOBAL (PRIMITIVE) LIGHT MODE PALETTE (Overrides when .dark class is NOT present)
+   GLOBAL (PRIMITIVE) LIGHT MODE PALETTE (Overrides when in Light Mode)
    ========================================================================== */
-.modal-overlay:not(.dark),
-.gemini-sidebar-container:not(.dark) {
+:host-context(body:not(.dark-theme)),
+.modal-overlay:not(.dark) {
   --bg-primary: ;
   --bg-secondary: ;
   --bg-tertiary: ;
-  
+
   --color-primary: ;
   --color-secondary: ;
-  
+
   --color-accent: ;
   --color-hover: ;
-  
+
   --color-success: ;
   --color-danger: ;
-  
+
   --border-primary: ;
   --shadow-primary: ;
 
@@ -875,6 +886,40 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
   z-index: 99999;
 }
 
+.side-nav-collapsed-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  background-color: transparent;
+  color: var(--bg-tertiary);
+}
+
+.side-nav-collapsed-btn:hover {
+  background-color: var(--color-primary);
+}
+
+/* Tooltip Positioning and Show/Hide logic */
+.gbr-collapsed-tooltip {
+  position: absolute;
+  left: calc(100% + 8px);
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.15s;
+  pointer-events: none;
+  z-index: 999999;
+}
+
+.side-nav-collapsed-btn-wrapper:hover .gbr-collapsed-tooltip {
+  opacity: 1;
+  visibility: visible;
+}
+
 /* Tooltip container overrides inside collapsed sidebar */
 .side-nav-collapsed-btn-wrapper .mat-mdc-tooltip-surface {
   background-color: var(--color-primary);
@@ -888,6 +933,7 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
   letter-spacing: 0.1px;
   position: relative;
   box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.3), 0 1px 3px 1px rgba(0, 0, 0, 0.15);
+  white-space: nowrap;
 }
 
 .side-nav-collapsed-btn-wrapper .mat-mdc-tooltip-surface::after {
