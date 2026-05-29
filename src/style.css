@@ -46,25 +46,25 @@
    ========================================================================== */
 :host-context(body:not(.dark-theme)),
 .modal-overlay:not(.dark) {
-  --bg-primary: ;
-  --bg-secondary: ;
-  --bg-tertiary: ;
+  --bg-primary: #f6f6f6;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: rgba(0, 0, 0, 0.08);
 
-  --color-primary: ;
-  --color-primary: ;
+  --color-primary: #000000;
+  --color-secondary: #212121;
 
-  --color-accent: ;
-  --color-hover: ;
+  --color-accent: #0b57d0;
+  --color-hover: #1466d8;
 
-  --color-success: ;
-  --color-danger: ;
+  --color-success: #1b642e;
+  --color-danger: #e84141;
 
-  --border-primary: ;
-  --shadow-primary: ;
+  --border-primary: #d3d4d4;
+  --shadow-primary: rgba(0, 0, 0, 0.2);
 
-  --color-star: ;
-  --color-bookmark: ;
-  --color-document: ;
+  --color-star: #fbbc04;
+  --color-bookmark: #a8c7fa;
+  --color-document: #7cc0ff;
 }
 
 *:not(.google-symbols) {
