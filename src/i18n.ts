@@ -76,7 +76,9 @@ const resources = {
       "create": "Create",
       "folderColor": "Folder Color",
       "emptyFolder": "Empty folder",
-      "close": "Close"
+      "close": "Close",
+      "deleteFolderTitle": "Delete Folder",
+      "deleteFolderDesc": "Are you sure you want to delete this folder?"
     }
   },
   tr: {
@@ -153,7 +155,9 @@ const resources = {
       "create": "Oluştur",
       "folderColor": "Klasör Rengi",
       "emptyFolder": "Boş klasör",
-      "close": "Kapat"
+      "close": "Kapat",
+      "deleteFolderTitle": "Klasörü Sil",
+      "deleteFolderDesc": "Bu klasörü silmek istediğinize emin misiniz?"
     }
   }
 };

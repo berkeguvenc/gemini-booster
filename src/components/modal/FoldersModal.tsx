@@ -5,6 +5,7 @@ import type { ChatFolder } from "../../types/folder"
 import EmptyState from "./components/EmptyState"
 import { FolderIcon } from "../Icons"
 import ListItem from "./components/ListItem"
+import ConfirmModal from "./ConfirmModal"
 
 export interface FoldersModalProps {
   mode?: "manage" | "select"
@@ -45,6 +46,7 @@ const FoldersModal: React.FC<FoldersModalProps> = ({
 }) => {
   const { t } = useTranslation()
   const [isDark, setIsDark] = useState(true)
+  const [folderToDeleteId, setFolderToDeleteId] = useState<string | null>(null)
 
   useEffect(() => {
     if (mode !== "select") return
@@ -118,7 +120,7 @@ const FoldersModal: React.FC<FoldersModalProps> = ({
                   <button
                     onClick={(e) => {
                       e.stopPropagation()
-                      if (window.confirm(t("delete"))) onDeleteFolder?.(f.id)
+                      setFolderToDeleteId(f.id)
                     }}
                     className="folder-card-delete"
                     title={t("delete")}>
@@ -201,7 +203,25 @@ const FoldersModal: React.FC<FoldersModalProps> = ({
     )
   }
 
-  return renderContent()
+  return (
+    <>
+      {renderContent()}
+      {folderToDeleteId && (
+        <ConfirmModal
+          title={t("deleteFolderTitle")}
+          description={t("deleteFolderDesc")}
+          confirmText={t("delete")}
+          cancelText={t("cancel")}
+          onConfirm={() => {
+            onDeleteFolder?.(folderToDeleteId)
+            setFolderToDeleteId(null)
+          }}
+          onCancel={() => setFolderToDeleteId(null)}
+          variant="danger"
+        />
+      )}
+    </>
+  )
 }
 
 export default FoldersModal
