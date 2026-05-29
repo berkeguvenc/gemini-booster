@@ -12,7 +12,7 @@ interface ListItemProps {
   url?: string
   icon: React.ReactNode
   iconColorClass: string // "star", "bookmark", "document"
-  onCopy: (id: string, text: string) => void
+  onCopy?: (id: string, text: string) => void
   onDelete: (id: string) => void
   isCopied: boolean
   dateFormat?: Intl.DateTimeFormatOptions
@@ -77,13 +77,15 @@ const ListItem: React.FC<ListItemProps> = ({
         </div>
       </div>
       <div className="list-item-actions">
-        <button
-          className={`favorite-copy-btn ${isCopied ? "copied" : ""}`}
-          onClick={() => onCopy(id, text)}
-          title={t("copyText")}
-        >
-          {isCopied ? <CheckIcon size={20} /> : <CopyIcon size={20} />}
-        </button>
+        {onCopy && (
+          <button
+            className={`favorite-copy-btn ${isCopied ? "copied" : ""}`}
+            onClick={() => onCopy(id, text)}
+            title={t("copyText")}
+          >
+            {isCopied ? <CheckIcon size={20} /> : <CopyIcon size={20} />}
+          </button>
+        )}
         <button
           className="favorite-delete-btn"
           onClick={() => onDelete(id)}

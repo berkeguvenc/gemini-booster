@@ -146,7 +146,6 @@ const FoldersModal: React.FC<FoldersModalProps> = ({
                           url={chat.url}
                           icon={<span className="google-symbols" style={{ fontSize: "20px" }}>chat</span>}
                           iconColorClass="default"
-                          onCopy={onCopy || (async () => {})}
                           onDelete={(id) => onRemoveChatFromFolder?.(f.id, id)}
                           isCopied={false}
                           dateFormat={{
