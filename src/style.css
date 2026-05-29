@@ -115,6 +115,7 @@ textarea {
 .gemini-sidebar-container {
   width: 100%;
   font-family: inherit;
+  overflow: visible !important;
 }
 
 @media (max-width: 960px) {
@@ -293,10 +294,6 @@ textarea {
   transition: background-color 0.15s;
 }
 
-.list-item-container:hover {
-  background-color: var(--bg-tertiary);
-}
-
 .list-item-main {
   display: flex;
   flex: 1;
@@ -415,9 +412,6 @@ textarea {
   cursor: pointer;
   transition: background-color 0.15s, color 0.15s;
   flex-shrink: 0;
-}
-
-.favorite-copy-btn {
   color: var(--color-primary);
 }
 
@@ -426,12 +420,8 @@ textarea {
   color: var(--color-accent);
 }
 
-.favorite-delete-btn {
-  color: var(--color-primary);
-}
-
 .favorite-delete-btn:hover {
-  background-color: var(--bg-delete-btn-hover);
+  background-color: var(--bg-tertiary);
   color: var(--color-danger);
 }
 
@@ -518,7 +508,7 @@ textarea {
   color: var(--color-accent);
   border: none;
   border-radius: 9999px;
-  padding: 6px 12px;
+  padding: 6px;
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
@@ -541,7 +531,7 @@ textarea {
 }
 
 .bulk-delete-btn.delete-action:hover:not(:disabled) {
-  background-color: var(--bg-delete-btn-hover);
+  background-color: var(--bg-tertiary);
   color: var(--color-danger);
 }
 
@@ -663,7 +653,7 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
   background-color: var(--color-accent);
   color: var(--bg-primary);
   border: none;
-  padding: 12px 16px;
+  padding: 8px 16px;
   border-radius: 20px;
   font-size: 14px;
   font-weight: 500;
@@ -719,6 +709,7 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
 }
 
 .folder-card-delete:hover {
+  background-color: var(--bg-tertiary);
   color: var(--color-danger);
 }
 
@@ -729,104 +720,6 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
 
 .folder-empty-msg {
   padding: 8px 16px;
-  color: var(--color-primary);
-  font-size: 14px;
-}
-
-/* =============================================
-   Folder Select Modal (gemini-bulk-delete)
-   ============================================= */
-
-.folder-select-box {
-  padding: 24px;
-  max-width: 400px;
-  background: var(--bg-secondary);
-  border-radius: 24px;
-}
-
-.folder-select-title {
-  color: var(--color-primary);
-  margin-bottom: 16px;
-  font-size: 18px;
-}
-
-.folder-select-create-row {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 16px;
-}
-
-.folder-select-input {
-  flex: 1;
-  padding: 12px;
-  border-radius: 12px;
-  border: 1px solid var(--border-primary);
-  background: var(--bg-primary);
-  color: var(--color-primary);
-  outline: none;
-  font-size: 14px;
-}
-
-.folder-select-create-btn {
-  padding: 12px 16px;
-  border-radius: 12px;
-  background: var(--color-accent);
-  color: var(--bg-primary);
-  border: none;
-  font-weight: 500;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background-color 0.15s ease;
-}
-
-.folder-select-create-btn:hover:not(:disabled) {
-  background-color: var(--color-hover);
-}
-
-.folder-select-create-btn:disabled {
-  background-color: var(--bg-tertiary);
-  color: var(--color-primary);
-  cursor: not-allowed;
-}
-
-.folder-select-list {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  max-height: 300px;
-  overflow-y: auto;
-}
-
-.folder-select-item {
-  padding: 12px 16px;
-  text-align: left;
-  background: var(--bg-tertiary);
-  color: var(--color-primary);
-  border-radius: 12px;
-  border: 1px solid var(--border-primary);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  transition: background-color 0.15s ease;
-}
-
-.folder-select-item:hover {
-  background-color: var(--bg-secondary);
-}
-
-.folder-select-item-icon {
-  font-size: 20px;
-  margin-right: 12px;
-  color: var(--color-accent);
-}
-
-.folder-select-item-name {
-  font-size: 14px;
-}
-
-.folder-select-empty {
-  padding: 16px;
-  text-align: center;
   color: var(--color-primary);
   font-size: 14px;
 }
@@ -863,13 +756,19 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
   box-sizing: border-box;
 }
 
+.gbr-bulk-delete-actions {
+  display: flex;
+  margin-left: auto;
+}
+
+.gbr-bulk-delete-icon {
+  font-size: 18px;
+}
+
 /* =============================================
    Collapsed Sidebar Styling
    ============================================= */
 
-.gemini-sidebar-container {
-  overflow: visible !important;
-}
 
 .sidebar-collapsed-btn-group {
   display: flex;

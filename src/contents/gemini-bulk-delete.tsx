@@ -360,7 +360,7 @@ const GeminiBulkDelete = () => {
           onClick={handleStartSelect}
           className="bulk-delete-btn"
           title={t("bulkSelect")}>
-          <span className="google-symbols" style={{ fontSize: "18px" }}>
+          <span className="google-symbols gbr-bulk-delete-icon">
             checklist
           </span>
           <span>{t("bulkSelect")}</span>
@@ -381,21 +381,22 @@ const GeminiBulkDelete = () => {
 
   return (
     <div className="gbr-bulk-delete-header-container">
-      <div style={{ display: "flex", gap: "8px", marginLeft: "auto" }}>
+      <div className="gbr-bulk-delete-actions">
         <button
           onClick={handleCancelSelect}
           disabled={mode === "deleting"}
           className="bulk-delete-btn cancel"
-          style={{ marginLeft: 0 }}>
-          <span>{t("cancel")}</span>
+          title={t("cancel")}>
+          <span className="google-symbols gbr-bulk-delete-icon">
+            close
+          </span>
         </button>
         <button
           onClick={handleAddToFolderClick}
           disabled={mode === "deleting" || selectedHrefs.size === 0}
           className={`bulk-delete-btn ${mode === "deleting" ? "deleting" : ""}`}
-          style={{ marginLeft: 0 }}
           title={t("addToFolder")}>
-          <span className="google-symbols" style={{ fontSize: "18px" }}>
+          <span className="google-symbols gbr-bulk-delete-icon">
             folder
           </span>
         </button>
@@ -403,9 +404,8 @@ const GeminiBulkDelete = () => {
           onClick={handleDeleteClick}
           disabled={mode === "deleting" || selectedHrefs.size === 0}
           className={`bulk-delete-btn delete-action ${mode === "deleting" ? "deleting" : ""}`}
-          style={{ marginLeft: 0 }}
           title={t("deleteChatsTitle")}>
-          <span className="google-symbols" style={{ fontSize: "18px" }}>
+          <span className="google-symbols gbr-bulk-delete-icon">
             delete
           </span>
           <span>
