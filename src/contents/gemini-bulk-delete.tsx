@@ -26,6 +26,12 @@ export const config: PlasmoCSConfig = {
 }
 
 export const getInlineAnchor: PlasmoGetInlineAnchor = async () => {
+  const section = document.querySelector('expandable-section[data-test-id="chats-expandable-section"]')
+  if (section) {
+    ; (section as HTMLElement).style.position = 'relative'
+    return { element: section, insertPosition: "afterbegin" }
+  }
+
   const container =
     document.querySelector('conversations-list[data-test-id="all-conversations"]') ||
     document.querySelector('conversations-list')
@@ -327,15 +333,14 @@ const GeminiBulkDelete = () => {
     const cssRules = [
       `body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a {
          cursor: pointer !important;
-         border: 2px dashed rgba(26, 115, 232, 0.4) !important;
-         border-radius: 8px;
-         margin-top: 2px;
-         margin-bottom: 2px;
-         transition: all 0.2s ease;
+         outline: 2px dashed rgba(26, 115, 232, 0.4) !important;
+         outline-offset: -2px;
+         border-radius: 9999px;
+         transition: background-color 0.2s ease, outline 0.2s ease;
       }`,
       `body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:hover {
          background-color: rgba(26, 115, 232, 0.1) !important;
-         border-style: solid !important;
+         outline-style: solid !important;
       }`
     ]
 
@@ -343,7 +348,7 @@ const GeminiBulkDelete = () => {
       cssRules.push(
         `body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a[href="${href}"] { 
            background-color: rgba(26, 115, 232, 0.15) !important; 
-           border: 2px solid #1a73e8 !important; 
+           outline: 2px solid #1a73e8 !important; 
         }`
       )
     })

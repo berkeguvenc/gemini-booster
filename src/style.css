@@ -703,9 +703,12 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
   border: none;
   color: var(--color-primary);
   cursor: pointer;
-  padding: 4px;
   display: flex;
   align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
 }
 
 .folder-card-delete:hover {
@@ -749,16 +752,15 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
 /* Bulk Delete Header Container */
 .gbr-bulk-delete-header-container {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 4px 16px;
-  width: 100%;
-  box-sizing: border-box;
+  position: absolute;
+  right: 0px;
+  z-index: 10;
 }
 
 .gbr-bulk-delete-actions {
   display: flex;
-  margin-left: auto;
+  gap: 4px;
 }
 
 .gbr-bulk-delete-icon {
