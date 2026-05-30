@@ -56,6 +56,13 @@ function injectStyles() {
       vertical-align: middle;
     }
 
+    @media (max-width: 960px) {
+      .gb-fav-btn {
+        width: 36px;
+        height: 36px;
+      }
+    }
+
     .gb-fav-btn:hover {
       background-color: var(--gb-fav-hover-bg);
       color: var(--gb-fav-hover-color);
@@ -68,6 +75,12 @@ function injectStyles() {
     .gb-fav-btn .google-symbols {
       font-size: 20px;
       font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+    }
+
+    @media (max-width: 960px) {
+      .gb-fav-btn .google-symbols {
+        font-size: 24px;
+      }
     }
 
     .gb-fav-btn.is-active .google-symbols {

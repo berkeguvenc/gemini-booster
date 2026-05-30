@@ -86,6 +86,12 @@ function injectStyles() {
       font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
     }
 
+    @media (max-width: 960px) {
+      .gb-save-btn .google-symbols {
+        font-size: 24px;
+      }
+    }
+
     .gb-save-btn.is-active .google-symbols {
       font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 20;
     }

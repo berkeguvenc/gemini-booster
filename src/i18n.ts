@@ -35,7 +35,7 @@ const resources = {
       "deleteError": "An error occurred, operation stopped.",
       "bulkSelect": "Select",
       "deleting": "Deleting...",
-      "deleteCount": "Delete ({{count}})",
+      "deleteCount": "({{count}})",
       "deleteChatsTitle": "Delete Chats",
       "deleteChatsDesc": "Are you sure you want to permanently delete the selected {{count}} chats? This action cannot be undone. Do not leave the page!",
       "favoriteAnswers": "Favorite Answers",
