@@ -28,6 +28,12 @@ function IndexPopup() {
   const [searchQuery, setSearchQuery] = useState("")
   const [copiedId, setCopiedId] = useState<string | null>(null)
 
+  // Determine store link based on browser
+  const isFirefox = typeof navigator !== "undefined" && navigator.userAgent.includes("Firefox");
+  const storeLink = isFirefox 
+    ? "https://addons.mozilla.org/en-US/firefox/addon/YOUR_ADDON_ID/" 
+    : "https://chrome.google.com/webstore/detail/YOUR_EXTENSION_ID";
+
   // Custom modals state
   const [alertMessage, setAlertMessage] = useState("")
   const [showConfirm, setShowConfirm] = useState(false)
@@ -342,7 +348,7 @@ function IndexPopup() {
                 </a>
               </div>
               <div className="popup-support-links">
-                <a href="#" target="_blank" rel="noopener noreferrer" className="popup-support-link rate">
+                <a href={storeLink} target="_blank" rel="noopener noreferrer" className="popup-support-link rate">
                   <span className="popup-support-icon"><StarIcon size={16} /></span>
                   {t("rateExtension")}
                 </a>
