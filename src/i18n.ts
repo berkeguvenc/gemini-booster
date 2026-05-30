@@ -12,7 +12,6 @@ const resources = {
       "copy": "Copy",
       "copied": "✓",
       "noResults": "No results found.",
-      "dataManagement": "Data Management",
       "allData": "All Data",
       "allDataDesc": "Your Prompts, Favorites, and Notes are backed up in a single file.",
       "export": "Export",
@@ -78,7 +77,11 @@ const resources = {
       "emptyFolder": "Empty folder",
       "close": "Close",
       "deleteFolderTitle": "Delete Folder",
-      "deleteFolderDesc": "Are you sure you want to delete this folder?"
+      "deleteFolderDesc": "Are you sure you want to delete this folder?",
+      "supportAndCommunity": "Support & Community",
+      "rateExtension": "Rate Extension",
+      "supportAndFeedback": "Support & Feedback",
+      "donate": "Buy me a coffee"
     }
   },
   tr: {
@@ -91,7 +94,6 @@ const resources = {
       "copy": "Kopyala",
       "copied": "✓",
       "noResults": "Sonuç bulunamadı.",
-      "dataManagement": "Veri Yönetimi",
       "allData": "Tüm Veriler",
       "allDataDesc": "İstemler, Favoriler ve Notlarınız tek bir dosyada yedeklenir.",
       "export": "Dışa Aktar",
@@ -157,7 +159,11 @@ const resources = {
       "emptyFolder": "Boş klasör",
       "close": "Kapat",
       "deleteFolderTitle": "Klasörü Sil",
-      "deleteFolderDesc": "Bu klasörü silmek istediğinize emin misiniz?"
+      "deleteFolderDesc": "Bu klasörü silmek istediğinize emin misiniz?",
+      "supportAndCommunity": "Destek ve Topluluk",
+      "rateExtension": "Eklentiyi Değerlendir",
+      "supportAndFeedback": "Destek ve Geri Bildirim",
+      "donate": "Kahve Ismarla"
     }
   }
 };

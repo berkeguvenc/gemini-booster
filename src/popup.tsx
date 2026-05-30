@@ -9,7 +9,7 @@ import ConfirmModal from "./components/modal/ConfirmModal"
 import AlertModal from "./components/modal/AlertModal"
 import StatBox from "./components/popup/StatBox"
 import SearchResultItem from "./components/popup/SearchResultItem"
-import { BookmarkIcon, StarIcon, DocumentIcon, FolderIcon } from "./components/Icons"
+import { BookmarkIcon, StarIcon, DocumentIcon, FolderIcon, MailIcon, HeartIcon } from "./components/Icons"
 
 import type { FavoriteAnswer } from "./types/favorite"
 import type { ChatFolder } from "./types/folder"
@@ -292,7 +292,7 @@ function IndexPopup() {
 
             {/* Data Management */}
             <div className="popup-section">
-              <h3 className="popup-section-title">{t("dataManagement")}</h3>
+              <h3 className="popup-section-title">{t("settings")}</h3>
 
               <div className="popup-data-section">
                 <div className="popup-data-header">
@@ -320,7 +320,6 @@ function IndexPopup() {
 
             {/* Settings */}
             <div className="popup-section">
-              <h3 className="popup-section-title">{t("settings")}</h3>
               <label className="popup-setting-label">
                 <span>{t("bulkDeleteShow")}</span>
                 <input
@@ -330,6 +329,29 @@ function IndexPopup() {
                   className="popup-setting-checkbox"
                 />
               </label>
+            </div>
+
+            {/* Support & Community */}
+            <div className="popup-section">
+              <h3 className="popup-section-title">{t("supportAndCommunity")}</h3>
+
+              <div className="popup-support-grid">
+                <a href="https://kreosus.com/berkeguvenc" target="_blank" rel="noopener noreferrer" className="popup-donate-btn">
+                  <span className="popup-support-icon"><HeartIcon size={18} /></span>
+                  {t("donate")}
+                </a>
+              </div>
+              <div className="popup-support-links">
+                <a href="#" target="_blank" rel="noopener noreferrer" className="popup-support-link rate">
+                  <span className="popup-support-icon"><StarIcon size={16} /></span>
+                  {t("rateExtension")}
+                </a>
+                <span className="popup-support-divider">|</span>
+                <a href="mailto:berke.guvenc@outlook.com?subject=Gemini%20Booster%20-%20Support%20and%20Feedback" className="popup-support-link support">
+                  <span className="popup-support-icon"><MailIcon size={16} /></span>
+                  {t("supportAndFeedback")}
+                </a>
+              </div>
             </div>
 
             {/* Danger Zone */}

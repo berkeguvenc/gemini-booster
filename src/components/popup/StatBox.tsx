@@ -18,29 +18,34 @@ const StatBox: React.FC<StatBoxProps> = ({ icon, value, label }) => {
 }
 
 const statBoxStyle: React.CSSProperties = {
-  backgroundColor: "#25252d",
-  borderRadius: "8px",
-  padding: "12px",
+  backgroundColor: "#1e1f20",
+  borderRadius: "10px",
+  padding: "8px",
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
-  border: "1px solid #333"
+  justifyContent: "center",
+  border: "1px solid rgba(255, 255, 255, 0.08)",
+  textAlign: "center"
 }
 
 const statIconStyle: React.CSSProperties = {
-  fontSize: "20px",
-  marginBottom: "4px"
+  fontSize: "18px",
+  marginBottom: "2px",
+  color: "#e8eaed"
 }
 
 const statValueStyle: React.CSSProperties = {
-  fontSize: "20px",
+  fontSize: "16px",
   fontWeight: "bold",
-  color: "#6c5ce7"
+  color: "#4285f4"
 }
 
 const statLabelStyle: React.CSSProperties = {
-  fontSize: "12px",
-  color: "#aaa"
+  fontSize: "10px",
+  color: "#aaa",
+  lineHeight: "1.1",
+  marginTop: "2px"
 }
 
 export default StatBox
