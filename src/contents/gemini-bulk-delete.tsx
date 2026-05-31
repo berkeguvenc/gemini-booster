@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next"
 
 import "../i18n"
 
-import { DELETE_WAIT_MS, STORAGE_KEYS } from "../constants"
+import { DELETE_WAIT_MS, STORAGE_KEYS, DOM_SELECTORS } from "../constants"
 import { generateId } from "../utils/id"
 import { initLanguageSync } from "../utils/language"
 import AlertModal from "../components/modal/AlertModal"
@@ -109,7 +109,7 @@ const GeminiBulkDelete = () => {
 
     const handleClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement
-      const listItem = target.closest('gem-nav-list-item[data-test-id="conversation"]')
+      const listItem = target.closest(DOM_SELECTORS.CHAT_ITEM)
       const anchor = listItem?.querySelector('a')
 
       if (anchor) {
@@ -154,7 +154,7 @@ const GeminiBulkDelete = () => {
   const getSelectedChatsData = (): FolderChatItem[] => {
     const chats: FolderChatItem[] = []
     for (const href of selectedHrefs) {
-      const anchor = document.querySelector(`gem-nav-list-item[data-test-id="conversation"] a[href="${href}"]`) || document.querySelector(`a[href="${href}"]`)
+      const anchor = document.querySelector(`${DOM_SELECTORS.CHAT_ITEM} a[href="${href}"]`) || document.querySelector(`a[href="${href}"]`)
       let title = "Unknown Chat"
       if (anchor) {
         title = anchor.textContent?.trim() || "Unknown Chat"
@@ -243,24 +243,24 @@ const GeminiBulkDelete = () => {
     try {
       // CRITICAL FIX: Yield to the event loop so React can process the mode="deleting" state change.
       // This ensures the capturing click listener from "selecting" mode is removed before we trigger programmatic clicks.
-      await wait(150)
+      await wait(DELETE_WAIT_MS.YIELD_EVENT_LOOP)
 
       for (const href of selectedHrefs) {
-        const anchor = document.querySelector(`gem-nav-list-item[data-test-id="conversation"] a[href="${href}"]`) || document.querySelector(`a[href="${href}"]`)
+        const anchor = document.querySelector(`${DOM_SELECTORS.CHAT_ITEM} a[href="${href}"]`) || document.querySelector(`a[href="${href}"]`)
         if (!anchor) {
           console.warn(`Chat not found or not visible in DOM: ${href}`)
           continue
         }
 
         // Find the options/actions button next to the conversation link
-        const listItem = anchor.closest('gem-nav-list-item[data-test-id="conversation"]')
+        const listItem = anchor.closest(DOM_SELECTORS.CHAT_ITEM)
         let actionsBtn = listItem?.querySelector(
-          'button[data-test-id="actions-menu-button"]'
+          DOM_SELECTORS.ACTIONS_BTN
         ) as HTMLElement
 
         if (!actionsBtn) {
           // Fallback if data-test-id changes
-          actionsBtn = listItem?.querySelector('.mat-mdc-menu-trigger') as HTMLElement
+          actionsBtn = listItem?.querySelector(DOM_SELECTORS.ACTIONS_BTN_FALLBACK) as HTMLElement
         }
 
         if (!actionsBtn) {
@@ -271,11 +271,11 @@ const GeminiBulkDelete = () => {
         // CRITICAL FIX: Wait for any leftover menus or dialogs from previous deletions to disappear
         let cleanupWait = 0
         while (
-          (document.querySelector("mat-dialog-container") || document.querySelector(".mat-mdc-menu-panel")) &&
-          cleanupWait < 3000
+          (document.querySelector(DOM_SELECTORS.DIALOG_CONTAINER) || document.querySelector(DOM_SELECTORS.MENU_PANEL)) &&
+          cleanupWait < DELETE_WAIT_MS.CLEANUP_MAX
         ) {
-          await wait(100)
-          cleanupWait += 100
+          await wait(DELETE_WAIT_MS.POLL_INTERVAL)
+          cleanupWait += DELETE_WAIT_MS.POLL_INTERVAL
         }
 
         actionsBtn.click()
@@ -283,11 +283,11 @@ const GeminiBulkDelete = () => {
         // Wait up to 2 seconds for the menu to open
         let menuItems: HTMLElement[] = []
         let menuWait = 0
-        while (menuItems.length === 0 && menuWait < 2000) {
-          await wait(100)
-          menuWait += 100
+        while (menuItems.length === 0 && menuWait < DELETE_WAIT_MS.MENU_OPEN_MAX) {
+          await wait(DELETE_WAIT_MS.POLL_INTERVAL)
+          menuWait += DELETE_WAIT_MS.POLL_INTERVAL
           menuItems = Array.from(
-            document.querySelectorAll('.mat-mdc-menu-panel [role="menuitem"]')
+            document.querySelectorAll(DOM_SELECTORS.MENU_ITEM)
           ) as HTMLElement[]
         }
 
@@ -295,29 +295,29 @@ const GeminiBulkDelete = () => {
           const testId = el.getAttribute("data-test-id")
           if (testId && testId.toLowerCase().includes("delete")) return true
 
-          const icon = el.querySelector("mat-icon, .mat-icon, .google-symbols")
+          const icon = el.querySelector(DOM_SELECTORS.MENU_ICON)
           return !!(icon && icon.textContent?.toLowerCase().trim() === "delete")
         })
 
         if (!deleteMenuItem) {
           console.error("Delete menu item not found in context menu.")
           document.body.click()
-          await wait(300)
+          await wait(DELETE_WAIT_MS.MENU_NOT_FOUND)
           continue
         }
 
         // Wait for menu open animation to settle before clicking
-        await wait(200)
+        await wait(DELETE_WAIT_MS.MENU_ANIMATION)
         deleteMenuItem.click()
         
         // Wait up to 2 seconds for the confirmation dialog to appear
         let confirmBtnWrapper: HTMLElement | null = null
         let dialogWait = 0
-        while (!confirmBtnWrapper && dialogWait < 2000) {
-          await wait(100)
-          dialogWait += 100
+        while (!confirmBtnWrapper && dialogWait < DELETE_WAIT_MS.DIALOG_APPEAR_MAX) {
+          await wait(DELETE_WAIT_MS.POLL_INTERVAL)
+          dialogWait += DELETE_WAIT_MS.POLL_INTERVAL
           confirmBtnWrapper = document.querySelector(
-            "mat-dialog-container [data-test-id='confirm-button'], .mdc-dialog [data-test-id='confirm-button']"
+            DOM_SELECTORS.CONFIRM_BTN_WRAPPER
           ) as HTMLElement
         }
 
@@ -328,35 +328,35 @@ const GeminiBulkDelete = () => {
 
         if (confirmBtn) {
           // Wait for dialog open animation to settle before clicking
-          await wait(300)
+          await wait(DELETE_WAIT_MS.DIALOG_ANIMATION)
           confirmBtn.click()
           
           // Wait for dialog to close
           let dialogCloseWait = 0
-          while (document.querySelector("mat-dialog-container") && dialogCloseWait < 1500) {
-            await wait(100)
-            dialogCloseWait += 100
+          while (document.querySelector(DOM_SELECTORS.DIALOG_CONTAINER) && dialogCloseWait < DELETE_WAIT_MS.DIALOG_CLOSE_MAX) {
+            await wait(DELETE_WAIT_MS.POLL_INTERVAL)
+            dialogCloseWait += DELETE_WAIT_MS.POLL_INTERVAL
           }
 
           // If the dialog is still open, the click might have been ignored during animation. Retry!
-          if (document.querySelector("mat-dialog-container")) {
+          if (document.querySelector(DOM_SELECTORS.DIALOG_CONTAINER)) {
             console.warn("Retrying confirm button click...")
             confirmBtn.click()
-            await wait(500)
+            await wait(DELETE_WAIT_MS.RETRY_CLICK_WAIT)
           }
 
           // Wait up to 4 seconds for the chat item to be removed from the DOM
           let disappearWait = 0
-          while (document.querySelector(`a[href="${href}"]`) && disappearWait < 4000) {
-            await wait(100)
-            disappearWait += 100
+          while (document.querySelector(`a[href="${href}"]`) && disappearWait < DELETE_WAIT_MS.DISAPPEAR_MAX) {
+            await wait(DELETE_WAIT_MS.POLL_INTERVAL)
+            disappearWait += DELETE_WAIT_MS.POLL_INTERVAL
           }
           
           await wait(DELETE_WAIT_MS.POST_DELETE)
         } else {
           console.error("Confirm button not found in delete dialog.")
           document.body.click()
-          await wait(500)
+          await wait(DELETE_WAIT_MS.RETRY_CLICK_WAIT)
         }
       }
       resultMessage = t("chatsDeletedSuccess")
@@ -387,14 +387,14 @@ const GeminiBulkDelete = () => {
     }
 
     const cssRules = [
-      `body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a {
+      `body.gemini-bulk-select-mode ${DOM_SELECTORS.CHAT_ITEM} a {
          cursor: pointer !important;
          outline: 2px dashed rgba(26, 115, 232, 0.4) !important;
          outline-offset: -2px;
          border-radius: 9999px;
          transition: background-color 0.2s ease, outline 0.2s ease;
       }`,
-      `body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:hover {
+      `body.gemini-bulk-select-mode ${DOM_SELECTORS.CHAT_ITEM} a:hover {
          background-color: rgba(26, 115, 232, 0.1) !important;
          outline-style: solid !important;
       }`
@@ -402,7 +402,7 @@ const GeminiBulkDelete = () => {
 
     Array.from(selectedHrefs).forEach((href) => {
       cssRules.push(
-        `body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a[href="${href}"] { 
+        `body.gemini-bulk-select-mode ${DOM_SELECTORS.CHAT_ITEM} a[href="${href}"] { 
            background-color: rgba(26, 115, 232, 0.15) !important; 
            outline: 2px solid #1a73e8 !important; 
         }`
