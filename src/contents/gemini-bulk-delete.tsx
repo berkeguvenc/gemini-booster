@@ -241,6 +241,10 @@ const GeminiBulkDelete = () => {
     let resultMessage = ""
 
     try {
+      // CRITICAL FIX: Yield to the event loop so React can process the mode="deleting" state change.
+      // This ensures the capturing click listener from "selecting" mode is removed before we trigger programmatic clicks.
+      await wait(150)
+
       for (const href of selectedHrefs) {
         const anchor = document.querySelector(`gem-nav-list-item[data-test-id="conversation"] a[href="${href}"]`) || document.querySelector(`a[href="${href}"]`)
         if (!anchor) {
@@ -250,22 +254,42 @@ const GeminiBulkDelete = () => {
 
         // Find the options/actions button next to the conversation link
         const listItem = anchor.closest('gem-nav-list-item[data-test-id="conversation"]')
-        const actionsBtn = listItem?.querySelector(
+        let actionsBtn = listItem?.querySelector(
           'button[data-test-id="actions-menu-button"]'
         ) as HTMLElement
+
+        if (!actionsBtn) {
+          // Fallback if data-test-id changes
+          actionsBtn = listItem?.querySelector('.mat-mdc-menu-trigger') as HTMLElement
+        }
 
         if (!actionsBtn) {
           console.warn(`Options button not found for: ${href}`)
           continue
         }
 
-        actionsBtn.click()
-        await wait(DELETE_WAIT_MS.MENU_OPEN)
+        // CRITICAL FIX: Wait for any leftover menus or dialogs from previous deletions to disappear
+        let cleanupWait = 0
+        while (
+          (document.querySelector("mat-dialog-container") || document.querySelector(".mat-mdc-menu-panel")) &&
+          cleanupWait < 3000
+        ) {
+          await wait(100)
+          cleanupWait += 100
+        }
 
-        // Find the "Delete" menu item in the opened context menu
-        const menuItems = Array.from(
-          document.querySelectorAll('.mat-mdc-menu-panel [role="menuitem"]')
-        ) as HTMLElement[]
+        actionsBtn.click()
+        
+        // Wait up to 2 seconds for the menu to open
+        let menuItems: HTMLElement[] = []
+        let menuWait = 0
+        while (menuItems.length === 0 && menuWait < 2000) {
+          await wait(100)
+          menuWait += 100
+          menuItems = Array.from(
+            document.querySelectorAll('.mat-mdc-menu-panel [role="menuitem"]')
+          ) as HTMLElement[]
+        }
 
         const deleteMenuItem = menuItems.find((el) => {
           const testId = el.getAttribute("data-test-id")
@@ -278,29 +302,61 @@ const GeminiBulkDelete = () => {
         if (!deleteMenuItem) {
           console.error("Delete menu item not found in context menu.")
           document.body.click()
+          await wait(300)
           continue
         }
 
+        // Wait for menu open animation to settle before clicking
+        await wait(200)
         deleteMenuItem.click()
-        await wait(DELETE_WAIT_MS.CONFIRM_DIALOG)
+        
+        // Wait up to 2 seconds for the confirmation dialog to appear
+        let confirmBtnWrapper: HTMLElement | null = null
+        let dialogWait = 0
+        while (!confirmBtnWrapper && dialogWait < 2000) {
+          await wait(100)
+          dialogWait += 100
+          confirmBtnWrapper = document.querySelector(
+            "mat-dialog-container [data-test-id='confirm-button'], .mdc-dialog [data-test-id='confirm-button']"
+          ) as HTMLElement
+        }
 
-        // Click the confirm button in the confirmation dialog
-        const dialogButtons = Array.from(
-          document.querySelectorAll(
-            "mat-dialog-container button, .mdc-dialog button"
-          )
-        ) as HTMLElement[]
-
-        const confirmBtn = dialogButtons.find(
-          (el) => el.getAttribute("data-test-id") === "confirm-button"
-        )
+        let confirmBtn = confirmBtnWrapper
+        if (confirmBtnWrapper && confirmBtnWrapper.tagName.toLowerCase() !== 'button') {
+          confirmBtn = (confirmBtnWrapper.querySelector('button') || confirmBtnWrapper) as HTMLElement
+        }
 
         if (confirmBtn) {
+          // Wait for dialog open animation to settle before clicking
+          await wait(300)
           confirmBtn.click()
+          
+          // Wait for dialog to close
+          let dialogCloseWait = 0
+          while (document.querySelector("mat-dialog-container") && dialogCloseWait < 1500) {
+            await wait(100)
+            dialogCloseWait += 100
+          }
+
+          // If the dialog is still open, the click might have been ignored during animation. Retry!
+          if (document.querySelector("mat-dialog-container")) {
+            console.warn("Retrying confirm button click...")
+            confirmBtn.click()
+            await wait(500)
+          }
+
+          // Wait up to 4 seconds for the chat item to be removed from the DOM
+          let disappearWait = 0
+          while (document.querySelector(`a[href="${href}"]`) && disappearWait < 4000) {
+            await wait(100)
+            disappearWait += 100
+          }
+          
           await wait(DELETE_WAIT_MS.POST_DELETE)
         } else {
           console.error("Confirm button not found in delete dialog.")
           document.body.click()
+          await wait(500)
         }
       }
       resultMessage = t("chatsDeletedSuccess")
