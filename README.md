@@ -61,4 +61,4 @@ This project is built using [Plasmo](https://docs.plasmo.com/) and React.
 - i18next
 
 ## License
-MIT License
+This project is licensed under the GNU Affero General Public License v3.0 (AGPL-3.0) - see the [LICENSE](LICENSE) file for details.

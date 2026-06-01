@@ -61,4 +61,4 @@ Bu proje [Plasmo](https://docs.plasmo.com/) ve React kullanılarak geliştirilmi
 - i18next
 
 ## Lisans
-MIT Lisansı
+Bu proje GNU Affero Genel Kamu Lisansı v3.0 (AGPL-3.0) ile lisanslanmıştır - detaylar için [LICENSE](LICENSE) dosyasına bakabilirsiniz.
