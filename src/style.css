@@ -761,7 +761,6 @@ body.gemini-bulk-select-mode gem-nav-list-item[data-test-id="conversation"] a:ho
   position: absolute;
   right: 0px;
   z-index: 10;
-  padding: 6px;
 }
 
 .gbr-bulk-delete-actions {
