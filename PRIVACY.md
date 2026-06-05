@@ -7,7 +7,7 @@ Thank you for using **Enhancer for Gemini** ("the Extension"). This Privacy Poli
 ## 1. Data Collection and Usage
 **Enhancer for Gemini does not collect, transmit, distribute, or sell your personal data.** 
 
-All data used by the Extension, including your saved prompts, notes, and favorite answers, is stored **locally** on your device using the standard browser storage API (`chrome.storage`). 
+All data used by the Extension, including your saved prompts, notes, and favorite responses, is stored **locally** on your device using the standard browser storage API (`chrome.storage`). 
 
 We do not have access to any of the data you save within the Extension, nor do we track your browsing history or your interactions with Google Gemini.
 

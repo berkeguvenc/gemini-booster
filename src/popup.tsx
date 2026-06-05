@@ -228,7 +228,7 @@ function IndexPopup() {
               <option value="en">EN</option>
               <option value="tr">TR</option>
             </select>
-            <span className="popup-version-badge">v1.1</span>
+            <span className="popup-version-badge">v1.2</span>
           </div>
         </div>
 
@@ -389,21 +389,21 @@ function IndexPopup() {
         )}
 
         {/* AGPL Source Code Link */}
-        <footer style={{ 
-          textAlign: 'center', 
-          padding: '12px', 
-          fontSize: '12px', 
+        <footer style={{
+          textAlign: 'center',
+          padding: '12px',
+          fontSize: '12px',
           marginTop: 'auto',
-          opacity: 0.8 
+          opacity: 0.8
         }}>
-          <a 
-            href="https://github.com/berkeguvenc/gemini-booster" 
-            target="_blank" 
+          <a
+            href="https://github.com/berkeguvenc/gemini-booster"
+            target="_blank"
             rel="noopener noreferrer"
-            style={{ 
-              color: 'inherit', 
+            style={{
+              color: 'inherit',
               textDecoration: 'underline',
-              fontWeight: '500' 
+              fontWeight: '500'
             }}
           >
             Source Code (AGPL-3.0)

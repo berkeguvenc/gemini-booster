@@ -1,12 +1,12 @@
 # Enhancer for Gemini
 
-Enhancer for Gemini is a powerful Chrome Extension that enhances your experience on [Google Gemini](https://gemini.google.com). It seamlessly integrates into the Gemini sidebar, providing a dedicated space to save, manage, and access your favorite answers, custom prompts, and personal notes.
+Enhancer for Gemini is a powerful Chrome Extension that enhances your experience on [Google Gemini](https://gemini.google.com). It seamlessly integrates into the Gemini sidebar, providing a dedicated space to save, manage, and access your favorite responses, custom prompts, and personal notes.
 
 Read this in other languages: [Türkçe](README.tr.md)
 
 ## Features
 
-- **Favorite Answers:** Save your favorite Gemini responses to access them later instantly.
+- **Favorite Responses:** Save your favorite Gemini responses to access them later instantly.
 - **Prompt Library:** Build and manage your own library of frequently used prompts.
 - **My Notes:** Keep personal notes directly within the Gemini interface.
 - **Chat Folders:** Organize your chats by moving them into folders.

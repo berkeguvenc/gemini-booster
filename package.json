@@ -1,8 +1,8 @@
 {
   "name": "enhancer-for-gemini",
   "displayName": "Enhancer for Gemini",
-  "version": "1.1",
-  "description": "Supercharge your Google Gemini experience with a prompt library, favorite answers, and quick notes.",
+  "version": "1.2",
+  "description": "Supercharge your Google Gemini experience with a prompt library, favorite responses, and quick notes.",
   "author": "Yağız Berke Güvenç",
   "license": "AGPL-3.0-or-later",
   "scripts": {
