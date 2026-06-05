@@ -62,8 +62,8 @@ This project is built using [Plasmo](https://docs.plasmo.com/) and React.
 
 ## License
 
-This project is licensed under the **GNU Affero General Public License v3.0 (AGPL-3.0-or-later)**. 
+This project is licensed under the **GNU General Public License v3.0 (GPL-3.0-or-later)**. 
 
-As per the requirements of the AGPL v3, any modifications or derivative works based on this project (including those that interact over a network) must also be open-sourced and made available under the same license. 
+As per the requirements of the GPL v3, any modifications or derivative works based on this project must also be open-sourced and made available under the same license. 
 
-For more details, please see the [LICENSE](LICENSE) file or visit [https://www.gnu.org/licenses/agpl-3.0.html](https://www.gnu.org/licenses/agpl-3.0.html).
+For more details, please see the [LICENSE](LICENSE) file or visit [https://www.gnu.org/licenses/gpl-3.0.html](https://www.gnu.org/licenses/gpl-3.0.html).

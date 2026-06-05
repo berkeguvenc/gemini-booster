@@ -62,8 +62,8 @@ Bu proje [Plasmo](https://docs.plasmo.com/) ve React kullanılarak geliştirilmi
 
 ## Lisans
 
-Bu proje **GNU Affero General Public License v3.0 (AGPL-3.0-or-later)** altında lisanslanmıştır.
+Bu proje **GNU General Public License v3.0 (GPL-3.0-or-later)** altında lisanslanmıştır.
 
-AGPL v3 gereksinimleri uyarınca, bu proje üzerinde yapılacak her türlü değişiklik veya bu projeyi temel alan türetilmiş çalışmalar (ağ üzerinden etkileşime giren servisler olarak sunulmaları durumu dahil), aynı lisans koşulları altında açık kaynak olarak paylaşılmak zorundadır.
+GPL v3 gereksinimleri uyarınca, bu proje üzerinde yapılacak her türlü değişiklik veya bu projeyi temel alan türetilmiş çalışmalar, aynı lisans koşulları altında açık kaynak olarak paylaşılmak zorundadır.
 
-Daha fazla detay için lütfen projedeki [LICENSE](LICENSE) dosyasına göz atın veya [https://www.gnu.org/licenses/agpl-3.0.html](https://www.gnu.org/licenses/agpl-3.0.html) adresini ziyaret edin.
+Daha fazla detay için lütfen projedeki [LICENSE](LICENSE) dosyasına göz atın veya [https://www.gnu.org/licenses/gpl-3.0.html](https://www.gnu.org/licenses/gpl-3.0.html) adresini ziyaret edin.
