@@ -4,7 +4,7 @@
   "version": "1.1",
   "description": "Supercharge your Google Gemini experience with a prompt library, favorite answers, and quick notes.",
   "author": "Yağız Berke Güvenç",
-  "license": "AGPL-3.0-only",
+  "license": "AGPL-3.0-or-later",
   "scripts": {
     "dev": "plasmo dev",
     "build": "plasmo build",

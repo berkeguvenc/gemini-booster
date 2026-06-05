@@ -1,3 +1,22 @@
+/*
+ * Copyright (C) 2026 Yağız Berke Güvenç
+ *
+ * This file is part of gemini-booster.
+ *
+ * gemini-booster is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * gemini-booster is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with gemini-booster. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 import { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next"
 
@@ -368,6 +387,28 @@ function IndexPopup() {
             </div>
           </>
         )}
+
+        {/* AGPL Source Code Link */}
+        <footer style={{ 
+          textAlign: 'center', 
+          padding: '12px', 
+          fontSize: '12px', 
+          marginTop: 'auto',
+          opacity: 0.8 
+        }}>
+          <a 
+            href="https://github.com/berkeguvenc/gemini-booster" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            style={{ 
+              color: 'inherit', 
+              textDecoration: 'underline',
+              fontWeight: '500' 
+            }}
+          >
+            Source Code (AGPL-3.0)
+          </a>
+        </footer>
       </div>
 
       {/* Confirmation Modal */}
