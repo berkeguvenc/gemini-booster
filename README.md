@@ -18,8 +18,8 @@ Read this in other languages: [Türkçe](README.tr.md)
 
 ### Download
 
-- **Google Chrome:** [Chrome Web Store](YOUR_CHROME_STORE_LINK_HERE)
-- **Firefox:** [Firefox Add-ons](YOUR_FIREFOX_ADDONS_LINK_HERE)
+- **Google Chrome:** [Chrome Web Store](https://chromewebstore.google.com/detail/enhancer-for-gemini/lmpillebceganhejnfmpjghghkeicfem)
+- **Firefox:** [Firefox Add-ons](https://addons.mozilla.org/tr/firefox/addon/enhancer-for-gemini/)
 
 ### Developer Mode (Local Installation)
 

@@ -18,8 +18,8 @@ Diğer dillerde oku: [English](README.md)
 
 ### İndir / Yükle
 
-- **Google Chrome:** [Chrome Web Mağazası](YOUR_CHROME_STORE_LINK_HERE)
-- **Firefox:** [Firefox Eklentileri](YOUR_FIREFOX_ADDONS_LINK_HERE)
+- **Google Chrome:** [Chrome Web Mağazası](https://chromewebstore.google.com/detail/enhancer-for-gemini/lmpillebceganhejnfmpjghghkeicfem)
+- **Firefox:** [Firefox Eklentileri](https://addons.mozilla.org/tr/firefox/addon/enhancer-for-gemini/)
 
 ### Geliştirici Modu (Yerel Kurulum)
 

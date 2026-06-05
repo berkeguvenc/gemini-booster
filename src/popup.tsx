@@ -30,9 +30,9 @@ function IndexPopup() {
 
   // Determine store link based on browser
   const isFirefox = typeof navigator !== "undefined" && navigator.userAgent.includes("Firefox");
-  const storeLink = isFirefox 
-    ? "https://addons.mozilla.org/en-US/firefox/addon/YOUR_ADDON_ID/" 
-    : "https://chrome.google.com/webstore/detail/YOUR_EXTENSION_ID";
+  const storeLink = isFirefox
+    ? "https://addons.mozilla.org/en-US/firefox/addon/enhancer-for-gemini/"
+    : "https://chrome.google.com/webstore/detail/enhancer-for-gemini/lmpillebceganhejnfmpjghghkeicfem";
 
   // Custom modals state
   const [alertMessage, setAlertMessage] = useState("")
