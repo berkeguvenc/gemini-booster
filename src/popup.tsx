@@ -209,7 +209,7 @@ function IndexPopup() {
               <option value="en">EN</option>
               <option value="tr">TR</option>
             </select>
-            <span className="popup-version-badge">v1.0</span>
+            <span className="popup-version-badge">v1.1</span>
           </div>
         </div>
 
