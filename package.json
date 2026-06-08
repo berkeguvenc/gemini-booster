@@ -52,15 +52,12 @@
   },
   "pnpm": {
     "overrides": {
-      "@parcel/source-map": "2.1.1",
-      "react-refresh": "0.16.0"
-    },
-    "onlyBuiltDependencies": [
-      "@parcel/watcher",
-      "@swc/core",
-      "esbuild",
-      "svelte-preprocess",
-      "canvas"
-    ]
+      "postcss": "^8.5.10",
+      "esbuild": "0.25.0",
+      "@parcel/reporter-dev-server": "^2.16.4",
+      "svelte": "5.55.7",
+      "content-security-policy-parser": "^0.6.0",
+      "msgpackr": "^1.10.1"
+    }
   }
 }
